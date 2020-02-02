@@ -1,0 +1,8 @@
+all: run
+
+
+run:
+	OAUTHLIB_INSECURE_TRANSPORT=1 OAUTHLIB_RELAX_TOKEN_SCOPE=1 FLASK_DEBUG=1 flask run
+
+prod:
+	FLASK_DEBUG=0 flask run
