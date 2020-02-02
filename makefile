@@ -2,7 +2,7 @@ all: run
 
 
 run:
-	OAUTHLIB_INSECURE_TRANSPORT=1 OAUTHLIB_RELAX_TOKEN_SCOPE=1 FLASK_DEBUG=1 flask run
+	bash run.sh
 
 prod:
-	FLASK_DEBUG=0 flask run
+	FLASK_DEBUG=0 python -m flask run
