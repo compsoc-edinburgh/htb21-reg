@@ -19,6 +19,11 @@ main {
     pointer-events: none;
 }
 
+.is-blurred {
+    color: transparent;
+    text-shadow: 0 0 0.5em rgba(0,0,0,0.8);
+}
+
 nav + .notification {
     border-radius: 0;
 }

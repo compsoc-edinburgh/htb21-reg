@@ -1,6 +1,7 @@
-from flask import Blueprint, session, render_template, request, flash
+from flask import Blueprint, session, render_template, request, flash, redirect, url_for
 from .auth import login_required
 from .db import get_db
+from .common import flasher
 
 bp = Blueprint('dashboard', __name__, url_prefix='/dashboard')
 
@@ -16,6 +17,7 @@ def admin():
     return render_template('dashboard/admin.html', session=session)
 
 @bp.route('/table')
+@login_required
 def table():
     # parse query params
     sort = request.args.get('sort')
@@ -39,3 +41,17 @@ def table():
         sort=sort,
         sort_reverse=reverse
     )
+
+@bp.route('/applicant/<mongo_id>')
+@login_required
+def applicant(mongo_id):
+    c = get_db().cursor()
+    
+    c.execute('SELECT * FROM Applicants WHERE mongo_id = ?', (mongo_id,))
+
+    row = c.fetchone()
+    if row is None:
+        flasher('No such user with ID {}!'.format(mongo_id), color='danger')
+        return redirect(url_for('dashboard.table'))
+
+    return render_template('dashboard/applicant.html', session=session, applicant=row)

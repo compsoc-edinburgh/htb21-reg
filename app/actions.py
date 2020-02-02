@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, request, redirect, url_for
+from flask import Blueprint, flash, request, redirect, url_for, send_file, current_app
 
 from .auth import login_required
 from .common import flasher
@@ -28,3 +28,9 @@ def submit_dump():
     flasher('Imported {} records.'.format(count), color='success')
 
     return redirect(url_for('dashboard.admin'))
+
+@bp.route('/download_db/votes.sqlite')
+@login_required
+def download_db():
+    print(current_app.config['DATABASE'])
+    return send_file(current_app.config['DATABASE'])

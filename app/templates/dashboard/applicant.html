@@ -1,0 +1,22 @@
+{% extends "dashboard/base.html" %}
+
+{% macro make_tag(name, value) %}
+{% if value == 1 %}
+<span class="tag is-success">
+  Tag label
+</span>
+{% else %}
+<span class="tag is-danger">
+  Tag label
+</span>
+{% endif %}
+{% endmacro %}
+
+{% block dashboard_content %}
+
+<div class="container">
+    <h1 class="is-blurred is-size-1">{{ applicant['name'] }}</h1>
+</div>
+
+{% endblock %}
+

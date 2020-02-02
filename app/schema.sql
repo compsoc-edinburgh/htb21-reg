@@ -33,7 +33,10 @@ CREATE TABLE Applicants (
 CREATE TABLE Votes (
     id      INTEGER PRIMARY KEY AUTOINCREMENT,
     rating  INTEGER NOT NULL,
+    author  TEXT NOT NULL,
     app_id  INTEGER,
     FOREIGN KEY (app_id) REFERENCES Applicants (id)
-        ON DELETE CASCADE ON UPDATE NO ACTION
+        ON DELETE CASCADE ON UPDATE NO ACTION,
+
+    UNIQUE (author, app_id)
 );

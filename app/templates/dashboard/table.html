@@ -64,7 +64,11 @@
                 <td>{{ row['email'] }}</td>
                 <td>{{ row['school'] }}</td>
                 <td><i>n/a</i></td>
-                <td> view </td>
+                <td>
+                    <a href="{{url_for('dashboard.applicant', mongo_id=row['mongo_id'])}}">
+                    view
+                    </a>
+                </td>
             </tr>
             {% else %}
             <tr>

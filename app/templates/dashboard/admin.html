@@ -59,18 +59,18 @@
     </div>
 
     <div class="box">
-        <h1 class="is-size-3"> Download backing SQLite</h1>
+        <h1 class="is-size-3"> Download backing SQLite database</h1>
         <p>
-            This control exposes a download of the entire SQLite database.
+            This control exposes a download of the entire SQLite database. Doing this exposes personal information, so do so with caution.
         </p>
 
         <br/>
 
-        <a class="button is-warning">
+        <a class="button is-warning" href="{{url_for('actions.download_db')}}">
+            <span>Download</span>
             <span class="icon">
                 <i class="fas fa-download"></i>
             </span>
-            <span>GitHub</span>
         </a>
 
     </div>
