@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, render_template, Blueprint
+from flask import Flask, redirect, url_for, render_template, Blueprint, session
 from flask_dance.contrib.google import make_google_blueprint, google
 from oauthlib.oauth2.rfc6749.errors import TokenExpiredError
 import functools
@@ -34,7 +34,7 @@ def email_valid(email):
 def index():
     if google.authorized:
         return redirect(url_for('auth.profile'))
-    return render_template('login.html')
+    return render_template('auth/login.html')
 
 @bp.route('/logout')
 def logout():
@@ -67,8 +67,7 @@ def login_required(view):
 @bp.route('/profile')
 @login_required
 def profile():
-    # print(dir(google.get))
-    # print('google token: {}'.format(google.token[u'access_token']))
+    # hacky, but this pins the google profile information to the session
     resp = requests.get(
             'https://people.googleapis.com/v1/people/me',
             params={
@@ -85,9 +84,11 @@ def profile():
         'name': person_info[u'names'][0][u'displayName'],
         'image': person_info[u'photos'][0][u'url'].split('=')[0] # remove the 100px limit (ends with =s100)
     }
+
+    session['name'] = profile['name']
+    session['email'] = profile['email']
+    session['image'] = profile['image']
+
     
-    return render_template('profile.html',
-            profile=profile,
-            valid=email_valid(profile['email'])
-    )
+    return redirect(url_for('dashboard.index'))
 

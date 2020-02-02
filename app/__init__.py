@@ -35,10 +35,10 @@ def create_app(test_config=None):
     db.init_app(app)
 
     # apply the blueprints to the app
-    from . import auth
+    from . import auth, dashboard
     app.register_blueprint(auth.bp)
     auth.register_google_bp(app) # hax
-    #app.register_blueprint(dashboard.bp)
+    app.register_blueprint(dashboard.bp)
     #app.register_blueprint(api.bp)
 
     # initialize the google blueprint
