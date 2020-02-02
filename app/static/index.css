@@ -15,4 +15,10 @@ main {
     border-radius: 50%;
 }
 
+.is-unselectable {
+    pointer-events: none;
+}
 
+nav + .notification {
+    border-radius: 0;
+}

@@ -24,7 +24,9 @@ CREATE TABLE Applicants (
     gradYear    TEXT,
     gender      TEXT,
     description TEXT,
-    essay       TEXT
+    essay       TEXT,
+
+    UNIQUE (mongo_id)
 );
 
 

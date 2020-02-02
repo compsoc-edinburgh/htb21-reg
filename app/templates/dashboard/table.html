@@ -1,0 +1,87 @@
+{% extends "dashboard/base.html" %}
+
+{% macro sortlink(name, field) -%}
+{% if field == sort -%}
+    {% if sort_reverse is sameas true -%}
+        <a
+            href="{{url_for('dashboard.table')}}?sort={{field}}"
+            class="has-text-primary">
+            {{name}}
+            <i class="fas fa-sort-up"></i>
+        </a>
+    {% else -%}
+        <a
+            href="{{url_for('dashboard.table')}}?sort={{field}}&reverse=true"
+            class="has-text-primary">
+            {{name}}
+            <i class="fas fa-sort-down"></i>
+        </a>
+    {% endif -%}
+{% else -%}
+<a
+    href="{{url_for('dashboard.table')}}?sort={{field}}"
+    class="has-text-black">
+    {{name}}
+</a>
+{% endif -%}
+{% endmacro -%}
+
+{% macro boolean_val(value) %}
+{% if value == 1 %}
+<span class="icon has-text-success">
+  <i class="fas fa-check"></i>
+</span>
+{% else %}
+<span class="icon has-text-danger">
+  <i class="fas fa-times"></i>
+</span>
+{% endif %}
+{% endmacro %}
+
+{% block dashboard_content %}
+
+<div class="container">
+    <table class="table is-striped is-fullwidth">
+        <thead>
+            <tr>
+                <th>{{ sortlink('ID', 'mongo_id') }}</th>
+                <th>{{ sortlink('Verified', 'verified') }}</th>
+                <th>{{ sortlink('Completed', 'completed') }}</th>
+                <th>{{ sortlink('Name', 'name') }}</th>
+                <th>{{ sortlink('Email', 'email') }}</th>
+                <th>{{ sortlink('School', 'school') }}</th>
+                <th>{{ sortlink('Rating', 'rating') }}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr>
+                <td>{{ row['id'] }}</td>
+                <td>{{ boolean_val(row['verified']) }}</td>
+                <td>{{ boolean_val(row['completed']) }}</td>
+                <td>{{ row['name'] }}</td>
+                <td>{{ row['email'] }}</td>
+                <td>{{ row['school'] }}</td>
+                <td><i>n/a</i></td>
+                <td> view </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="8">
+                    <i> No applicants in DB, upload some from the <a href="{{url_for('dashboard.admin')}}">admin interface. </a></i>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        {% if rows|length %}
+        <tfoot>
+            <tr>
+                <th colspan="8">{{rows|length}}/{{rows|length}} rows retrieved.</th>
+            </tr>
+        </tfoot>
+        {% endif %}
+    </table>
+</div>
+
+{% endblock %}
