@@ -22,9 +22,11 @@
 </p>
 {% endmacro %}
 
-{% macro make_rating(email, rating) %}
+{% macro make_rating(email, name, rating) %}
 <div>
-    <strong>{{ email }}</strong>
+    <strong>
+        <abbr title="{{ email }}">{{ name }}</abbr>
+    </strong>
     <div class="flex-row">
         {% for i in range(rating) %}
         <span class="icon has-text-warning">
@@ -110,7 +112,7 @@
             <h4 class="title is-4">Vote History</h4>
             {% if votes %}
             {% for vote in votes %}
-            {{ make_rating(vote.author_email, vote.rating) }}
+            {{ make_rating(vote.author_email, vote.author, vote.rating) }}
             {% endfor %}
             {% else %}
             <i> no votes yet. </i>

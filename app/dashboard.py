@@ -102,18 +102,18 @@ def applicant(mongo_id):
     if previousVote is not None:
         previousVote = { 'value': previousVote['rating'] }
 
-    c.execute('SELECT author_email, rating FROM Votes WHERE app_id=?', (row['mongo_id'],))
+    c.execute('SELECT author, author_email, rating FROM Votes WHERE app_id=?', (row['mongo_id'],))
     votes = c.fetchall()
     print(votes)
 
     votes += [
-        {'rating': 5, 'author_email': 'user1@long.domain.com' },
-        {'rating': 4, 'author_email': 'user2@long.domain.com' },
-        {'rating': 4, 'author_email': 'longlonglonglonglong@long.domain.com' },
-        {'rating': 3, 'author_email': 'user4@long.domain.com' },
-        {'rating': 2, 'author_email': 'user5@long.domain.com' },
-        {'rating': 3, 'author_email': 'user6@long.domain.com' },
-        {'rating': 1, 'author_email': 'user7@long.domain.com' }
+            {'rating': 5, 'author_email': 'user1@long.domain.com', 'author': 'John Doe' },
+            {'rating': 4, 'author_email': 'user2@long.domain.com', 'author': 'John Doe' },
+            {'rating': 4, 'author_email': 'longlonglonglonglong@long.domain.com', 'author': 'John Doe' },
+            {'rating': 3, 'author_email': 'user4@long.domain.com', 'author': 'John Doe' },
+            {'rating': 2, 'author_email': 'user5@long.domain.com', 'author': 'John Doe' },
+            {'rating': 3, 'author_email': 'user6@long.domain.com', 'author': 'John Doe' },
+            {'rating': 1, 'author_email': 'user7@long.domain.com', 'author': 'John Doe' }
     ]
 
     voteaverage = functools.reduce( lambda a,v: a + v['rating'], votes, 0 ) / len(votes)
