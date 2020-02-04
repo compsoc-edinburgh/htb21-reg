@@ -96,7 +96,7 @@ def applicant(mongo_id):
     # resolve vote
     c.execute(
         'SELECT rating FROM Votes WHERE app_id=? AND author_email=?',
-        (row['id'], session['email'])
+        (row['mongo_id'], session['email'])
     )
     previousVote = c.fetchone()
     if previousVote is not None:
