@@ -3,20 +3,195 @@
 {% macro make_tag(name, value) %}
 {% if value == 1 %}
 <span class="tag is-success">
-  Tag label
+    {{ name }}&nbsp;&nbsp;
+    <i class="fas fa-check"></i>
 </span>
 {% else %}
 <span class="tag is-danger">
-  Tag label
+    {{ name }}&nbsp;&nbsp;
+    <i class="fas fa-times"></i>
 </span>
 {% endif %}
+{% endmacro %}
+
+{% macro make_ratebtn(value) %}
+<p class="control">
+<button class="button is-medium {% if previousVote and previousVote.value == value %}is-success{% endif %}" data-rating-val="{{value}}">
+    <span>{{ value }}</span>
+</button>
+</p>
+{% endmacro %}
+
+{% macro make_rating(email, rating) %}
+<div>
+    <strong>{{ email }}</strong>
+    <div class="flex-row">
+        {% for i in range(rating) %}
+        <span class="icon has-text-warning">
+            <i class="fas fa-star"></i>
+        </span> 
+        {% endfor %}
+        {% for i in range(5 - rating) %}
+        <span class="icon">
+            <i class="far fa-star"></i>
+        </span> 
+        {% endfor %}
+    </div>
+    
+</div>
+{% endmacro %}
+
+{% macro make_rateinput(value) %}
+<input type="radio" id="ratingRadio" name="rating" value="{{ value }}">
 {% endmacro %}
 
 {% block dashboard_content %}
 
 <div class="container">
-    <h1 class="is-blurred is-size-1">{{ applicant['name'] }}</h1>
+    <div class="applicant__rating_row">
+    {% if applicant['completed'] %}
+    <h1 class="is-size-1">{{ applicant['name'] }}</h1>
+    {% else %}
+    <h1 class="is-blurred is-size-1">No Name Provided</h1>
+    {% endif %}
+
+    <span class="has-text-weight-bold applicant__rating">
+        <span class="is-size-3">{{ voteaverage }}/5</span>
+        <span class="is-size-6">({{ votes|length }} votes)</span>
+    </span>
+
+    </div>
+    <h2 class="subtitle">
+        {{ applicant['email'] }}{% if applicant.completed %} &bull; {{ applicant.school }}{% endif %}
+    </h2>
+
+    <div class="tags are-medium">
+        {{ make_tag('verified', applicant['verified']) }}
+        {{ make_tag('completed', applicant['completed']) }}
+        {% if not applicant['completed'] %}
+        <span class="tag is-warning">
+            adult&nbsp;&nbsp;
+            <i class="fas fa-question"></i>
+        </span>
+        {% else %}
+        {{ make_tag('adult', applicant['adult']) }}
+        {% endif %}
+        {{ make_tag('admin', applicant['admin']) }}
+        {{ make_tag('accepted', applicant['accepted']) }}
+    </div>
+
+    <div class="columns applicant__main">
+        <div class="column is-two-thirds">
+            {% if applicant.completed %}
+            <h4 class="title is-4">Basic Information</h4>
+            <p>
+                <strong>University: </strong> {{ applicant.school }} <br/>
+                <strong>Grad Year: </strong> {{ applicant.gradYear }} <br/>
+                <strong>Gender: </strong> {{ applicant.gender }} <br/>
+                <strong>Submitted: </strong> {{ timestamp }}
+            </p>
+            <h4 class="title is-4 has-margin-top--1em">Short Answers</h4>
+            <strong>Why are you excited about Hack the Burgh?</strong>
+            <p>
+                {{ description|safe }}
+            </p>
+            <br/>
+            <strong> Describe an interesting project you've been involved in. </strong>
+            <p>
+                {{ essay|safe }}
+            </p>
+            {% else %}
+            <div class="applicant__incompletebody">
+                <span class="is-size-4 is-italic">application incomplete</span>
+            </div>
+            {% endif %}
+        </div>
+        <div class="column">
+            <h4 class="title is-4">Vote History</h4>
+            {% if votes %}
+            {% for vote in votes %}
+            {{ make_rating(vote.author_email, vote.rating) }}
+            {% endfor %}
+            {% else %}
+            <i> no votes yet. </i>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="applicant__bottompin_margin"></div>
+    
+
+    <div class="applicant__bottompin has-background-light">
+        <form class="applicant__rating_row" id="rating" method="POST" action="{{ url_for('actions.submit_vote') }}">
+                <div class="field has-addons">
+                    {{ make_ratebtn(1) }}
+                    {{ make_ratebtn(2) }}
+                    {{ make_ratebtn(3) }}
+                    {{ make_ratebtn(4) }}
+                    {{ make_ratebtn(5) }}
+
+                    <div class="is-hidden">
+                        {{ make_rateinput(1) }}
+                        {{ make_rateinput(2) }}
+                        {{ make_rateinput(3) }}
+                        {{ make_rateinput(4) }}
+                        {{ make_rateinput(5) }}
+
+                        <input name="mongo_id" type="text" value="{{ applicant.mongo_id }}"/>
+                        <input name="id" type="text" value="{{ applicant.id }}"/>
+                    </div>
+
+                </div>
+                <div class="flex-row applicant__votebtnrow">
+                    <span class="applicant__votename"> Voting as <strong>{{ session['name'] }}</strong></span>
+                    {% if previousVote %}
+                    <button type="submit" class="button is-medium is-warning">
+                        <span>
+                            Change Vote
+                        </span>
+                        <span class="icon">
+                            <i class="fas fa-chevron-right"></i>
+                        </span>
+                    </button>
+                    {% else %}
+                    <button type="submit" class="button is-medium is-primary">
+                        <span>
+                            Submit Vote
+                        </span>
+                        <span class="icon">
+                            <i class="fas fa-chevron-right"></i>
+                        </span>
+                    </button>
+                {% endif %}
+                </div>
+            </form>
+    </div>
 </div>
+
+<script type="text/javascript">
+    const radioClickHandler = (element) => {
+        element.addEventListener('click', el => {
+            el.preventDefault()
+
+            const btns = document.querySelectorAll('[data-rating-val]')
+            btns.forEach(e => e.classList.remove('is-success'))
+
+            document.querySelector(`[data-rating-val="${element.dataset.ratingVal}"]`)
+                .classList.add('is-success')
+
+            document.querySelector(`[name="rating"][value="${element.dataset.ratingVal}"]`)
+                .checked = true
+
+        })
+    }
+
+    let btns = document.querySelectorAll('[data-rating-val]')
+    btns.forEach(e => radioClickHandler(e))
+
+    {% if previousVote %}
+    document.querySelector(`[name="rating"][value="{{ previousVote.value }}"`).checked = true
+    {% endif %}
+</script>
 
 {% endblock %}
 

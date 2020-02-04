@@ -7,6 +7,19 @@ main {
     justify-content: center;
 }
 
+.applicant__incompletebody {
+    min-height: 40vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.has-margin-top--1em {
+    margin-top: 1em;
+}
+
 .dashboard__content {
     margin-top: 1rem;
 }
@@ -26,4 +39,53 @@ main {
 
 nav + .notification {
     border-radius: 0;
+}
+
+.applicant__rating_row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.applicant__rating {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.applicant__bottompin {
+    position: fixed;
+    bottom: -1rem;
+    left: 0;
+    right: 0;
+    padding-left: 48px;
+    padding-right: 48px;
+    padding-top: calc(0.75rem / 2);
+    min-height: 80px;
+}
+
+.applicant__bottompin_margin {
+    height: 80px;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.applicant__votename {
+    font-size: 0.8rem;
+    margin-right: 1rem;
+}
+
+.applicant__main {
+    margin-bottom: 80px;
+}
+
+#rating > *:first-child {
+    margin-bottom: 0!important;
 }

@@ -24,6 +24,10 @@
                 Rate
             </a>
 
+            <a class="navbar-item" href="{{url_for('dashboard.table')}}">
+                Table
+            </a>
+
             <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link">
                     More
@@ -74,6 +78,7 @@
 
 {% for message in get_flashed_messages() %}
 <div class="notification {{ message.type }}">
+    <button class="delete" onclick="closeNotification(this)"></button>
     {{ message.text }}
 </div>
 {% endfor %}
@@ -104,6 +109,8 @@
         }
 
     });
+
+    const closeNotification = e => e.parentElement.remove()
 </script>
 
 <section class="dashboard__content">

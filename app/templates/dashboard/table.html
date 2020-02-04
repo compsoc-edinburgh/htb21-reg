@@ -50,7 +50,8 @@
                 <th>{{ sortlink('Name', 'name') }}</th>
                 <th>{{ sortlink('Email', 'email') }}</th>
                 <th>{{ sortlink('School', 'school') }}</th>
-                <th>{{ sortlink('Rating', 'rating') }}</th>
+                <th>{{ sortlink('Ratings', 'ratings') }}</th>
+                <th>{{ sortlink('Score', 'score') }}</th>
                 <th></th>
             </tr>
         </thead>
@@ -63,10 +64,11 @@
                 <td>{{ row['name'] }}</td>
                 <td>{{ row['email'] }}</td>
                 <td>{{ row['school'] }}</td>
-                <td><i>n/a</i></td>
+                <td>{{ row['ratings'] }}</td>
+                <td>{{ row['score'] }}</td>
                 <td>
                     <a href="{{url_for('dashboard.applicant', mongo_id=row['mongo_id'])}}">
-                    view
+                        view
                     </a>
                 </td>
             </tr>

@@ -53,11 +53,50 @@
                 <p class="help"> If you understand the risks, please write <code class="is-unselectable">i know what i am doing</code> in the box above.</p>
             </div>
             <div class="control">
-                <button class="button is-danger">Submit</button>
+                <button class="button is-danger">
+                    <span>Submit</span>
+                    <span class="icon">
+                        <i class="fas fa-upload"></i>
+                    </span>
+                </button>
             </div>
         </form>
     </div>
 
+    <div class="box">
+        <h1 class="is-size-3"> Purge all votes </h1>
+        <p>
+            This control allows you to drop all votes in the database. This is useful for clearing out votes after a new dump import. Note this this too can cause damage.
+        </p>
+
+        <br/>
+
+        <form action="{{url_for('actions.purge_votes')}}" method="POST">
+            <div class="field">
+                <label class="label">Verification</label>
+                <div class="control">
+                    <input
+                        class="input"
+                        type="text"
+                        placeholder="i know what i am doing"
+                        name="verification"
+                        autocomplete="off"
+                        autocorrect="off"
+                        spellcheck="false"
+                        required>
+                </div>
+                <p class="help"> If you understand the risks, please write <code class="is-unselectable">i know what i am doing</code> in the box above.</p>
+            </div>
+            <div class="control">
+                <button class="button is-danger">
+                    <span>Purge</span>
+                    <span class="icon">
+                        <i class="fas fa-trash"></i>
+                    </span>
+                </button>
+            </div>
+        </form>
+    </div>
     <div class="box">
         <h1 class="is-size-3"> Download backing SQLite database</h1>
         <p>

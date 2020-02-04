@@ -52,7 +52,7 @@ def logout():
     except TokenExpiredError as e:
         print('token expired, ignoring')
     del google_bp.token  # Delete OAuth token from storage
-    return redirect(url_for('index'))
+    return redirect(url_for('auth.index'))
 
 def login_required(view):
     """View decorator that redirects anonymous users to the login page."""
