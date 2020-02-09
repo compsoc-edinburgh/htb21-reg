@@ -11,7 +11,57 @@ bp = Blueprint('dashboard', __name__, url_prefix='/dashboard')
 @login_required
 def index():
     #return 'hello, ' + session['email']
-    return render_template('dashboard/index.html', session=session)
+    metrics = {'applicants': {}, 'votes': {}}
+    conn = get_db()
+    c = conn.cursor()
+
+    # get the applicant metrics
+    c.execute('SELECT COUNT(id) FROM Applicants')
+    metrics['applicants']['all'] = c.fetchone()[0]
+    c.execute('SELECT COUNT(id) FROM Applicants WHERE verified=1')
+    metrics['applicants']['verified'] = c.fetchone()[0]
+    c.execute('SELECT COUNT(id) FROM Applicants WHERE completed=1')
+    metrics['applicants']['completed'] = c.fetchone()[0]
+
+    # get vote metrics
+    c.execute('SELECT COUNT(id) FROM Votes')
+    metrics['votes']['all'] = c.fetchone()[0]
+    c.execute('SELECT COUNT(id) FROM Votes WHERE rating=1')
+    metrics['votes']['1'] = c.fetchone()[0]
+    c.execute('SELECT COUNT(id) FROM Votes WHERE rating=2')
+    metrics['votes']['2'] = c.fetchone()[0]
+    c.execute('SELECT COUNT(id) FROM Votes WHERE rating=3')
+    metrics['votes']['3'] = c.fetchone()[0]
+    c.execute('SELECT COUNT(id) FROM Votes WHERE rating=4')
+    metrics['votes']['4'] = c.fetchone()[0]
+    c.execute('SELECT COUNT(id) FROM Votes WHERE rating=5')
+    metrics['votes']['5'] = c.fetchone()[0]
+    c.execute('SELECT DISTINCT author, author_email FROM Votes')
+    author_names = c.fetchall()
+    authors = []
+    if author_names is None:
+        author_names = []
+    for author in author_names:
+        c.execute(
+            'SELECT COUNT(id), AVG(rating) FROM Votes WHERE author_email=?',
+            (author['author_email'],)
+        )
+        row = c.fetchone()
+        authors.append({
+            'name': author['author'],
+            'email': author['author_email'],
+            'count': row[0],
+            'average': '{:.2}'.format(row[1])
+        })
+
+    authors.sort(key=lambda a: a['count'])
+    metrics['votes']['authors'] = authors
+
+    return render_template(
+        'dashboard/index.html',
+        session=session,
+        metrics=metrics
+    )
 
 @bp.route('/admin')
 @login_required
@@ -241,8 +291,11 @@ def get_next_applicant():
     
     return redirect(url_for('dashboard.applicant', mongo_id=targets[0]['mongo_id']) + '?flow=1')
 
+@bp.route('/export')
+def export_csv():
+    return render_template('dashboard/export.html', session=session)
+
 @bp.after_request
 def no_cache(response):
-    print('setting resp')
     response.headers['Cache-Control'] = 'no-store'
     return response

@@ -2,7 +2,44 @@
 
 {% block dashboard_content %}
 
-<p> todo: metrics </p>
+<div class="container">
+    <h1 class="title">Export controls</h1>
+    <h2 class="subtitle">Gets the data off this application.</h2>
+
+    <div class="box">
+        <h1 class="is-size-3"> Download CSV</h1>
+        <p>
+            This control exposes a download of the applicants database, converted to a spreadsheet. Doing this exposes personal information, so do so with caution.
+        </p>
+
+        <br/>
+
+        <a class="button is-warning" href="{{url_for('actions.download_csv')}}" download>
+            <span>Download</span>
+            <span class="icon">
+                <i class="fas fa-download"></i>
+            </span>
+        </a>
+
+    </div>
+    <div class="box">
+        <h1 class="is-size-3"> Download backing SQLite database</h1>
+        <p>
+            This control exposes a download of the entire SQLite database. Doing this exposes personal information, so do so with caution.
+        </p>
+
+        <br/>
+
+        <a class="button is-warning" href="{{url_for('actions.download_db')}}">
+            <span>Download</span>
+            <span class="icon">
+                <i class="fas fa-download"></i>
+            </span>
+        </a>
+
+    </div>
+
+</div>
 
 {% endblock %}
 

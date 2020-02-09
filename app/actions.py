@@ -2,9 +2,8 @@ from flask import Blueprint, flash, request, redirect, url_for, send_file, curre
 
 from .auth import login_required
 from .common import flasher
-from .data import get_applicants_from_csv, insert_applicant
+from .data import get_applicants_from_csv, insert_applicant, create_csv
 from .db import get_db
-
 bp = Blueprint('actions', __name__, url_prefix='/action')
 
 
@@ -55,6 +54,10 @@ def download_db():
 @bp.route('/vote/submit', methods=['POST'])
 @login_required
 def submit_vote():
+    if not 'rating' in request.form:
+        flasher('Please select a rating!', color='danger')
+        return redirect(url_for('dashboard.applicant', mongo_id=request.form['mongo_id']) + '?flow=1')
+
 
     flow_voting = request.args.get('flow') is not None
 
@@ -95,7 +98,10 @@ def submit_vote():
     else:
         return redirect(url_for('dashboard.applicant', mongo_id=request.form['mongo_id']))
 
-@bp.route('/export')
+@bp.route('/download_csv/export.csv')
 @login_required
-def export_csv():
-    return 'foo'
+def download_csv():
+    conn = get_db()
+    csv_str = create_csv(conn)
+    return csv_str
+    
