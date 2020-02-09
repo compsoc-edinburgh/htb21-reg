@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, render_template, Blueprint, session
+from flask import Flask, redirect, url_for, render_template, Blueprint, session, current_app
 from flask_dance.contrib.google import make_google_blueprint, google
 from oauthlib.oauth2.rfc6749.errors import TokenExpiredError
 import functools

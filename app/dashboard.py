@@ -105,18 +105,11 @@ def applicant(mongo_id):
     c.execute('SELECT author, author_email, rating FROM Votes WHERE app_id=?', (row['mongo_id'],))
     votes = c.fetchall()
 
-    votes += [
-            {'rating': 5, 'author_email': 'user1@long.domain.com', 'author': 'John Doe' },
-            {'rating': 4, 'author_email': 'user2@long.domain.com', 'author': 'John Doe' },
-            {'rating': 4, 'author_email': 'longlonglonglonglong@long.domain.com', 'author': 'John Doe' },
-            {'rating': 3, 'author_email': 'user4@long.domain.com', 'author': 'John Doe' },
-            {'rating': 2, 'author_email': 'user5@long.domain.com', 'author': 'John Doe' },
-            {'rating': 3, 'author_email': 'user6@long.domain.com', 'author': 'John Doe' },
-            {'rating': 1, 'author_email': 'user7@long.domain.com', 'author': 'John Doe' }
-    ]
-
-    voteaverage = functools.reduce( lambda a,v: a + v['rating'], votes, 0 ) / len(votes)
-    voteaverage = '{:.3}'.format(voteaverage)
+    if len(votes) != 0:
+        voteaverage = functools.reduce( lambda a,v: a + v['rating'], votes, 0 ) / len(votes)
+        voteaverage = '{:.3}'.format(voteaverage)
+    else:
+        voteaverage = '?'
 
     c.execute('''
         SELECT COUNT(a.id) FROM Applicants a
@@ -151,6 +144,7 @@ def applicant(mongo_id):
     )
 
 @bp.route('/rate_queue')
+@login_required
 def rate_queue():
     conn = get_db()
 
@@ -196,3 +190,59 @@ def rate_queue():
         targets=targets,
         done=done
     )
+
+@bp.route('/rate_next')
+@login_required
+def get_next_applicant():
+    # next applicant algorithm:
+    # find the next applicant that you haven't yet voted on, and has the least amount of votes
+    
+    conn = get_db()
+    c = conn.cursor()
+
+    c = conn.cursor()
+    c.execute('''
+        SELECT mongo_id, email
+        FROM
+            Applicants
+        WHERE
+            completed=1
+        ORDER BY email ASC
+    ''')
+    rows = c.fetchall()
+
+    targets = []
+    for row in rows:
+        c.execute('''
+            SELECT COUNT(app_id)
+            FROM Votes
+            WHERE
+                app_id=? AND author_email=?
+        ''', (row['mongo_id'], session['email']))
+        if c.fetchone()[0] != 0:
+            # we've already voted
+            continue
+
+        # figure out how many votes are here
+        c.execute('''
+            SELECT
+                COUNT(app_id)
+            FROM Votes WHERE
+                app_id=?
+        ''', (row['mongo_id'],))
+        count = c.fetchone()[0]
+        targets.append({
+            'mongo_id': row['mongo_id'],
+            'count': count
+        })
+
+    targets.sort(key=lambda k: k['count'])
+
+    
+    return redirect(url_for('dashboard.applicant', mongo_id=targets[0]['mongo_id']) + '?flow=1')
+
+@bp.after_request
+def no_cache(response):
+    print('setting resp')
+    response.headers['Cache-Control'] = 'no-store'
+    return response

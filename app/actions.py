@@ -56,6 +56,8 @@ def download_db():
 @login_required
 def submit_vote():
 
+    flow_voting = request.args.get('flow') is not None
+
     print('voting: {} {} -> {} {}'.format(session['name'], session['email'], request.form['mongo_id'], request.form['rating']))
 
     # find previous vote if it exists
@@ -74,7 +76,8 @@ def submit_vote():
             INSERT INTO Votes (rating, author, author_email, app_id) VALUES (?, ?, ?, ?)''',
             (request.form['rating'], session['name'], session['email'], request.form['mongo_id'])
         )
-        flasher('Vote recorded successfully!', color='success')
+        if not flow_voting:
+            flasher('Vote recorded successfully!', color='success')
     else:
         print('previous vote exists')
         c.execute('''
@@ -87,4 +90,12 @@ def submit_vote():
     conn.commit()
 
 
-    return redirect(url_for('dashboard.applicant', mongo_id=request.form['mongo_id']))
+    if flow_voting:
+        return redirect(url_for('dashboard.get_next_applicant'))
+    else:
+        return redirect(url_for('dashboard.applicant', mongo_id=request.form['mongo_id']))
+
+@bp.route('/export')
+@login_required
+def export_csv():
+    return 'foo'
