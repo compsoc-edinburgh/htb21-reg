@@ -1,0 +1,84 @@
+{% extends "dashboard/base.html" %}
+
+{% macro make_applicant(row) %}
+<tr>
+        <td>{{ row['name'] }}</td>
+        <td>{{ row['email'] }}</td>
+        <td>
+            <a href="{{url_for('dashboard.applicant', mongo_id=row['mongo_id'])}}?flow=1">
+                vote
+            </a>
+        </td>
+</tr>
+{% endmacro %}
+
+{% block dashboard_content %}
+
+<div class="container">
+    <div class="flex-row is-space-between">
+        <h1 class="is-size-1">Rate queue</h1>
+        <a href="#" class="button is-medium is-primary">
+            <span>
+                Start Voting
+            </span>
+            <span class="icon">
+                <i class="fas fa-chevron-right"></i>
+            </span>
+        </a>
+    </div>
+    <h2 class="subtitle">Your personal voting queue.</h2>
+    
+
+    <div class="columns">
+        <div class="column">
+            <h1 class="title">{{ targets|length }} Remaining</h1>
+            <table class="table is-fullwidth is-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Vote</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in targets %}
+                        {{ make_applicant(app) }}
+                    {% else %}
+                        <tr>
+                            <td colspan=2>
+                                <i>None remaining. Good job!</i>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="column">
+            <h1 class="title">{{ done|length }} Votes</h1>
+            <table class="table is-fullwidth is-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Vote</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in done %}
+                        {{ make_applicant(app) }}
+                    {% else %}
+                        <tr>
+                            <td colspan=2>
+                                <i>No votes yet.</i>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+</div>
+
+{% endblock %}
+

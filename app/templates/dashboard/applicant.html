@@ -49,7 +49,23 @@
 
 {% block dashboard_content %}
 
+{% if flow %}
+<div class="flow_header has-background-light">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-two-thirds">
+                <h1 class="subtitle">Flow voting: <strong>{{ flow_votes_total - flow_votes_completed }}</strong> remaining (<strong>{{flow_votes_percentage}}% done</strong>).</h1>
+            </div>
+            <div class="column">
+                <progress value="{{ flow_votes_completed }}" max="{{ flow_votes_total }}" class="progress is-link flow-header__progress"></progress>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 <div class="container">
+
     <div class="applicant__rating_row">
     {% if applicant['completed'] %}
     <h1 class="is-size-1">{{ applicant['name'] }}</h1>
@@ -124,7 +140,11 @@
     
 
     <div class="applicant__bottompin has-background-light">
-        <form class="applicant__rating_row" id="rating" method="POST" action="{{ url_for('actions.submit_vote') }}">
+        <form
+            class="applicant__rating_row"
+            id="rating"
+            {% if flow %}action="{{ url_for('actions.submit_vote') }}?flow=1"{% else %}action="{{ url_for('actions.submit_vote') }}"{% endif %}
+            method="POST">
                 <div class="field has-addons">
                     {{ make_ratebtn(1) }}
                     {{ make_ratebtn(2) }}
@@ -193,6 +213,24 @@
     {% if previousVote %}
     document.querySelector(`[name="rating"][value="{{ previousVote.value }}"`).checked = true
     {% endif %}
+</script>
+
+<script type="text/javascript">
+document.body.addEventListener('keyup', e => {
+    if (e.keyCode === 49) {
+        document.querySelector('[data-rating-val="1"]').click()
+    } else if (e.keyCode === 50) {
+        document.querySelector('[data-rating-val="2"]').click()
+    } else if (e.keyCode === 51) {
+        document.querySelector('[data-rating-val="3"]').click()
+    } else if (e.keyCode === 52) {
+        document.querySelector('[data-rating-val="4"]').click()
+    } else if (e.keyCode === 53) {
+        document.querySelector('[data-rating-val="5"]').click()
+    } else if (e.keyCode === 13) {
+        document.querySelector('button[type="submit"]').click()
+    }
+})
 </script>
 
 {% endblock %}

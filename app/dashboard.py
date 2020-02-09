@@ -104,7 +104,6 @@ def applicant(mongo_id):
 
     c.execute('SELECT author, author_email, rating FROM Votes WHERE app_id=?', (row['mongo_id'],))
     votes = c.fetchall()
-    print(votes)
 
     votes += [
             {'rating': 5, 'author_email': 'user1@long.domain.com', 'author': 'John Doe' },
@@ -119,6 +118,22 @@ def applicant(mongo_id):
     voteaverage = functools.reduce( lambda a,v: a + v['rating'], votes, 0 ) / len(votes)
     voteaverage = '{:.3}'.format(voteaverage)
 
+    c.execute('''
+        SELECT COUNT(a.id) FROM Applicants a
+        INNER JOIN Votes v ON a.mongo_id = v.app_id
+        WHERE
+            v.author_email = ? AND a.completed=1
+    ''', (session['email'],))
+    flow_votes_completed = c.fetchone()[0]
+    c.execute('''
+        SELECT COUNT(a.id) FROM Applicants a
+        WHERE
+            a.completed=1
+    ''')
+    flow_votes_total = c.fetchone()[0]
+    
+    flow_votes_percentage = '{:.2}'.format(100 * (flow_votes_completed/flow_votes_total))
+    
     return render_template(
         'dashboard/applicant.html',
         session=session,
@@ -128,5 +143,56 @@ def applicant(mongo_id):
         description=description,
         previousVote=previousVote,
         votes=votes,
-        voteaverage=voteaverage
+        voteaverage=voteaverage,
+        flow=request.args.get('flow'),
+        flow_votes_completed=flow_votes_completed,
+        flow_votes_total=flow_votes_total,
+        flow_votes_percentage=flow_votes_percentage
+    )
+
+@bp.route('/rate_queue')
+def rate_queue():
+    conn = get_db()
+
+    # this should be cleaner but won't be
+    c = conn.cursor()
+    c.execute('''
+        SELECT name, email, mongo_id
+        FROM
+            Applicants
+        WHERE
+            completed=1
+        ORDER BY email ASC
+    ''')
+
+    
+    rows = c.fetchall()
+    targets = []
+    done    = []
+    for row in rows:
+        c.execute('''
+            SELECT COUNT(app_id) FROM Votes
+            WHERE
+                app_id=? AND author_email=?
+        ''', (row['mongo_id'],session['email']))
+        vcount = c.fetchone()
+
+        if vcount[0] == 0:
+            targets.append({
+                'name': row['name'],
+                'email': row['email'],
+                'mongo_id': row['mongo_id']
+            })
+        else:
+            done.append({
+                'name': row['name'],
+                'email': row['email'],
+                'mongo_id': row['mongo_id']
+            })
+
+    return render_template(
+        'dashboard/rate_queue.html',
+        session=session,
+        targets=targets,
+        done=done
     )

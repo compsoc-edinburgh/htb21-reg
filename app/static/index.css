@@ -76,6 +76,9 @@ nav + .notification {
     flex-direction: row;
     align-items: center;
 }
+.flex-row.is-space-between {
+    justify-content: space-between;
+}
 
 .applicant__votename {
     font-size: 0.8rem;
@@ -89,3 +92,14 @@ nav + .notification {
 #rating > *:first-child {
     margin-bottom: 0!important;
 }
+
+.flow_header {
+    margin-top: -1rem;
+
+    padding: 10px 0 10px 0;
+}
+
+.flow-header__progress {
+    margin-top: 5px;
+}
+
