@@ -1,11 +1,13 @@
 from flask import Flask
 import os
 import json
+from werkzeug.contrib.fixers import ProxyFix
 
 def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
 
     app = Flask(__name__, instance_relative_config=True)
+    app.wsgi_app = ProxyFix(app.wsgi_app)
     app.config.from_mapping(
         # a default secret that should be overridden by instance config
         SECRET_KEY='dev',
