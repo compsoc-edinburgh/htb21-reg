@@ -3,3 +3,5 @@ instance/secret.json
 env_*
 *.pyc
 .DS_Store
+*.tar.gz
+staging/

@@ -1,0 +1,11 @@
+version: '3'
+services:
+    htb20-voter:
+        image: htb20-voter
+        environment:
+        - "FLASK_PREFERRED_URL_SCHEME=https"
+        - "OAUTHLIB_RELAX_TOKEN_SCOPE=1"
+        ports:
+        - "8099:5000"
+        volumes:
+        - "./instance/:/app/instance/"
