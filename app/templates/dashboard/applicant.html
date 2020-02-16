@@ -68,7 +68,11 @@
 
     <div class="applicant__rating_row">
     {% if applicant['completed'] %}
-    <h1 class="is-size-1">{{ applicant['name'] }}</h1>
+    {% if session.redacted %}
+        <h1 class="is-size-1 is-blurred">{{ applicant['name'] }}</h1>
+    {% else %}
+        <h1 class="is-size-1">{{ applicant['name'] }}</h1>
+    {% endif %}
     {% else %}
     <h1 class="is-blurred is-size-1">No Name Provided</h1>
     {% endif %}
@@ -80,7 +84,7 @@
 
     </div>
     <h2 class="subtitle">
-        {{ applicant['email'] }}{% if applicant.completed %} &bull; {{ applicant.school }}{% endif %}
+        <span class="{% if session.redacted %}is-blurred{% endif %}">{{ applicant['email'] }}</span>{% if applicant.completed %} &bull; {{ applicant.school }}{% endif %}
     </h2>
 
     <div class="tags are-medium">
@@ -105,7 +109,7 @@
             <p>
                 <strong>University: </strong> {{ applicant.school }} <br/>
                 <strong>Grad Year: </strong> {{ applicant.gradYear }} <br/>
-                <strong>Gender: </strong> {{ applicant.gender }} <br/>
+                <strong>Gender: </strong> <span class="{% if session.redacted %}is-blurred{% endif %}">{{ applicant.gender }}</span> <br/>
                 <strong>Submitted: </strong> {{ timestamp }}
             </p>
             <h4 class="title is-4 has-margin-top--1em">Short Answers</h4>
@@ -145,24 +149,26 @@
             id="rating"
             {% if flow %}action="{{ url_for('actions.submit_vote') }}?flow=1"{% else %}action="{{ url_for('actions.submit_vote') }}"{% endif %}
             method="POST">
-                <div class="field has-addons">
-                    {{ make_ratebtn(1) }}
-                    {{ make_ratebtn(2) }}
-                    {{ make_ratebtn(3) }}
-                    {{ make_ratebtn(4) }}
-                    {{ make_ratebtn(5) }}
+                <div class="flex-row">
+                
+                    <div class="field has-addons">
+                        {{ make_ratebtn(1) }}
+                        {{ make_ratebtn(2) }}
+                        {{ make_ratebtn(3) }}
+                        {{ make_ratebtn(4) }}
+                        {{ make_ratebtn(5) }}
 
-                    <div class="is-hidden">
-                        {{ make_rateinput(1) }}
-                        {{ make_rateinput(2) }}
-                        {{ make_rateinput(3) }}
-                        {{ make_rateinput(4) }}
-                        {{ make_rateinput(5) }}
+                        <div class="is-hidden">
+                            {{ make_rateinput(1) }}
+                            {{ make_rateinput(2) }}
+                            {{ make_rateinput(3) }}
+                            {{ make_rateinput(4) }}
+                            {{ make_rateinput(5) }}
 
-                        <input name="mongo_id" type="text" value="{{ applicant.mongo_id }}"/>
-                        <input name="id" type="text" value="{{ applicant.id }}"/>
+                            <input name="mongo_id" type="text" value="{{ applicant.mongo_id }}"/>
+                            <input name="id" type="text" value="{{ applicant.id }}"/>
+                        </div>
                     </div>
-
                 </div>
                 <div class="flex-row applicant__votebtnrow">
                     <span class="applicant__votename"> Voting as <strong>{{ session['name'] }}</strong></span>

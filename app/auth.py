@@ -90,5 +90,5 @@ def profile():
     session['image'] = profile['image']
 
     
-    return redirect(url_for('dashboard.index'))
+    return redirect(url_for('dashboard.rate_queue'))
 

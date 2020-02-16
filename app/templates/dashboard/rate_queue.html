@@ -28,8 +28,11 @@
     </div>
     <h2 class="subtitle">Your personal voting queue.</h2>
     
+    <p>
+        <i>Remember, you can use your keyboard to vote! Number keys selects a value, and Enter submits.</i><br/>
+        <a href="{{url_for('actions.toggle_hiding')}}">Click to toggle hiding names (currently {% if session['redacted'] %}enabled{% else %}disabled{% endif %}).</a></p>
 
-    <div class="columns">
+    <div class="columns has-margin-top--1em">
         <div class="column">
             <h1 class="title">{{ targets|length }} Remaining</h1>
             <table class="table is-fullwidth is-striped">

@@ -104,4 +104,14 @@ def download_csv():
     conn = get_db()
     csv_str = create_csv(conn)
     return csv_str
-    
+
+@bp.route('/toggle_hiding')
+@login_required
+def toggle_hiding():
+    if not 'redacted' in session:
+        session['redacted'] = True
+    else:
+        session['redacted'] = not session['redacted']
+
+    return redirect(url_for('dashboard.rate_queue'))
+

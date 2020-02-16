@@ -55,6 +55,8 @@ def index():
         })
 
     authors.sort(key=lambda a: a['count'])
+    if authors is not None:
+        authors.reverse()
     metrics['votes']['authors'] = authors
 
     return render_template(
@@ -98,7 +100,7 @@ def table():
             WHERE
                 app_id=?
         ''', (applicant['mongo_id'],))
-        
+
         row = c.fetchone()
         applicant['ratings'] = row[0]
         if row[1] is not None:
@@ -126,7 +128,7 @@ def table():
 @login_required
 def applicant(mongo_id):
     c = get_db().cursor()
-    
+
     c.execute('SELECT * FROM Applicants WHERE mongo_id = ?', (mongo_id,))
 
     row = c.fetchone()
@@ -174,9 +176,9 @@ def applicant(mongo_id):
             a.completed=1
     ''')
     flow_votes_total = c.fetchone()[0]
-    
-    flow_votes_percentage = '{:.2}'.format(100 * (flow_votes_completed/flow_votes_total))
-    
+
+    flow_votes_percentage = '{:0.2f}'.format(100 * (flow_votes_completed/flow_votes_total))
+
     return render_template(
         'dashboard/applicant.html',
         session=session,
@@ -209,7 +211,7 @@ def rate_queue():
         ORDER BY email ASC
     ''')
 
-    
+
     rows = c.fetchall()
     targets = []
     done    = []
@@ -246,7 +248,7 @@ def rate_queue():
 def get_next_applicant():
     # next applicant algorithm:
     # find the next applicant that you haven't yet voted on, and has the least amount of votes
-    
+
     conn = get_db()
     c = conn.cursor()
 
@@ -286,10 +288,13 @@ def get_next_applicant():
             'count': count
         })
 
-    targets.sort(key=lambda k: k['count'])
+    if len(targets) != 0:
+        targets.sort(key=lambda k: k['count'])
+        return redirect(url_for('dashboard.applicant', mongo_id=targets[0]['mongo_id']) + '?flow=1')
+    else:
+        flasher('Congrats! You\'ve finished!', color='success')
+        return redirect(url_for('dashboard.rate_queue'))
 
-    
-    return redirect(url_for('dashboard.applicant', mongo_id=targets[0]['mongo_id']) + '?flow=1')
 
 @bp.route('/export')
 def export_csv():

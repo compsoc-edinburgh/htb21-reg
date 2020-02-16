@@ -1,7 +1,7 @@
 from flask import Flask
 import os
 import json
-from werkzeug.contrib.fixers import ProxyFix
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
