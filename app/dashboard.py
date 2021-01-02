@@ -1,14 +1,14 @@
 from flask import Blueprint, session, render_template, request, flash, redirect, url_for, escape
 import functools
 import arrow
-from .auth import login_required
+from .auth import admin_login_required
 from .db import get_db
 from .common import flasher
 
 bp = Blueprint('dashboard', __name__, url_prefix='/dashboard')
 
 @bp.route('/')
-@login_required
+@admin_login_required
 def index():
     #return 'hello, ' + session['email']
     metrics = {'applicants': {}, 'votes': {}}
@@ -66,12 +66,12 @@ def index():
     )
 
 @bp.route('/admin')
-@login_required
+@admin_login_required
 def admin():
     return render_template('dashboard/admin.html', session=session)
 
 @bp.route('/table')
-@login_required
+@admin_login_required
 def table():
     # parse query params
     sort = request.args.get('sort')
@@ -125,7 +125,7 @@ def table():
     )
 
 @bp.route('/applicant/<mongo_id>')
-@login_required
+@admin_login_required
 def applicant(mongo_id):
     c = get_db().cursor()
 
@@ -196,7 +196,7 @@ def applicant(mongo_id):
     )
 
 @bp.route('/rate_queue')
-@login_required
+@admin_login_required
 def rate_queue():
     conn = get_db()
 
@@ -244,7 +244,7 @@ def rate_queue():
     )
 
 @bp.route('/rate_next')
-@login_required
+@admin_login_required
 def get_next_applicant():
     # next applicant algorithm:
     # find the next applicant that you haven't yet voted on, and has the least amount of votes

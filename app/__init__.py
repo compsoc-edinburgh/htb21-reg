@@ -1,7 +1,12 @@
+from dotenv import load_dotenv
+load_dotenv(verbose=True)
+
 from flask import Flask
 import os
 import json
 from werkzeug.middleware.proxy_fix import ProxyFix
+
+
 
 def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
@@ -10,7 +15,7 @@ def create_app(test_config=None):
     app.wsgi_app = ProxyFix(app.wsgi_app)
     app.config.from_mapping(
         # a default secret that should be overridden by instance config
-        SECRET_KEY='dev',
+        SECRET_KEY=os.environ['APP_SECRET_KEY'],
         # store the database in the instance folder
         DATABASE=os.path.join(app.instance_path, 'votes.sqlite'),
     )
@@ -38,8 +43,10 @@ def create_app(test_config=None):
 
     # apply the blueprints to the app
     from . import auth, dashboard, actions
-    app.register_blueprint(auth.bp)
+    app.register_blueprint(auth.bp, url_prefix='/auth')
     auth.register_google_bp(app) # hax
+    auth.register_mlh_bp(app) # double hax
+
     app.register_blueprint(dashboard.bp)
     app.register_blueprint(actions.bp)
 

@@ -1,6 +1,6 @@
 from flask import Blueprint, flash, request, redirect, url_for, send_file, current_app, session
 
-from .auth import login_required
+from .auth import admin_login_required
 from .common import flasher
 from .data import get_applicants_from_csv, insert_applicant, create_csv
 from .db import get_db
@@ -8,7 +8,7 @@ bp = Blueprint('actions', __name__, url_prefix='/action')
 
 
 @bp.route('/submit_dump', methods=['POST'])
-@login_required
+@admin_login_required
 def submit_dump():
 
     # check for verification string
@@ -29,7 +29,7 @@ def submit_dump():
     return redirect(url_for('dashboard.admin'))
 
 @bp.route('/votes/purge', methods=['POST'])
-@login_required
+@admin_login_required
 def purge_votes():
     # check for verification string
     if request.form['verification'] != 'i know what i am doing':
@@ -47,12 +47,12 @@ def purge_votes():
     
 
 @bp.route('/download_db/votes.sqlite')
-@login_required
+@admin_login_required
 def download_db():
     return send_file(current_app.config['DATABASE'])
 
 @bp.route('/vote/submit', methods=['POST'])
-@login_required
+@admin_login_required
 def submit_vote():
     if not 'rating' in request.form:
         flasher('Please select a rating!', color='danger')
@@ -99,14 +99,14 @@ def submit_vote():
         return redirect(url_for('dashboard.applicant', mongo_id=request.form['mongo_id']))
 
 @bp.route('/download_csv/export.csv')
-@login_required
+@admin_login_required
 def download_csv():
     conn = get_db()
     csv_str = create_csv(conn)
     return csv_str
 
 @bp.route('/toggle_hiding')
-@login_required
+@admin_login_required
 def toggle_hiding():
     if not 'redacted' in session:
         session['redacted'] = True

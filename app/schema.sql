@@ -6,8 +6,7 @@ DROP TABLE IF EXISTS Votes;
 CREATE TABLE Applicants (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     mongo_id    TEXT NOT NULL,
-
-    -- fields here are from the CSV dump
+    mlh_id      TEXT NOT NULL,
 
     -- meta
     admin       INTEGER,
@@ -25,6 +24,13 @@ CREATE TABLE Applicants (
     gender      TEXT,
     description TEXT,
     essay       TEXT,
+
+    -- authorizations
+    gdpr            INTEGER,
+    mlh_coc         INTEGER,
+    hackuk_admin    INTEGER,
+    hackuk_mail     INTEGER,
+
 
     UNIQUE (mongo_id)
 );

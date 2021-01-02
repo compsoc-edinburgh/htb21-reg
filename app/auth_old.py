@@ -1,60 +1,25 @@
 from flask import Flask, redirect, url_for, render_template, Blueprint, session, current_app
 from flask_dance.contrib.google import make_google_blueprint, google
-from flask_dance.consumer import OAuth2ConsumerBlueprint
 from oauthlib.oauth2.rfc6749.errors import TokenExpiredError
 import functools
 import requests
 import json
 import os
-from flask.globals import LocalProxy, _lookup_app_object
-from pprint import pprint
-try:
-    from flask import _app_ctx_stack as stack
-except ImportError:
-    from flask import _request_ctx_stack as stack
 
 secrets = json.load(open('instance/secret.json', 'r'))
 
 bp = Blueprint('auth', __name__)
 
 google_bp = None
-mlh_bp = None
-mymlh = None
 
 def register_google_bp(app):
     global google_bp # NOT GOOD
     google_bp = make_google_blueprint(
-        client_id=os.environ['GOOGLE_CLIENT_ID'],
-        client_secret=os.environ['GOOGLE_CLIENT_SECRET'],
-        scope=['profile', 'email'],
-        redirect_to='auth.profile'
+        client_id=secrets['client_id'],
+        client_secret=secrets['client_secret'],
+        scope=['profile', 'email']
     )
     app.register_blueprint(google_bp, url_prefix='/oauth/admin')
-
-
-def register_mlh_bp(app):
-    global mlh_bp
-    global mymlh
-
-    mlh_bp = OAuth2ConsumerBlueprint(
-        'mymlh', __name__,
-        client_id=os.environ['MLH_CLIENT_ID'],
-        client_secret=os.environ['MLH_CLIENT_SECRET'],
-        base_url='https://my.mlh.io',
-        token_url='https://my.mlh.io/oauth/token',
-        scope=['email','education'],
-        authorization_url='https://my.mlh.io/oauth/authorize',
-        redirect_to='auth.hacker_profile'
-    )
-
-    
-    @mlh_bp.before_app_request
-    def set_applocal_session():
-        ctx = stack.top
-        ctx.mymlh_oauth = mlh_bp.session
-
-    mymlh = LocalProxy(functools.partial(_lookup_app_object, "mymlh_oauth"))
-    app.register_blueprint(mlh_bp, url_prefix='/oauth/hacker')
 
 
 # magic happens here
@@ -63,13 +28,11 @@ def email_valid(email):
         return True
     return False
 
-
 @bp.route('/')
 def index():
     if google.authorized:
         return redirect(url_for('auth.profile'))
     return render_template('auth/login.html')
-
 
 @bp.route('/logout')
 def logout():
@@ -89,8 +52,7 @@ def logout():
     del google_bp.token  # Delete OAuth token from storage
     return redirect(url_for('auth.index'))
 
-
-def admin_login_required(view):
+def login_required(view):
     """View decorator that redirects anonymous users to the login page."""
     @functools.wraps(view)
     def wrapped_view(**kwargs):
@@ -100,19 +62,8 @@ def admin_login_required(view):
 
     return wrapped_view
 
-def hacker_login_required(view):
-    """View decorator that redirects anonymous users to the login page."""
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if not mymlh.authorized:
-            return redirect(url_for('mymlh.login'))
-        return view(**kwargs)
-
-    return wrapped_view
-
-
 @bp.route('/profile')
-@admin_login_required
+@login_required
 def profile():
     # hacky, but this pins the google profile information to the session
     resp = requests.get(
@@ -125,7 +76,6 @@ def profile():
             })
 
     person_info = resp.json()
-    pprint(person_info)
 
     profile = {
         'email': person_info[u'emailAddresses'][0][u'value'],
@@ -140,20 +90,3 @@ def profile():
     
     return redirect(url_for('dashboard.rate_queue'))
 
-# -- MLH profile info --
-
-@bp.route('/mlh')
-@hacker_login_required
-def hacker_profile():
-    get_hacker_profile()
-    return render_template('hacker/base.html')
-
-@bp.route('/mlh/logout')
-@hacker_login_required
-def hacker_logout():
-    del mlh_bp.token
-    return redirect(url_for('auth.index'))
-
-def get_hacker_profile():
-    resp = mlh_bp.session.get('/api/v3/user.json')
-    print(resp.json())

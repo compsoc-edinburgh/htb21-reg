@@ -4,7 +4,11 @@
 
 <main class="login__bg">
     <a href="{{ url_for('auth.profile') }}" class="login row">
-        <span>login </span>
+        <span>login with admin</span>
+        <i class="fas fa-arrow-right"></i>
+    </a>
+    <a href="{{ url_for('auth.hacker_profile') }}" class="login row">
+        <span>login with MyMLH</span>
         <i class="fas fa-arrow-right"></i>
     </a>
 </main>
