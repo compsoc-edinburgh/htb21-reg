@@ -5,7 +5,7 @@
         <td>{{ row['name'] }}</td>
         <td>{{ row['email'] }}</td>
         <td>
-            <a href="{{url_for('dashboard.applicant', mongo_id=row['mongo_id'])}}?flow=1">
+            <a href="{{url_for('dashboard.applicant', user_id=row['user_id'])}}?flow=1">
                 vote
             </a>
         </td>

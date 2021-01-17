@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block bulma_css %}
+<link href="{{ url_for('static', filename='bulma_cyborg.css') }}" rel="stylesheet" type="text/css"/>
+{% endblock %}
+
+{% block content %}
+
+<div class="fullpage">
+            <div class="fullpage__centered">
+                <article>
+                    <div class="image is-32x32" style="margin-bottom: 1rem;">
+                        <img src="/static/favicon.svg" alt="htb7 logo">
+                    </div>
+                    <h1 class="title">Hack the Burgh 7 Registration</h1>
+                    <h2 class="subtitle">An internal CompSoc service.</h2>
+                    <p class="block">
+                        This service bridges our Sendy instance with an
+                        MJML-powered designer, and allows for creation of
+                        S3-backed image files with simple asset management.
+                        <a class="admin_login_button" href="{{ url_for('google.login') }}" class="button">Log in as admin</a>
+                    </p>
+
+                    <p class="block ">
+                        <div class="level">
+                            <div class="level-left"></div>
+                            <div class="level-right">
+                                <p class="has-text-right">
+                                    <a href="{{ url_for('github.login') }}">
+                                        <span>Log in with Github</span>
+                                        <span class="icon">
+                                            <i class="fas fa-arrow-right"></i>
+                                        </span>
+                                    </a><br/>
+                                    <a href="{{ url_for('mymlh.login') }}">
+                                        <span>Log in with MyMLH</span>
+                                        <span class="icon">
+                                            <i class="fas fa-arrow-right"></i>
+                                        </span>
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    </p>
+                </article>
+            </div>
+        </div>
+
+{% endblock %}

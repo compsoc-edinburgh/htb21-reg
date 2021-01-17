@@ -2,3 +2,5 @@ flask
 Flask-Dance
 requests
 arrow
+python-dotenv
+bcrypt

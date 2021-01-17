@@ -1,4 +1,4 @@
-# compsoc committee sso
+# HTB 7 Registration Portal
 
 ## what?
 
@@ -20,6 +20,14 @@ More verbosely:
 
 ![credentials](/docs/credentials.png?raw=true)
 ![routes](/docs/routes.png?raw=true)
+
+Routes for this application:
+
+```
+# Google
+http://localhost:5000/oauth/admin/google/authorized
+https://registration.2021.hacktheburgh.com/oauth/admin/google/authorized
+```
 
 3) You'll also need to enable access to the People API, which is used to retrieve a profile photo and other information. This can be done through the sidebar > APIs & Services > Library portal.
 

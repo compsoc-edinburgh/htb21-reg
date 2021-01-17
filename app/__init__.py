@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-load_dotenv(verbose=True)
+load_dotenv()
 
 from flask import Flask
 import os
@@ -17,7 +17,7 @@ def create_app(test_config=None):
         # a default secret that should be overridden by instance config
         SECRET_KEY=os.environ['APP_SECRET_KEY'],
         # store the database in the instance folder
-        DATABASE=os.path.join(app.instance_path, 'votes.sqlite'),
+        DATABASE=os.path.join(app.instance_path, 'registrations.sqlite'),
     )
 
     # ensure the instance folder exists
@@ -42,16 +42,17 @@ def create_app(test_config=None):
     db.init_app(app)
 
     # apply the blueprints to the app
-    from . import auth, dashboard, actions
+    from . import auth, dashboard, actions, landing, hacker
     app.register_blueprint(auth.bp, url_prefix='/auth')
     auth.register_google_bp(app) # hax
-    auth.register_mlh_bp(app) # double hax
+    auth.register_mlh_bp(app)    # double hax
+    auth.register_github_bp(app) # triple hax
 
     app.register_blueprint(dashboard.bp)
     app.register_blueprint(actions.bp)
+    app.register_blueprint(landing.bp)
+    app.register_blueprint(hacker.bp)
 
-    # initialize the google blueprint
-    
 
 
     # Apply CORS rules to the entire application

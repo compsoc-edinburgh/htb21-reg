@@ -1,0 +1,14 @@
+input[type="text"], input[type="email"] {
+    background-color: inherit;
+    color: white;
+}
+
+.input:-moz-placeholder, .input::placeholder, .select select:-moz-placeholder, .select select::placeholder, .textarea:-moz-placeholder, .textarea::placeholder {
+    color: #aaa;
+}
+
+.input, .select select, .textarea {
+    background-color: inherit;
+    color: white;
+}
+

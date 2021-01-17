@@ -1,6 +1,6 @@
 STAGING = staging
-VIRTUALENV = env_voter
-DOCKER_TAG_NAME = htb20-voter
+VIRTUALENV = env_h21reg
+DOCKER_TAG_NAME = htb21-reg
 REMOTE = compsoc-admin@bucket.comp-soc.com
 REMOTE_DESTINATION = ~/voter
 
@@ -11,7 +11,7 @@ run:
 		OAUTHLIB_INSECURE_TRANSPORT=1    \
 		OAUTHLIB_RELAX_TOKEN_SCOPE=1     \
 		FLASK_DEBUG=1	                 \
-		FLASK_ENVIRONMENT=development    \
+		FLASK_ENV=development    \
 		python -m flask run
 
 init-db:

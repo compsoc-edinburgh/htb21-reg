@@ -7,6 +7,7 @@ from .common import flasher
 
 bp = Blueprint('dashboard', __name__, url_prefix='/dashboard')
 
+
 @bp.route('/')
 @admin_login_required
 def index():
@@ -65,10 +66,12 @@ def index():
         metrics=metrics
     )
 
+
 @bp.route('/admin')
 @admin_login_required
 def admin():
     return render_template('dashboard/admin.html', session=session)
+
 
 @bp.route('/table')
 @admin_login_required
@@ -76,9 +79,9 @@ def table():
     # parse query params
     sort = request.args.get('sort')
     reverse = request.args.get('reverse') is not None
-    sorts_available=['mongo_id', 'verified', 'completed', 'name', 'email', 'school']
+    sorts_available=['user_id', 'verified', 'completed', 'name', 'email', 'school']
     if sort is None or (not sort in sorts_available):
-        sort = 'mongo_id'
+        sort = 'user_id'
 
     # retreive from db
     c = get_db().cursor()
@@ -99,7 +102,7 @@ def table():
             FROM Votes
             WHERE
                 app_id=?
-        ''', (applicant['mongo_id'],))
+        ''', (applicant['user_id'],))
 
         row = c.fetchone()
         applicant['ratings'] = row[0]
@@ -124,16 +127,17 @@ def table():
         sort_reverse=reverse
     )
 
-@bp.route('/applicant/<mongo_id>')
+
+@bp.route('/applicant/<user_id>')
 @admin_login_required
-def applicant(mongo_id):
+def applicant(user_id):
     c = get_db().cursor()
 
-    c.execute('SELECT * FROM Applicants WHERE mongo_id = ?', (mongo_id,))
+    c.execute('SELECT * FROM Applicants WHERE user_id = ?', (user_id,))
 
     row = c.fetchone()
     if row is None:
-        flasher('No such user with ID {}!'.format(mongo_id), color='danger')
+        flasher('No such user with ID {}!'.format(user_id), color='danger')
         return redirect(url_for('dashboard.table'))
 
     # make sure newlines work
@@ -148,13 +152,13 @@ def applicant(mongo_id):
     # resolve vote
     c.execute(
         'SELECT rating FROM Votes WHERE app_id=? AND author_email=?',
-        (row['mongo_id'], session['email'])
+        (row['user_id'], session['email'])
     )
     previousVote = c.fetchone()
     if previousVote is not None:
         previousVote = { 'value': previousVote['rating'] }
 
-    c.execute('SELECT author, author_email, rating FROM Votes WHERE app_id=?', (row['mongo_id'],))
+    c.execute('SELECT author, author_email, rating FROM Votes WHERE app_id=?', (row['user_id'],))
     votes = c.fetchall()
 
     if len(votes) != 0:
@@ -165,7 +169,7 @@ def applicant(mongo_id):
 
     c.execute('''
         SELECT COUNT(a.id) FROM Applicants a
-        INNER JOIN Votes v ON a.mongo_id = v.app_id
+        INNER JOIN Votes v ON a.user_id = v.app_id
         WHERE
             v.author_email = ? AND a.completed=1
     ''', (session['email'],))
@@ -177,7 +181,10 @@ def applicant(mongo_id):
     ''')
     flow_votes_total = c.fetchone()[0]
 
-    flow_votes_percentage = '{:0.2f}'.format(100 * (flow_votes_completed/flow_votes_total))
+    if flow_votes_total > 0:
+        flow_votes_percentage = '{:0.2f}'.format(100 * (flow_votes_completed/flow_votes_total))
+    else:
+        flow_votes_percentage = '0.00%'
 
     return render_template(
         'dashboard/applicant.html',
@@ -195,6 +202,7 @@ def applicant(mongo_id):
         flow_votes_percentage=flow_votes_percentage
     )
 
+
 @bp.route('/rate_queue')
 @admin_login_required
 def rate_queue():
@@ -203,7 +211,7 @@ def rate_queue():
     # this should be cleaner but won't be
     c = conn.cursor()
     c.execute('''
-        SELECT name, email, mongo_id
+        SELECT first_name, last_name, email, user_id
         FROM
             Applicants
         WHERE
@@ -220,20 +228,22 @@ def rate_queue():
             SELECT COUNT(app_id) FROM Votes
             WHERE
                 app_id=? AND author_email=?
-        ''', (row['mongo_id'],session['email']))
+        ''', (row['user_id'],session['email']))
         vcount = c.fetchone()
 
         if vcount[0] == 0:
             targets.append({
-                'name': row['name'],
+                'first_name': row['first_name'],
+                'last_name': row['last_name'],
                 'email': row['email'],
-                'mongo_id': row['mongo_id']
+                'user_id': row['user_id']
             })
         else:
             done.append({
-                'name': row['name'],
+                'first_name': row['first_name'],
+                'last_name': row['last_name'],
                 'email': row['email'],
-                'mongo_id': row['mongo_id']
+                'user_id': row['user_id']
             })
 
     return render_template(
@@ -242,6 +252,7 @@ def rate_queue():
         targets=targets,
         done=done
     )
+
 
 @bp.route('/rate_next')
 @admin_login_required
@@ -254,7 +265,7 @@ def get_next_applicant():
 
     c = conn.cursor()
     c.execute('''
-        SELECT mongo_id, email
+        SELECT user_id, email
         FROM
             Applicants
         WHERE
@@ -270,7 +281,7 @@ def get_next_applicant():
             FROM Votes
             WHERE
                 app_id=? AND author_email=?
-        ''', (row['mongo_id'], session['email']))
+        ''', (row['user_id'], session['email']))
         if c.fetchone()[0] != 0:
             # we've already voted
             continue
@@ -281,16 +292,16 @@ def get_next_applicant():
                 COUNT(app_id)
             FROM Votes WHERE
                 app_id=?
-        ''', (row['mongo_id'],))
+        ''', (row['user_id'],))
         count = c.fetchone()[0]
         targets.append({
-            'mongo_id': row['mongo_id'],
+            'user_id': row['user_id'],
             'count': count
         })
 
     if len(targets) != 0:
         targets.sort(key=lambda k: k['count'])
-        return redirect(url_for('dashboard.applicant', mongo_id=targets[0]['mongo_id']) + '?flow=1')
+        return redirect(url_for('dashboard.applicant', user_id=targets[0]['user_id']) + '?flow=1')
     else:
         flasher('Congrats! You\'ve finished!', color='success')
         return redirect(url_for('dashboard.rate_queue'))
@@ -299,6 +310,7 @@ def get_next_applicant():
 @bp.route('/export')
 def export_csv():
     return render_template('dashboard/export.html', session=session)
+
 
 @bp.after_request
 def no_cache(response):

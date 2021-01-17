@@ -1,0 +1,272 @@
+{% extends "hacker/base.html" %}
+
+{% block hacker_content %}
+
+<h1 class="title">Application</h1>
+<h2 class="subtitle">Not submitted &bull; <span class="is-size-6 is-italic">Required fields marked with an <span class="has-text-danger">*</span>.</span></h2>
+
+<form action="{{ url_for('hacker.submit_application') }}" method="POST" id="application">
+    <h2 class="subtitle">Basic Info</h2>
+    <div class="columns">
+        <div class="column">
+            <div class="field">
+                <label class="label">First Name<span class="has-text-danger">*</span></label>
+                <div class="control">
+                    <input class="input" type="text" placeholder="Hacker" name="first_name" value="{{ appl['first_name'] }}" required>
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="field">
+                <label class="label">Last Name<span class="has-text-danger">*</span></label>
+                <div class="control">
+                    <input class="input" type="text" placeholder="McHackerton" name="last_name" value="{{ appl['last_name'] }}" required>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="field">
+        <label class="label">Email<span class="has-text-danger">*</span></label>
+        <div class="control has-icons-left">
+            <input class="input" type="email" placeholder="hacker@hacktheburgh.com" name="contact_email" value="{{ appl['contact_email'] }}" required>
+            <span class="icon is-small is-left">
+                <i class="fas fa-envelope"></i>
+            </span>
+        </div>
+    </div>
+    {#
+    <div class="columns">
+        <div class="column">
+            <div class="field">
+                <label class="label">Gender<span class="has-text-danger">*</span></label>
+                <div class="control">
+                    <div class="select">
+                        <select name="gender" required>
+                            <option selected disabled><i>Please select</i></option>
+                            <option value="female">Female</option>
+                            <option value="male">Male</option>
+                            <option value="trans">Trans</option>
+                            <option value="nonbinary">Non-binary</option>
+                            <option value="other">Other</option>
+                            <option value="prefernottosay">Prefer not to say</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="column is-two-thirds">
+            <div class="field">
+                <label class="label is-italic">If other, please specify</label>
+                <div class="control">
+                    <input class="input" type="text" placeholder="Gender" name="gender_other">
+                </div>
+            </div>
+        </div>
+    </div>
+    #}
+    <div class="columns">
+        <div class="column is-two-thirds">
+            <div class="field">
+                <label class="label">University Name<span class="has-text-danger">*</span></label>
+                <div class="control has-icons-left">
+                    <input class="input" type="text" placeholder="Hacker University" name="school" value="{{ appl['school'] or '' }}" required>
+                    <span class="icon is-small is-left">
+                        <i class="fas fa-university"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="field">
+                <label class="label">Grad. Year<span class="has-text-danger">*</span></label>
+                <div class="control">
+                    <div class="select">
+                        <select name="gradYear" required>
+                            <option {% if appl['gradYear'] == '2026' %}selected{% endif %} value="2026">2026</option>
+                            <option {% if appl['gradYear'] == '2025' %}selected{% endif %} value="2025">2025</option>
+                            <option {% if appl['gradYear'] == '2024' %}selected{% endif %} value="2024">2024</option>
+                            <option {% if appl['gradYear'] == '2023' %}selected{% endif %} value="2023">2023</option>
+                            <option {% if appl['gradYear'] == '2022' %}selected{% endif %} value="2022">2022</option>
+                            <option {% if appl['gradYear'] == '2021' %}selected{% endif %} value="2021">2021</option>
+                            <option {% if appl['gradYear'] == '2020' %}selected{% endif %} value="2020">2020</option>
+                            <option {% if appl['gradYear'] == '2019' %}selected{% endif %} value="2019">2019</option>
+                            <option {% if appl['gradYear'] == '2018' %}selected{% endif %} value="2018">2018</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">T-Shirt Size<span class="has-text-danger">*</span></label>
+        <div class="control">
+            <div class="select">
+                <select name="shirt_size" required>
+                    <option {% if appl['shirt_size'] == 'xs'  %}selected{% endif %} value="xs">XS</option>
+                    <option {% if appl['shirt_size'] == 's'   %}selected{% endif %} value="s">S</option>
+                    <option {% if appl['shirt_size'] == 'm'   %}selected{% endif %} value="m">M</option>
+                    <option {% if appl['shirt_size'] == 'l'   %}selected{% endif %} value="l">L</option>
+                    <option {% if appl['shirt_size'] == 'xl'  %}selected{% endif %} value="xl">XL</option>
+                    <option {% if appl['shirt_size'] == 'xxl' %}selected{% endif %} value="xxl">XXL</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="subtitle">Address Info</h2>
+
+    <div class="field">
+        <label class="label">Address Line 1<span class="has-text-danger">*</span></label>
+        <div class="control">
+            <input class="input" type="text" placeholder="1337 Hacker Way" name="address_line_1" value="{{ appl['address_line_1'] }}" required>
+        </div>
+    </div>
+    <div class="field">
+        <label class="label">Address Line 2</label>
+        <div class="control">
+            <input class="input" type="text" placeholder="Apt 1a" name="address_line_2" value="{{ appl['address_line_2'] }}">
+        </div>
+    </div>
+    <div class="field">
+        <label class="label">Address Line 3</label>
+        <div class="control">
+            <input class="input" type="text" placeholder="" name="address_line_3" value="{{ appl['address_line_3'] }}" >
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column">
+            <div class="field">
+                <label class="label">City<span class="has-text-danger">*</span></label>
+                <div class="control">
+                    <input class="input" type="text" placeholder="Hackville" name="address_city" value="{{ appl['address_city'] }}" required>
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="field">
+                <label class="label">Region<span class="has-text-danger">*</span></label>
+                <div class="control">
+                    <input class="input" type="text" placeholder="McHackerton" name="address_region" value="{{ appl['address_region'] }}" required>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column is-two-thirds">
+            <div class="field">
+                <label class="label">Country<span class="has-text-danger">*</span></label>
+                <div class="control">
+                    <input class="input" type="text" placeholder="Scotland" name="address_country" value="{{ appl['address_country'] }}" required>
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="field">
+                <label class="label">Postcode<span class="has-text-danger">*</span></label>
+                <div class="control">
+                    <input class="input" type="text" placeholder="EH8 9LE" name="address_pcode" value="{{ appl['address_pcode'] }}" required>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="subtitle">Short Answers</h2>
+    <div class="field">
+        <label class="label">Why are you excited about Hack the Burgh?</label>
+        <div class="control">
+            <textarea class="textarea" placeholder="Type here!" name="description">{{ appl['description'] }}</textarea>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Describe an interesting project you've been involved in.</label>
+        <div class="control">
+            <textarea class="textarea" placeholder="One time I was...">{{appl['essay']}}</textarea>
+        </div>
+    </div>
+
+    <h2 class="subtitle" style="margin-top: 1em;">Authorizations</h2>
+
+    <div class="field">
+        <div class="control">
+            <label class="checkbox">
+                <input type="checkbox" name="gdpr" {% if appl['gdpr'] == 1 %}checked{% endif %} required>
+                I agree to the <span class="has-background-danger is-size-4">GDPR_COMPLIANCE_TEXT</span>
+                <span class="has-text-danger">*</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="control">
+            <label class="checkbox">
+                <input type="checkbox" name="mlh_coc" {% if appl['mlh_coc'] == 1 %}checked{% endif %} required>
+                I agree to the <a href="//mlh.io/code-of-conduct" target="_blank">code of conduct</a>.
+                <span class="has-text-danger">*</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="control">
+            <label class="checkbox">
+                <input type="checkbox" name="adult" {% if appl['adult'] == 1 %}checked{% endif %} required>
+                I am 18 years of age or older (or will be at the time of the event).
+                <span class="has-text-danger">*</span>
+            </label>
+        </div>
+    </div>
+
+
+    <div class="field">
+        <div class="control">
+            <label class="checkbox">
+                <input type="checkbox" name="hackuk_admin" {% if appl['hackuk_admin'] == 1 %}checked{% endif %} required>
+                I authorise you to share my application/registration information with <a href="https://hackathons.org.uk/" target="_blank">Hackathons UK Limited</a> for event administration, Hackathons UK Limited administration, and with my authorisation email in-line with the Hackathons UK Limited <a href="https://hackuk.org/privacy" target="_blank">Privacy Policy</a>.
+                <span class="has-text-danger">*</span>
+            </label>
+        </div>
+    </div>
+
+    
+    <div class="field">
+        <div class="control">
+            <label class="checkbox">
+                <input type="checkbox" name="hackuk_email" {% if appl['hackuk_email'] == 1 %}checked{% endif %}>
+                I authorise Hackathons UK Limited to send me occasional messages about hackathons and their activities.
+            </label>
+        </div>
+    </div>
+
+    <div class="field is-grouped">
+        <div class="control">
+            <button type="button" class="button" id="save-button">Save</button>
+        </div>
+        <div class="control">
+            <button type="submit" class="button is-link">Submit</button>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+document.querySelector('#save-button')
+    .addEventListener('click', e => {
+        e.preventDefault()
+        const form = document.querySelector('form#application')
+
+        form
+            .querySelectorAll('input')
+            .forEach(el => {
+                el.removeAttribute('required')
+            })
+
+        form.setAttribute('action', "{{ url_for('hacker.save_application') }}")
+
+        form.submit()
+    })
+
+</script>
+
+{% endblock %}

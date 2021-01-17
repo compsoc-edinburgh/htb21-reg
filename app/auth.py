@@ -1,5 +1,8 @@
+# -- this is a disaster. --
+
 from flask import Flask, redirect, url_for, render_template, Blueprint, session, current_app
 from flask_dance.contrib.google import make_google_blueprint, google
+from flask_dance.contrib.github import make_github_blueprint, github
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from oauthlib.oauth2.rfc6749.errors import TokenExpiredError
 import functools
@@ -19,6 +22,7 @@ bp = Blueprint('auth', __name__)
 
 google_bp = None
 mlh_bp = None
+github_bp = None
 mymlh = None
 
 def register_google_bp(app):
@@ -42,12 +46,11 @@ def register_mlh_bp(app):
         client_secret=os.environ['MLH_CLIENT_SECRET'],
         base_url='https://my.mlh.io',
         token_url='https://my.mlh.io/oauth/token',
-        scope=['email','education'],
+        scope=['email','education', 'demographics'],
         authorization_url='https://my.mlh.io/oauth/authorize',
         redirect_to='auth.hacker_profile'
     )
 
-    
     @mlh_bp.before_app_request
     def set_applocal_session():
         ctx = stack.top
@@ -56,12 +59,16 @@ def register_mlh_bp(app):
     mymlh = LocalProxy(functools.partial(_lookup_app_object, "mymlh_oauth"))
     app.register_blueprint(mlh_bp, url_prefix='/oauth/hacker')
 
+def register_github_bp(app):
+    global github_bp
+    github_bp = make_github_blueprint(
+        client_id=os.environ['GITHUB_CLIENT_ID'],
+        client_secret=os.environ['GITHUB_CLIENT_SECRET'],
+        scope='user:email',
+        redirect_to='auth.hacker_profile_gh'
+    )
 
-# magic happens here
-def email_valid(email):
-    if email.endswith('@comp-soc.com') or email.endswith('@hacktheburgh.com') or email.endswith('@sigint.mx'):
-        return True
-    return False
+    app.register_blueprint(github_bp, url_prefix='/oauth/hacker')
 
 
 @bp.route('/')
@@ -87,7 +94,7 @@ def logout():
     except TokenExpiredError as e:
         print('token expired, ignoring')
     del google_bp.token  # Delete OAuth token from storage
-    return redirect(url_for('auth.index'))
+    return redirect(url_for('landing.index'))
 
 
 def admin_login_required(view):
@@ -104,8 +111,8 @@ def hacker_login_required(view):
     """View decorator that redirects anonymous users to the login page."""
     @functools.wraps(view)
     def wrapped_view(**kwargs):
-        if not mymlh.authorized:
-            return redirect(url_for('mymlh.login'))
+        if not mymlh.authorized and not github.authorized:
+            return redirect(url_for('landing.index'))
         return view(**kwargs)
 
     return wrapped_view
@@ -137,23 +144,58 @@ def profile():
     session['email'] = profile['email']
     session['image'] = profile['image']
 
-    
     return redirect(url_for('dashboard.rate_queue'))
 
 # -- MLH profile info --
 
-@bp.route('/mlh')
+@bp.route('/hacker')
 @hacker_login_required
 def hacker_profile():
-    get_hacker_profile()
-    return render_template('hacker/base.html')
+    session['login_type'] = 'mlh'
+    profile = get_hacker_mlh_profile()
+    session['email'] = profile['email']
+    session['mlh_info'] = profile
+    return redirect(url_for('hacker.init_mlh'))
 
-@bp.route('/mlh/logout')
+@bp.route('/hacker/logout')
 @hacker_login_required
 def hacker_logout():
-    del mlh_bp.token
-    return redirect(url_for('auth.index'))
+    try:
+        del mlh_bp.token
+    except:
+        pass
+    try:
+        del github_bp.token
+    except:
+        pass
 
-def get_hacker_profile():
+    session.clear()
+    return redirect(url_for('landing.index'))
+
+def get_hacker_mlh_profile():
     resp = mlh_bp.session.get('/api/v3/user.json')
     print(resp.json())
+    return resp.json()['data']
+
+
+# -- GH profile info --
+
+def get_hacker_gh_profile():
+    resp = github.get('/user').json()
+    resp_emails = github.get('/user/emails')
+    email = [addr['email'] for addr in resp_emails.json() if addr['primary']][0]
+    
+    resp['email'] = email
+
+    return resp
+
+@bp.route('/hacker/github')
+@hacker_login_required
+def hacker_profile_gh():
+    session['login_type'] = 'github'
+    profile = get_hacker_gh_profile()
+    session['gh_info'] = profile
+    session['email'] = profile['email']
+
+    return redirect(url_for('hacker.init_gh'))
+

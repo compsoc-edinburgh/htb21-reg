@@ -44,7 +44,7 @@
     <table class="table is-striped is-fullwidth">
         <thead>
             <tr>
-                <th>{{ sortlink('ID', 'mongo_id') }}</th>
+                <th>{{ sortlink('ID', 'user_id') }}</th>
                 <th>{{ sortlink('Verified', 'verified') }}</th>
                 <th>{{ sortlink('Completed', 'completed') }}</th>
                 <th>{{ sortlink('Name', 'name') }}</th>
@@ -67,7 +67,7 @@
                 <td>{{ row['ratings'] }}</td>
                 <td>{{ row['score'] }}</td>
                 <td>
-                    <a href="{{url_for('dashboard.applicant', mongo_id=row['mongo_id'])}}">
+                    <a href="{{url_for('dashboard.applicant', user_id=row['user_id'])}}">
                         view
                     </a>
                 </td>

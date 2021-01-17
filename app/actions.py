@@ -56,19 +56,19 @@ def download_db():
 def submit_vote():
     if not 'rating' in request.form:
         flasher('Please select a rating!', color='danger')
-        return redirect(url_for('dashboard.applicant', mongo_id=request.form['mongo_id']) + '?flow=1')
+        return redirect(url_for('dashboard.applicant', user_id=request.form['user_id']) + '?flow=1')
 
 
     flow_voting = request.args.get('flow') is not None
 
-    print('voting: {} {} -> {} {}'.format(session['name'], session['email'], request.form['mongo_id'], request.form['rating']))
+    print('voting: {} {} -> {} {}'.format(session['name'], session['email'], request.form['user_id'], request.form['rating']))
 
     # find previous vote if it exists
     conn = get_db()
     c = conn.cursor()
     c.execute(
         'SELECT * FROM Votes WHERE app_id=? AND author_email=?', 
-        (request.form['mongo_id'], session['email'])
+        (request.form['user_id'], session['email'])
     )
 
     previousVote = c.fetchone()
@@ -77,7 +77,7 @@ def submit_vote():
         print('previous vote does not exist')
         c.execute('''
             INSERT INTO Votes (rating, author, author_email, app_id) VALUES (?, ?, ?, ?)''',
-            (request.form['rating'], session['name'], session['email'], request.form['mongo_id'])
+            (request.form['rating'], session['name'], session['email'], request.form['user_id'])
         )
         if not flow_voting:
             flasher('Vote recorded successfully!', color='success')
@@ -86,7 +86,7 @@ def submit_vote():
         c.execute('''
             UPDATE Votes
             SET rating=? WHERE app_id=? AND author_email=?
-        ''', (request.form['rating'], request.form['mongo_id'], session['email'])
+        ''', (request.form['rating'], request.form['user_id'], session['email'])
         )
         flasher('Vote updated successfully!', color='success')
 
@@ -96,7 +96,7 @@ def submit_vote():
     if flow_voting:
         return redirect(url_for('dashboard.get_next_applicant'))
     else:
-        return redirect(url_for('dashboard.applicant', mongo_id=request.form['mongo_id']))
+        return redirect(url_for('dashboard.applicant', user_id=request.form['user_id']))
 
 @bp.route('/download_csv/export.csv')
 @admin_login_required
