@@ -309,14 +309,18 @@ def status():
 def invites():
     appl, appl_text = resolve_application(session['email'])
 
-    if appl['completed']:
-        completed_time = arrow.get(appl['completed_time']).format('MMM D, YYYY hh:mm a')
-    else:
-        completed_time = ''
+    c = get_db().cursor()
+    c.execute('''
+        SELECT * FROM Invites WHERE app_id=?
+    ''', [appl['user_id']])
+
+    rows = c.fetchall()
+    if rows is None:
+        rows = []
 
     return render_template(
         'hacker/invites.html',
         appl=appl_text,
-        completed_time=completed_time,
+        invites=rows,
         login_type=capitalize_login_provider()
     )

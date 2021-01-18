@@ -68,7 +68,11 @@ CREATE TABLE Votes (
 );
 
 CREATE TABLE Invites (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
     app_id          TEXT NOT NULL,
+    service         TEXT NOT NULL,
+    code            TEXT,
+    link            TEXT,
 
     FOREIGN KEY (app_id) REFERENCES Applicants (user_id)
         ON DELETE CASCADE ON UPDATE NO ACTION

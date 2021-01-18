@@ -231,11 +231,76 @@ def api_get_all_applicants_csv():
         mimetype='text/csv'
     )
 
+@bp.route('/invites/create', methods=['POST'])
+@service_auth_required
+def api_invite_create():
+    '''
+    Creates an invite from POSTed JSON.
+
+    JSON body:
+    <pre>
+    {
+        "app_id": "applicant_id",
+        "service": "Service Name",
+        "code": "(optional) code",
+        "link": "(optional) link",
+    }</pre>
+    '''
+
+    link = request.json['link'] if 'link' in request.json else None
+    code = request.json['code'] if 'code' in request.json else None
+
+    if link is None and code is None:
+        return create_response({}, ok=False, message='Must have either link or code!')
+
+    c = get_db().cursor()
+    c.execute('''
+        INSERT INTO Invites (app_id, service, link, code)
+        VALUES (?,?,?,?)
+    ''', [
+        request.json['app_id'],
+        request.json['service'],
+        link,
+        code
+    ])
+    
+    c.connection.commit()
+
+    return create_response({})
+
+@bp.route('/invites/list')
+@service_auth_required
+def api_invite_list():
+    '''
+    List all the invites in the database.
+
+    With an optional parameter `id`, this will return only the invites for the specified `user_id`.
+    '''
+
+    c = get_db().cursor()
+
+    if request.args.get('id') is not None:
+        c.execute('''
+            SELECT * FROM Invites WHERE app_id=?
+        ''', [request.args.get('id')])
+    else:
+        c.execute('''
+            SELECT * FROM Invites
+        ''')
+    
+    rows = c.fetchall()
+    if rows is None:
+        rows = []
+
+    return create_response(rows_to_objs(rows))
+
 api_routes = [
     api_config,
     api_download_backup,
     api_get_by_id,
     api_get_by_email,
     api_get_all_applicants,
-    api_get_all_applicants_csv
+    api_get_all_applicants_csv,
+    api_invite_create,
+    api_invite_list
 ]

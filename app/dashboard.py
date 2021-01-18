@@ -389,6 +389,28 @@ def edit_config():
         strtimes=strtimes
     )
 
+@bp.route('/invites')
+@admin_login_required
+def list_invites():
+    c = get_db().cursor()
+
+    c.execute('''
+        SELECT i.id, i.app_id, i.service, i.code, i.link, a.email
+            FROM Invites i
+            LEFT JOIN Applicants a ON a.user_id=i.app_id
+    ''')
+
+    rows = c.fetchall()
+    
+    if rows is None:
+        rows = []
+
+    return render_template(
+        'dashboard/invites.html',
+        session=session,
+        invites=rows
+    )
+
 @bp.after_request
 def no_cache(response):
     response.headers['Cache-Control'] = 'no-store'

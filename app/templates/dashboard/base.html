@@ -36,18 +36,21 @@
                 </a>
 
                 <div class="navbar-dropdown">
+                    <a class="navbar-item" href="{{url_for('dashboard.list_services')}}">
+                        Linked Services
+                    </a>
+                    <a class="navbar-item" href="{{url_for('dashboard.list_invites')}}">
+                        Invites
+                    </a>
+                    <a class="navbar-item" href="{{url_for('dashboard.edit_config') }}">
+                        Event Information
+                    </a>
+                    <hr class="navbar-divider">
                     <a class="navbar-item" href="{{url_for('dashboard.export_csv')}}">
                         Export CSV
                     </a>
                     <a class="navbar-item" href="{{url_for('dashboard.admin')}}">
                         Database Admin
-                    </a>
-                    <a class="navbar-item" href="{{url_for('dashboard.list_services')}}">
-                        Linked Services
-                    </a>
-                    {# <hr class="navbar-divider"> #}
-                    <a class="navbar-item" href="{{url_for('dashboard.edit_config') }}">
-                        Event Information
                     </a>
                 </div>
             </div>

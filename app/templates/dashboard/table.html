@@ -58,7 +58,7 @@
         <tbody>
             {% for row in rows %}
             <tr>
-                <td>{{ row['id'] }}</td>
+                <td>{{ row['user_id'] }}</td>
                 <td>{{ boolean_val(row['verified']) }}</td>
                 <td>{{ boolean_val(row['completed']) }}</td>
                 <td>{{ row['first_name'] }} {{ row['last_name'] }}</td>
@@ -75,7 +75,7 @@
             {% else %}
             <tr>
                 <td colspan="8">
-                    <i> No applicants in DB, upload some from the <a href="{{url_for('dashboard.admin')}}">admin interface. </a></i>
+                    <i> No applicants in DB.</i>
                 </td>
             </tr>
             {% endfor %}

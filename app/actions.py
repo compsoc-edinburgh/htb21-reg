@@ -275,4 +275,43 @@ def service_delete():
     flasher(f"Service <code>{svc['display_name']}</code> deleted successfully.", color='success')
 
     return redirect(url_for('dashboard.list_services'))
+
+
+@bp.route('/invites/new', methods=['POST'])
+@admin_login_required
+def invite_create():
     
+    link = request.form['link'] if 'link' in request.form else None
+    code = request.form['code'] if 'code' in request.form else None
+
+    c = get_db().cursor()
+    c.execute('''
+        INSERT INTO Invites (app_id, service, link, code)
+        VALUES (?,?,?,?)
+    ''', [
+        request.form['app_id'],
+        request.form['service'],
+        link,
+        code
+    ])
+    
+    c.connection.commit()
+
+    flasher('Created invite successfully!', color='success')
+
+    return redirect(url_for('dashboard.list_invites'))
+
+
+@bp.route('/invites/delete/<inv_id>')
+@admin_login_required
+def invite_delete(inv_id):
+    c = get_db().cursor()
+    c.execute('''
+        DELETE FROM Invites WHERE id=?
+    ''', [inv_id])
+
+    c.connection.commit()
+
+    flasher('Deleted invite successfully!', color='success')
+
+    return redirect(url_for('dashboard.list_invites'))
