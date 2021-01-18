@@ -1,5 +1,6 @@
 from csv import DictReader, DictWriter
 from io import StringIO
+from .common import row_to_obj
 import functools
 import tempfile
 import os
@@ -87,7 +88,7 @@ def insert_applicant(cursor, applicant):
 def create_csv(conn):
     c = conn.cursor()
     c.execute('''
-        SELECT name, email, mongo_id FROM Applicants WHERE completed=1
+        SELECT * FROM Applicants WHERE completed=1
     ''')
     rows = c.fetchall()
     if rows is None:
@@ -100,26 +101,23 @@ def create_csv(conn):
             FROM Votes
             WHERE
                 app_id=?
-        ''', (row['mongo_id'],))
+        ''', (row['user_id'],))
         votes = c.fetchall()
         
+        # i don't remember why i did this but there must have been a reason...
         if len(votes) != 0:
             voteaverage = functools.reduce( lambda a,v: a + v['rating'], votes, 0 ) / len(votes)
             voteaverage = float('{:.3}'.format(voteaverage))
         else:
             voteaverage = 0
         
-        out.append({
-            'name': row['name'],
-            'email': row['email'],
-            'mongo_id': row['mongo_id'],
-            'rating': voteaverage,
-            'votes': len(votes)
-        })
+        obj = row_to_obj(row)
+        obj['votes'] = voteaverage
+        out.append(obj)
 
     buf = StringIO()
     
-    csv = DictWriter(buf, fieldnames=['mongo_id', 'name', 'email', 'rating', 'votes'])
+    csv = DictWriter(buf, fieldnames=out[0].keys())
     csv.writeheader()
     for app in out:
         csv.writerow(app)

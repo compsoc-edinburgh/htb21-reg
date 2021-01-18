@@ -1,0 +1,163 @@
+{% extends "dashboard/base.html" %}
+
+{% macro make_tag(name, value) %}
+{% if value == 1 %}
+<span class="tag is-success">
+    {{ name }}&nbsp;&nbsp;
+    <i class="fas fa-check"></i>
+</span>
+{% else %}
+<span class="tag is-danger">
+    {{ name }}&nbsp;&nbsp;
+    <i class="fas fa-times"></i>
+</span>
+{% endif %}
+{% endmacro %}
+
+{% block dashboard_content %}
+<div class="container">
+    <h1 class="is-size-1">Linked services</h1>
+    <h2 class="subtitle">
+        {{ services | length }} authorized service(s)
+        &bull;
+        <a href="{{ url_for('dashboard.services_docs') }}">API Reference</a>
+    </h2>
+
+    {% for svc in services %}
+    <div class="block box">
+        <div class="level">
+            <div class="level-left">
+                <h1 class="title">{{ svc.display_name }}</h1>
+            </div>
+            <div class="level-right">
+                <div class="tags are-medium">
+                    <a href="{{ url_for('actions.service_toggle', api_key=svc.api_key) }}">
+                        {% if svc.active == 1 %}
+                            {{ make_tag('Active', svc.active) }}
+                        {% else %}
+                            {{ make_tag('Inactive', svc.active) }}
+                        {% endif %}
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <p>
+            <strong>API key:</strong> <code>{{ svc.api_key }}</code><br/>
+            <strong>API secret:</strong> <code>[hidden]</code><br/>
+            <strong>Created:</strong> {{ svc.created }}<br/>
+            <strong>Created by:</strong> patrick@comp-soc.com<br/>
+            <strong>Last used:</strong> {% if svc.last_used %}{{ svc.last_used }}{% else %}<i>unused</i>{% endif %}<br/>
+        </p>
+
+        <details>
+            <summary><strong>Options</strong></summary>
+
+            <div class="columns">
+                <div class="column">
+                    <h1 class="is-size-3"> Recreate API Secret </h1>
+                    <p>
+                        This will re-create the API secret for this service. Requests with the old credentials will immediately fail.
+                    </p>
+
+                    <br/>
+
+                    <form action="{{url_for('actions.service_recreate_key')}}" method="POST">
+                        <input type="hidden" name="api_key" value="{{ svc.api_key }}">
+                        <div class="field">
+                            <label class="label">Verification</label>
+                            <div class="control">
+                                <input
+                                    class="input"
+                                    type="text"
+                                    placeholder="i know what i am doing"
+                                    name="verification"
+                                    autocomplete="off"
+                                    autocorrect="off"
+                                    spellcheck="false"
+                                    required>
+                            </div>
+                            <p class="help"> If you understand the risks, please write <code class="is-unselectable">i know what i am doing</code> in the box above.</p>
+                        </div>
+                        <div class="control">
+                            <button class="button is-warning">
+                                <span>Recreate Secret</span>
+                                <span class="icon">
+                                    <i class="fas fa-key"></i>
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="column">
+                    <h1 class="is-size-3"> Delete the service </h1>
+                    <p>
+                        This will immediately and irrevocably delete the service. Requests with these credentials will fail.
+                    </p>
+
+                    <br/>
+
+                    <form action="{{url_for('actions.service_delete')}}" method="POST">
+                        <input type="hidden" name="api_key" value="{{ svc.api_key }}">
+                        <div class="field">
+                            <label class="label">Verification</label>
+                            <div class="control">
+                                <input
+                                    class="input"
+                                    type="text"
+                                    placeholder="i know what i am doing"
+                                    name="verification"
+                                    autocomplete="off"
+                                    autocorrect="off"
+                                    spellcheck="false"
+                                    required>
+                            </div>
+                            <p class="help"> If you understand the risks, please write <code class="is-unselectable">i know what i am doing</code> in the box above.</p>
+                        </div>
+                        <div class="control">
+                            <button class="button is-danger">
+                                <span>Delete</span>
+                                <span class="icon">
+                                    <i class="fas fa-trash"></i>
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+        </details>
+
+
+    </div>
+    {% endfor %}
+
+
+    <div class="block">
+        <h1 class="title">Create new service</h1>
+
+        <form action="{{ url_for('actions.service_create') }}" method="POST">
+            <div class="field">
+                <label class="label">Display name</label>
+                <div class="control">
+                    <input class="input" type="text" placeholder="My Cool Service" name="display_name" autocomplete="off" required>
+                </div>
+            </div>
+
+            <div class="control">
+                <button class="button is-success" type="submit">
+                    <span>Create</span>
+                    <span class="icon">
+                        <i class="fas fa-plus"></i>
+                    </span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <br/>
+
+
+</div>
+{% endblock %}

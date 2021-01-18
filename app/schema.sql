@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS Applicants;
 DROP TABLE IF EXISTS Votes;
 DROP TABLE IF EXISTS Services;
 DROP TABLE IF EXISTS Configuration;
+DROP TABLE IF EXISTS Invites;
 
 
 CREATE TABLE Applicants (
@@ -14,6 +15,7 @@ CREATE TABLE Applicants (
     admin           INTEGER,
     adult           INTEGER,
     completed       INTEGER,
+    completed_time  INTEGER,
     admitted        INTEGER,
     verified        INTEGER,
     timestamp       TEXT,
@@ -23,9 +25,9 @@ CREATE TABLE Applicants (
     gh_json         TEXT,
 
     -- address
-    address_line1   TEXT,
-    address_line2   TEXT,
-    address_line3   TEXT,
+    address_line_1  TEXT,
+    address_line_2  TEXT,
+    address_line_3  TEXT,
     address_city    TEXT,
     address_region  TEXT,
     address_pcode   TEXT,
@@ -65,6 +67,13 @@ CREATE TABLE Votes (
     UNIQUE (author, app_id)
 );
 
+CREATE TABLE Invites (
+    app_id          TEXT NOT NULL,
+
+    FOREIGN KEY (app_id) REFERENCES Applicants (user_id)
+        ON DELETE CASCADE ON UPDATE NO ACTION
+);
+
 
 CREATE TABLE Services (
     api_key         TEXT NOT NULL,
@@ -72,6 +81,8 @@ CREATE TABLE Services (
     display_name    TEXT NOT NULL,
     author_email    TEXT NOT NULL,
     created         INTEGER NOT NULL,
+    last_used       INTEGER,
+    active          INTEGER NOT NULL,
 
     UNIQUE(api_key),
     UNIQUE(display_name)

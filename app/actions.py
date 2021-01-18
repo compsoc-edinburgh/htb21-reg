@@ -1,11 +1,39 @@
-from flask import Blueprint, flash, request, redirect, url_for, send_file, current_app, session
+from flask import Blueprint, flash, request, redirect, url_for, send_file, current_app, session, Response
 
 from .auth import admin_login_required
 from .common import flasher
 from .data import get_applicants_from_csv, insert_applicant, create_csv
 from .db import get_db
+from uuid import uuid4
+import time
+import bcrypt
+import arrow
+
 bp = Blueprint('actions', __name__, url_prefix='/action')
 
+@bp.route('/update_cfg', methods=['POST'])
+@admin_login_required
+def update_cfg():
+    c = get_db().cursor()
+
+    c.execute('''
+        UPDATE Configuration
+            SET applications_open=?,
+                applications_dline=?,
+                event_start=?
+            WHERE
+                id=0
+    ''', [
+        arrow.get(request.form['applications_open']).timestamp,
+        arrow.get(request.form['applications_dline']).timestamp,
+        arrow.get(request.form['event_start']).timestamp,
+    ])
+
+    c.connection.commit()
+
+    flasher('Event configuration updated.', color='success')
+
+    return redirect(url_for('dashboard.edit_config'))
 
 @bp.route('/submit_dump', methods=['POST'])
 @admin_login_required
@@ -46,7 +74,7 @@ def purge_votes():
     return redirect(url_for('dashboard.admin'))
     
 
-@bp.route('/download_db/votes.sqlite')
+@bp.route('/download_db/registrations.sqlite')
 @admin_login_required
 def download_db():
     return send_file(current_app.config['DATABASE'])
@@ -103,7 +131,10 @@ def submit_vote():
 def download_csv():
     conn = get_db()
     csv_str = create_csv(conn)
-    return csv_str
+    return Response(
+        csv_str,
+        mimetype='text/csv'
+    )
 
 @bp.route('/toggle_hiding')
 @admin_login_required
@@ -115,3 +146,133 @@ def toggle_hiding():
 
     return redirect(url_for('dashboard.rate_queue'))
 
+# service actions
+
+@bp.route('/service/create', methods=['POST'])
+@admin_login_required
+def service_create():
+    c = get_db().cursor()
+
+    api_key = ''.join(str(uuid4()).split('-'))
+    api_secret = ''.join((str(uuid4()) + str(uuid4())).split('-'))
+    api_secret_crypt = bcrypt.hashpw(api_secret.encode('ascii'), bcrypt.gensalt())
+
+    c.execute('''
+        INSERT INTO Services (
+            display_name,
+            api_key,
+            api_secret,
+            author_email,
+            active,
+            created
+        ) VALUES (?,?,?,?,1,?)
+    ''', [
+        request.form['display_name'],
+        api_key,
+        api_secret_crypt,
+        session['email'],
+        time.time()
+    ])
+
+    c.connection.commit()
+
+    flasher(f"Service <code>{request.form['display_name']}</code> added successfully.<br/>API secret: <code>{api_secret}</code>. Copy it down, it will not show again!", color="success")
+
+    return redirect(url_for('dashboard.list_services'))
+
+@bp.route('/service/toggle/<api_key>')
+@admin_login_required
+def service_toggle(api_key):
+    c = get_db().cursor()
+
+    c.execute('''
+        SELECT * FROM Services WHERE api_key=?
+    ''', (api_key,))
+
+    svc = c.fetchone()
+    if svc is None:
+        flasher(f'No such service <code>{api_key}</code>', color='warning')
+        return redirect(url_for('dashboard.list_services'))
+
+    c.execute('''
+        UPDATE Services
+            SET active=?
+            WHERE api_key=?
+    ''', [
+        1 if svc['active'] == 0 else 0,
+        api_key
+    ])
+
+    c.connection.commit()
+
+    flasher(f"Service {svc['display_name']} toggled.", color='success')
+
+    return redirect(url_for('dashboard.list_services'))
+
+@bp.route('/service/recreate_key', methods=['POST'])
+@admin_login_required
+def service_recreate_key():
+    # check for verification string
+    if request.form['verification'] != 'i know what i am doing':
+        flasher('Verification failed, please try again.', color='warning')
+        return redirect(url_for('dashboard.list_services'))
+
+    c = get_db().cursor()
+
+    c.execute('''
+        SELECT * FROM Services WHERE api_key=?
+    ''', (request.form['api_key'],))
+
+    svc = c.fetchone()
+    if svc is None:
+        flasher(f"No such service <code>{request.form['api_key']}</code>", color='warning')
+        return redirect(url_for('dashboard.list_services'))
+
+    api_secret = ''.join((str(uuid4()) + str(uuid4())).split('-'))
+    api_secret_crypt = bcrypt.hashpw(api_secret.encode('ascii'), bcrypt.gensalt())
+
+    c.execute('''
+        UPDATE Services
+            SET api_secret=?
+            WHERE api_key=?
+    ''', [
+        api_secret_crypt,
+        request.form['api_key']
+    ])
+
+    c.connection.commit()
+
+    flasher(f"Service <code>{svc['display_name']}</code> re-keyed successfully.<br/>API secret: <code>{api_secret}</code>. Copy it down, it will not show again!", color="success")
+    
+    return redirect(url_for('dashboard.list_services'))
+
+@bp.route('/services/delete', methods=['POST'])
+@admin_login_required
+def service_delete():
+    # check for verification string
+    if request.form['verification'] != 'i know what i am doing':
+        flasher('Verification failed, please try again.', color='warning')
+        return redirect(url_for('dashboard.list_services'))
+
+    c = get_db().cursor()
+
+    c.execute('''
+        SELECT * FROM Services WHERE api_key=?
+    ''', (request.form['api_key'],))
+
+    svc = c.fetchone()
+    if svc is None:
+        flasher(f"No such service <code>{request.form['api_key']}</code>", color='warning')
+        return redirect(url_for('dashboard.list_services'))
+
+    c.execute('''
+        DELETE FROM Services WHERE api_key=?
+    ''', (request.form['api_key'],)
+    )
+
+    c.connection.commit()
+
+    flasher(f"Service <code>{svc['display_name']}</code> deleted successfully.", color='success')
+
+    return redirect(url_for('dashboard.list_services'))
+    

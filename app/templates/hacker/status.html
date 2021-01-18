@@ -1,0 +1,41 @@
+{% extends "hacker/base.html" %}
+
+{% block hacker_content %}
+<h1 class="title">Application Status</h1>
+
+{% if appl['completed'] %}
+<div class="is-size-4 has-text-success">
+    <span class="icon">
+        <i class="fas fa-check"></i>
+    </span>
+    &nbsp;Application submitted on {{ completed_time }}
+</div>
+
+{% if appl['admitted'] %}
+<div class="is-size-4 has-text-success">
+    <span class="icon">
+        <i class="fas fa-check"></i>
+    </span>
+    &nbsp;Application accepted!
+</div>
+{% else %}
+<div class="is-size-4 has-text-warning">
+    <span class="icon">
+        <i class="fas fa-clock"></i>
+    </span>
+    &nbsp;Waiting on response
+</div>
+{% endif %}
+
+
+{% else %}
+<div class="is-size-4 has-text-warning">
+    <span class="icon">
+        <i class="fas fa-times"></i>
+    </span>
+    &nbsp;Application not submitted
+</div>
+{% endif %}
+
+{% endblock %}
+

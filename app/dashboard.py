@@ -1,9 +1,10 @@
 from flask import Blueprint, session, render_template, request, flash, redirect, url_for, escape
 import functools
 import arrow
+from markdown import markdown
 from .auth import admin_login_required
 from .db import get_db
-from .common import flasher
+from .common import flasher, get_config
 
 bp = Blueprint('dashboard', __name__, url_prefix='/dashboard')
 
@@ -308,11 +309,88 @@ def get_next_applicant():
 
 
 @bp.route('/export')
+@admin_login_required
 def export_csv():
     return render_template('dashboard/export.html', session=session)
 
+@bp.route('/services')
+@admin_login_required
+def list_services():
+    c = get_db().cursor()
+    c.execute('''
+        SELECT api_key, display_name, author_email, created, last_used, active
+        FROM Services
+    ''')
+    services = c.fetchall()
+
+    svcs = []
+    for svc_row in services:
+        svc = {}
+        for key in svc_row.keys():
+            svc[key] = svc_row[key]
+
+        svc['created'] = arrow.get(svc['created']).format('YYYY-MM-DD HH:mm:ss')
+        if svc['last_used'] is not None:
+            svc['last_used'] = arrow.get(svc['last_used']).format('YYYY-MM-DD HH:mm:ss')
+
+        svcs.append(svc)
+
+
+    return render_template(
+        'dashboard/services.html',
+        session=session,
+        services=svcs
+    )
+
+
+@bp.route('/services/docs')
+@admin_login_required
+def services_docs():
+    from .services import api_routes
+
+    endpoints = []
+    for func in api_routes:
+        if func.__doc__:
+            doc = func.__doc__.split('\n')
+            doc = [(line[3:] if len(line) > 3 else line) for line in doc]
+            doc = '\n'.join(doc)
+            doc = markdown(doc)
+        else:
+            doc = ''
+        ep = {
+            'name': func.__name__,
+            'doc': doc,
+            'url': url_for(f'service_api.{func.__name__}')
+        }
+        endpoints.append(ep)
+
+    return render_template(
+        'dashboard/services_doc.html',
+        session=session,
+        endpoints=endpoints
+    )
+
+@bp.route('/config')
+@admin_login_required
+def edit_config():
+    db = get_db()
+    cfg = get_config(db)
+    
+    strtimes = {
+        'applications_open': arrow.get(cfg['applications_open']).format(),
+        'applications_dline': arrow.get(cfg['applications_dline']).format(),
+        'event_start': arrow.get(cfg['event_start']).format()
+    }
+            
+    return render_template(
+        'dashboard/config.html',
+        session=session,
+        config=cfg,
+        strtimes=strtimes
+    )
 
 @bp.after_request
 def no_cache(response):
     response.headers['Cache-Control'] = 'no-store'
     return response
+

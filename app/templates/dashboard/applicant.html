@@ -69,9 +69,9 @@
     <div class="applicant__rating_row">
     {% if applicant['completed'] %}
     {% if session.redacted %}
-        <h1 class="is-size-1 is-blurred">{{ applicant['name'] }}</h1>
+        <h1 class="is-size-1 is-blurred">{{ applicant['first_name'] }} {{ applicant['last_name'] }}</h1>
     {% else %}
-        <h1 class="is-size-1">{{ applicant['name'] }}</h1>
+        <h1 class="is-size-1">{{ applicant['first_name'] }} {{ applicant['last_name'] }}</h1>
     {% endif %}
     {% else %}
     <h1 class="is-blurred is-size-1">No Name Provided</h1>
@@ -109,8 +109,20 @@
             <p>
                 <strong>University: </strong> {{ applicant.school }} <br/>
                 <strong>Grad Year: </strong> {{ applicant.gradYear }} <br/>
-                <strong>Gender: </strong> <span class="{% if session.redacted %}is-blurred{% endif %}">{{ applicant.gender }}</span> <br/>
+                {# <strong>Gender: </strong> <span class="{% if session.redacted %}is-blurred{% endif %}">{{ applicant.gender }}</span> <br/> #}
+                <strong>Login email:</strong> {{applicant.email }} <br/>
+                <strong>Contact email:</strong> {{applicant.contact_email }} <br/>
                 <strong>Submitted: </strong> {{ timestamp }}
+
+                <details>
+                    <summary><strong>Address info</strong></summary>
+                    <pre>{{ applicant.first_name }} {{ applicant.last_name }}
+{{ applicant.address_line_1 }}{% if applicant.address_line_2 %}
+{{ applicant.address_line_2 }}{% endif %}{% if applicant.address_line_3 %}
+{{ applicant.address_line_3 }}{% endif %}
+{{ applicant.address_city }}, {{ applicant.address_region }}
+{{ applicant.address_country }} {{ applicant.address_pcode }}</pre>
+                </details>
             </p>
             <h4 class="title is-4 has-margin-top--1em">Short Answers</h4>
             <strong>Why are you excited about Hack the Burgh?</strong>

@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 load_dotenv()
 
-from flask import Flask
+from flask import Flask, render_template
 import os
 import json
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -42,7 +42,7 @@ def create_app(test_config=None):
     db.init_app(app)
 
     # apply the blueprints to the app
-    from . import auth, dashboard, actions, landing, hacker
+    from . import auth, dashboard, actions, landing, hacker, services
     app.register_blueprint(auth.bp, url_prefix='/auth')
     auth.register_google_bp(app) # hax
     auth.register_mlh_bp(app)    # double hax
@@ -51,8 +51,13 @@ def create_app(test_config=None):
     app.register_blueprint(dashboard.bp)
     app.register_blueprint(actions.bp)
     app.register_blueprint(landing.bp)
+    app.register_blueprint(services.bp)
     app.register_blueprint(hacker.bp)
 
+
+    @app.errorhandler(404)
+    def app_404(route):
+        return render_template('404.html')
 
 
     # Apply CORS rules to the entire application

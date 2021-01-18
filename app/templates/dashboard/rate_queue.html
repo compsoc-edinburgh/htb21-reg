@@ -2,7 +2,7 @@
 
 {% macro make_applicant(row) %}
 <tr>
-        <td>{{ row['name'] }}</td>
+        <td>{{ row['first_name'] }} {{ row['last_name'] }}</td>
         <td>{{ row['email'] }}</td>
         <td>
             <a href="{{url_for('dashboard.applicant', user_id=row['user_id'])}}?flow=1">

@@ -47,7 +47,7 @@
                 <th>{{ sortlink('ID', 'user_id') }}</th>
                 <th>{{ sortlink('Verified', 'verified') }}</th>
                 <th>{{ sortlink('Completed', 'completed') }}</th>
-                <th>{{ sortlink('Name', 'name') }}</th>
+                <th>{{ sortlink('Name', 'first_name') }}</th>
                 <th>{{ sortlink('Email', 'email') }}</th>
                 <th>{{ sortlink('School', 'school') }}</th>
                 <th>{{ sortlink('Ratings', 'ratings') }}</th>
@@ -61,7 +61,7 @@
                 <td>{{ row['id'] }}</td>
                 <td>{{ boolean_val(row['verified']) }}</td>
                 <td>{{ boolean_val(row['completed']) }}</td>
-                <td>{{ row['name'] }}</td>
+                <td>{{ row['first_name'] }} {{ row['last_name'] }}</td>
                 <td>{{ row['email'] }}</td>
                 <td>{{ row['school'] }}</td>
                 <td>{{ row['ratings'] }}</td>
