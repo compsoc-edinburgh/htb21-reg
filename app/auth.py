@@ -16,8 +16,6 @@ try:
 except ImportError:
     from flask import _request_ctx_stack as stack
 
-secrets = json.load(open('instance/secret.json', 'r'))
-
 bp = Blueprint('auth', __name__)
 
 google_bp = None
