@@ -2,7 +2,7 @@ FROM python:alpine3.7
 
 WORKDIR /app
 
-RUN apk add make
+RUN apk add make alpine-sdk libffi-dev --no-cache
 RUN pip install gunicorn
 COPY ./requirements.txt ./requirements.txt
 RUN pip install -r requirements.txt

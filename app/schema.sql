@@ -42,13 +42,17 @@ CREATE TABLE Applicants (
     gender      TEXT,
     description TEXT,
     essay       TEXT,
+    resume      TEXT,
     shirt_size  TEXT,
 
     -- authorizations
     gdpr            INTEGER,
+    gdpr_sponsor    INTEGER,
     mlh_coc         INTEGER,
+    mlh_admin       INTEGER,
+    mlh_email       INTEGER,
     hackuk_admin    INTEGER,
-    hackuk_email     INTEGER,
+    hackuk_email    INTEGER,
 
     UNIQUE (user_id),
     UNIQUE (email)

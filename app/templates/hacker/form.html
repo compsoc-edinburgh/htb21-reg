@@ -5,7 +5,7 @@
 <h1 class="title">Application</h1>
 <h2 class="subtitle">{% if appl['completed'] == 1 %}<span class="has-text-success">Submitted {{ completed_time }}</span>{% else %}Not submitted{% endif %} &bull; <span class="is-size-6 is-italic">Required fields marked with an <span class="has-text-danger">*</span>.</span></h2>
 
-<form action="{{ url_for('hacker.submit_application') }}" method="POST" id="application">
+<form action="{{ url_for('hacker.submit_application') }}" method="POST" id="application" enctype="multipart/form-data">
     <h2 class="subtitle">Basic Info</h2>
     <div class="columns">
         <div class="column">
@@ -188,13 +188,71 @@
         </div>
     </div>
 
-    <h2 class="subtitle" style="margin-top: 1em;">Authorizations</h2>
+
+
+    <div class="field">
+        <label class="label">Upload your CV/Resume to share with our sponsors.</label>
+        <div class="control">
+            <div class="level">
+                <div class="level-left">
+                    <div class="file has-name" id="file-resume">
+                        <label class="file-label">
+                            <input class="file-input" type="file" name="resume" accepts="application/pdf">
+                            <span class="file-cta">
+                                <span class="file-icon">
+                                    <i class="fas fa-upload"></i>
+                                </span>
+                                <span class="file-label">
+                                    Choose a file…
+                                </span>
+                            </span>
+                            <span class="file-name">
+                                No file chosen
+                            </span>
+                        </label>
+                    </div>
+                    {% if appl['resume'] %}
+                    <a href="{{ url_for('hacker.show_resume') }}" class="button is-link" style="margin-left: 1em" target="_blank">
+                        <span>View uploaded</span>
+                        <div class="icon">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    {% endif %}
+                </div>
+                {% if appl['resume'] %}
+                <div class="level-right">
+                    <a href="{{ url_for('hacker.delete_resume') }}" class="button is-danger">
+                        <span>Delete</span>
+                        <div class="icon">
+                            <i class="fas fa-trash"></i>
+                        </div>
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+
+
+    <h2 class="subtitle" style="margin-top: 1em;margin-bottom: 0.5em;">Authorisations</h2>
+    <h2 class="is-size-6 has-text-weight-semibold" style="margin-bottom: 0.5em;">Administration</h2>
 
     <div class="field">
         <div class="control">
             <label class="checkbox">
+                <input type="checkbox" name="mlh_coc" {% if appl['mlh_coc'] == 1 %}checked{% endif %} required>
+                I have read and agree to the <a href="//mlh.io/code-of-conduct" target="_blank">code of conduct</a>.
+                <span class="has-text-danger">*</span>
+            </label>
+        </div>
+    </div>
+    <div class="field">
+        <div class="control">
+            <label class="checkbox">
                 <input type="checkbox" name="gdpr" {% if appl['gdpr'] == 1 %}checked{% endif %} required>
-                I agree to the <span class="has-background-danger is-size-4">GDPR_COMPLIANCE_TEXT</span>
+                I agree to the Hack the Burgh <a href="https://www.eusa.ed.ac.uk/about/privacynotice/">privacy policy</a>, as well as authorize Hack the Burgh to process my registration information for the purposes of event organisation and shipping merch to our hackers. 
                 <span class="has-text-danger">*</span>
             </label>
         </div>
@@ -203,8 +261,8 @@
     <div class="field">
         <div class="control">
             <label class="checkbox">
-                <input type="checkbox" name="mlh_coc" {% if appl['mlh_coc'] == 1 %}checked{% endif %} required>
-                I agree to the <a href="//mlh.io/code-of-conduct" target="_blank">code of conduct</a>.
+                <input type="checkbox" name="mlh_admin" {% if appl['mlh_admin'] == 1 %}checked{% endif %} required>
+                I authorise you to share my application/registration information with Major League Hacking for event administration, ranking, and MLH administration in-line with the MLH Privacy Policy. I further agree to the terms of both the MLH Contest Terms and Conditions and the MLH Privacy Policy.
                 <span class="has-text-danger">*</span>
             </label>
         </div>
@@ -231,6 +289,25 @@
         </div>
     </div>
 
+    <h2 class="is-size-6 has-text-weight-semibold" style="margin-top: 1.5em; margin-bottom: 0.5em;">Marketing</h2>
+
+    <div class="field">
+        <div class="control">
+            <label class="checkbox">
+                <input type="checkbox" name="gdpr_sponsor" {% if appl['gdpr_sponsor'] == 1 %}checked{% endif %}>
+                I authorise Hack the Burgh to send my application information and CV to sponsors.
+            </label>
+        </div>
+    </div>
+    <div class="field">
+        <div class="control">
+            <label class="checkbox">
+                <input type="checkbox" name="mlh_email" {% if appl['mlh_email'] == 1 %}checked{% endif %}>
+                I authorise MLH to send me pre- and post-event informational emails, which contain free credit and opportunities from their partners.
+            </label>
+        </div>
+    </div>
+
     
     <div class="field">
         <div class="control">
@@ -240,6 +317,7 @@
             </label>
         </div>
     </div>
+    <br/>
 
     <div class="field is-grouped">
         {% if appl['completed'] == 1 %}
@@ -258,7 +336,7 @@
 </form>
 
 
-{% if appl['completed'] == 0 %}
+{% if appl['completed'] != 1 %}
 <script type="text/javascript">
 document.querySelector('#save-button')
     .addEventListener('click', e => {
@@ -277,5 +355,18 @@ document.querySelector('#save-button')
     })
 </script>
 {% endif %}
+
+
+<script>
+    const fileInput = document.querySelector('#file-resume input[type=file]');
+    fileInput.onchange = () => {
+        if (fileInput.files.length > 0) {
+            const fileName = document.querySelector('#file-resume .file-name');
+            fileName.textContent = fileInput.files[0].name;
+            
+            // todo: file size validation
+        }
+    }
+</script>
 
 {% endblock %}

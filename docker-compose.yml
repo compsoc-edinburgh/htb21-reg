@@ -1,7 +1,7 @@
 version: '3'
 services:
-    htb20-voter:
-        image: htb20-voter
+    htb21-reg:
+        image: htb21-reg
         environment:
         - "FLASK_PREFERRED_URL_SCHEME=https"
         - "OAUTHLIB_RELAX_TOKEN_SCOPE=1"

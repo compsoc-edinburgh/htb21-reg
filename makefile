@@ -1,8 +1,8 @@
 STAGING = staging
 VIRTUALENV = env_h21reg
 DOCKER_TAG_NAME = htb21-reg
-REMOTE = compsoc-admin@bucket.comp-soc.com
-REMOTE_DESTINATION = ~/voter
+REMOTE = compsoc-admin@bucket.2021.hacktheburgh.com
+REMOTE_DESTINATION = ~/registration
 
 all: run
 
@@ -26,19 +26,24 @@ clean:
 upload: clean
 	mkdir -p ${STAGING}
 	docker build . -t ${DOCKER_TAG_NAME}
-	docker save ${DOCKER_TAG_NAME} -o ${STAGING}/${DOCKER_TAG_NAME}.tar.gz
-	scp ${STAGING}/${DOCKER_TAG_NAME}.tar.gz ${REMOTE}:${REMOTE_DESTINATION}/${DOCKER_TAG_NAME}
+	docker save ${DOCKER_TAG_NAME} -o ${STAGING}/${DOCKER_TAG_NAME}.tar
+	gzip ${STAGING}/${DOCKER_TAG_NAME}.tar
+	ls -lH ${STAGING}/${DOCKER_TAG_NAME}.tar.gz
+	scp ${STAGING}/${DOCKER_TAG_NAME}.tar.gz ${REMOTE}:${REMOTE_DESTINATION}/${DOCKER_TAG_NAME}.tar.gz
+	ssh -t ${REMOTE} 'gzip -df ${REMOTE_DESTINATION}/${DOCKER_TAG_NAME}.tar.gz'
 
 connect:
 	ssh ${REMOTE}
 
 deploy: upload
-	ssh -t ${REMOTE} 'cd ${REMOTE_DESTINATION}; sudo docker-compose stop; sudo docker load -i ${DOCKER_TAG_NAME}.tar.gz; sudo docker-compose up -d;'
+	ssh -t ${REMOTE} 'cd ${REMOTE_DESTINATION}; sudo docker-compose stop; sudo docker load -i ${DOCKER_TAG_NAME}.tar; sudo docker-compose up -d;'
 
 
 init-deploy:
 	ssh -t ${REMOTE} 'mkdir -p ${REMOTE_DESTINATION}'
 	scp docker-compose.yml ${REMOTE}:${REMOTE_DESTINATION}
+	scp .env ${REMOTE}:${REMOTE_DESTINATION}
+	scp -r instance ${REMOTE}:${REMOTE_DESTINATION}/instance
 
 
 prod:
