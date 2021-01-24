@@ -1,6 +1,7 @@
 __pycache__/
 instance/secret.json
 env_*
+.env
 *.pyc
 .DS_Store
 *.tar.gz
