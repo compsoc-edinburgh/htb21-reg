@@ -187,10 +187,15 @@ def applicant(user_id):
     else:
         flow_votes_percentage = '0.00%'
 
+    applicant_txt = ''
+    for key in row.keys():
+        applicant_txt += f'{key}: {row[key]}\n'
+
     return render_template(
         'dashboard/applicant.html',
         session=session,
         applicant=row,
+        applicant_txt=applicant_txt,
         timestamp=timestamp,
         essay=essay,
         description=description,

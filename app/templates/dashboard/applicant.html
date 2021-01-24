@@ -67,7 +67,7 @@
 <div class="container">
 
     <div class="applicant__rating_row">
-    {% if applicant['completed'] %}
+    {% if applicant['completed'] or (applicant['first_name'] and applicant['last_name']) %}
     {% if session.redacted %}
         <h1 class="is-size-1 is-blurred">{{ applicant['first_name'] }} {{ applicant['last_name'] }}</h1>
     {% else %}
@@ -98,7 +98,6 @@
         {% else %}
         {{ make_tag('adult', applicant['adult']) }}
         {% endif %}
-        {{ make_tag('admin', applicant['admin']) }}
         {{ make_tag('accepted', applicant['accepted']) }}
     </div>
 
@@ -112,6 +111,11 @@
                 {# <strong>Gender: </strong> <span class="{% if session.redacted %}is-blurred{% endif %}">{{ applicant.gender }}</span> <br/> #}
                 <strong>Login email:</strong> {{applicant.email }} <br/>
                 <strong>Contact email:</strong> {{applicant.contact_email }} <br/>
+                {% if applicant.resume %}
+                    <strong>Resume:</strong> <a href="{{ applicant.resume }}" target="_blank">{{applicant.resume}}</a> <br/>
+                {% else %}
+                    <strong>Resume:</strong> <i>Not provided.</i> <br/>
+                {% endif %}
                 <strong>Submitted: </strong> {{ timestamp }}
 
                 <details>
@@ -123,6 +127,27 @@
 {{ applicant.address_city }}, {{ applicant.address_region }}
 {{ applicant.address_country }} {{ applicant.address_pcode }}</pre>
                 </details>
+                <details>
+                    <summary><strong>Authorizations</strong></summary>
+                    <strong>Required:</strong>
+                    <div class="tags" style="margin-bottom: 0px;">
+                        {{ make_tag('HTB Admin', applicant['gdpr']) }}
+                        {{ make_tag('MLH Admin', applicant['mlh_admin']) }}
+                        {{ make_tag('HackUK Admin', applicant['hackuk_admin']) }}
+                        {{ make_tag('MLH COC', applicant['mlh_coc']) }}
+                    </div>
+                    <strong>Optional:</strong>
+                    <div class="tags">
+                        {{ make_tag('Share with sponsors?', applicant['gdpr_sponsor']) }}
+                        {{ make_tag('MLH Email', applicant['mlh_email']) }}
+                        {{ make_tag('HackUK Email', applicant['hackuk_email']) }}
+                    </div>
+                </details>
+                <details>
+                    <summary><strong>All Information</strong></summary>
+                    <pre>{{ applicant_txt }}</pre>
+                </details>
+                
             </p>
             <h4 class="title is-4 has-margin-top--1em">Short Answers</h4>
             <strong>Why are you excited about Hack the Burgh?</strong>

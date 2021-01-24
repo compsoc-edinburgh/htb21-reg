@@ -81,9 +81,10 @@ def index():
 @bp.route('/logout')
 def logout():
     # retrieve token
-    token = google_bp.token["access_token"]
 
     try:
+        token = google_bp.token["access_token"]
+
         # revoke permission from Google's API
         resp = google.post(
             "https://accounts.google.com/o/oauth2/revoke",
@@ -91,9 +92,16 @@ def logout():
             headers={"Content-Type": "application/x-www-form-urlencoded"}
         )
         assert resp.ok, resp.text
+
     except TokenExpiredError as e:
         print('token expired, ignoring')
-    del google_bp.token  # Delete OAuth token from storage
+    except TypeError as e:
+        print('probably fine too')
+
+    try:
+        del google_bp.token  # Delete OAuth token from storage
+    except Exception as e:
+        print('probably also fine')
     return redirect(url_for('landing.index'))
 
 

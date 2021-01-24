@@ -191,13 +191,13 @@
 
 
     <div class="field">
-        <label class="label">Upload your CV/Resume to share with our sponsors.</label>
+        <label class="label">Upload your CV/Resume to share with our sponsors. (PDF, max 15MB)</label>
         <div class="control">
             <div class="level">
                 <div class="level-left">
                     <div class="file has-name" id="file-resume">
                         <label class="file-label">
-                            <input class="file-input" type="file" name="resume" accepts="application/pdf">
+                            <input class="file-input" type="file" name="resume" accept=".pdf,application/pdf">
                             <span class="file-cta">
                                 <span class="file-icon">
                                     <i class="fas fa-upload"></i>
@@ -360,11 +360,17 @@ document.querySelector('#save-button')
 <script>
     const fileInput = document.querySelector('#file-resume input[type=file]');
     fileInput.onchange = () => {
+        const f_el = document.querySelector('#file-resume')
         if (fileInput.files.length > 0) {
+            f_el.classList.remove('is-danger')
             const fileName = document.querySelector('#file-resume .file-name');
             fileName.textContent = fileInput.files[0].name;
             
-            // todo: file size validation
+            if (fileInput.files[0].size > 15 * 1024 * 1024) {
+                f_el.classList.add('is-danger')
+                fileName.textContent = 'File too large!';
+                fileInput.value = ''
+            }
         }
     }
 </script>
