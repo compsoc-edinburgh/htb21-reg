@@ -1,4 +1,8 @@
 **/__pycache__
-**/env_htb21reg
-instance/
-staging/
+env_h21reg
+instance
+staging
+.git
+docs
+.env
+.DS_Store
