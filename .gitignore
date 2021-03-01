@@ -6,3 +6,4 @@ env_*
 .DS_Store
 *.tar.gz
 staging/
+instance/
