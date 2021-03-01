@@ -231,6 +231,41 @@ def api_get_all_applicants_csv():
         mimetype='text/csv'
     )
 
+@bp.route('/applicants/admit', methods=['POST'])
+@service_auth_required
+def api_admit():
+    '''
+    Set's a user's admission status by `user_id`, via a POST request.
+
+    JSON body:
+    <pre>
+    {
+        "app_id": "applicant_id",
+        "admit": true, // or false
+    }</pre>
+    '''
+
+    app_id = request.json['app_id'] if 'app_id' in request.json else None
+    admit  = request.json['admit']  if 'admit'  in request.json else None
+
+    if app_id is None or admit is None:
+        return create_response({}, ok=False, message='Must have both app_id and admit!')
+
+
+    c = get_db().cursor()
+    c.execute('''
+        UPDATE Applicants
+            SET admitted=?
+            WHERE user_id=?
+    ''', [
+        admit,
+        app_id
+    ])
+
+    c.connection.commit()
+    return create_response({})
+
+
 @bp.route('/invites/create', methods=['POST'])
 @service_auth_required
 def api_invite_create():
@@ -263,7 +298,7 @@ def api_invite_create():
         link,
         code
     ])
-    
+
     c.connection.commit()
 
     return create_response({})
@@ -287,7 +322,7 @@ def api_invite_list():
         c.execute('''
             SELECT * FROM Invites
         ''')
-    
+
     rows = c.fetchall()
     if rows is None:
         rows = []
@@ -301,6 +336,7 @@ api_routes = [
     api_get_by_email,
     api_get_all_applicants,
     api_get_all_applicants_csv,
+    api_admit,
     api_invite_create,
     api_invite_list
 ]
