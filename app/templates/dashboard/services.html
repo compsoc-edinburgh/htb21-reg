@@ -46,7 +46,7 @@
             <strong>API key:</strong> <code>{{ svc.api_key }}</code><br/>
             <strong>API secret:</strong> <code>[hidden]</code><br/>
             <strong>Created:</strong> {{ svc.created }}<br/>
-            <strong>Created by:</strong> patrick@comp-soc.com<br/>
+            <strong>Created by:</strong> {{ svc.author_email }}<br/>
             <strong>Last used:</strong> {% if svc.last_used %}{{ svc.last_used }}{% else %}<i>unused</i>{% endif %}<br/>
         </p>
 
