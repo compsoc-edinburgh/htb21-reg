@@ -23,6 +23,9 @@ def create_response(obj, ok=True, message=None, code=None):
 
 
 def validate_auth(auth_slug):
+    if auth_slug is None:
+        return False
+
     if len(auth_slug) <= 8:
         return False
 
@@ -54,7 +57,7 @@ def validate_auth(auth_slug):
     if svc is None:
         print('no such service')
         return False
-    
+
     # validate bcrypt
     if not bcrypt.checkpw(api_secret, svc['api_secret']):
         print('bcrypt failure')
