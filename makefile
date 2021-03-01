@@ -21,14 +21,14 @@ init-db:
 		python -m flask init-db
 
 clean:
-	rm -f ${STAGING}/${DOCKER_TAG_NAME}.tar.gz
+	rm -rf ${STAGING}
 
 upload: clean
 	mkdir -p ${STAGING}
 	docker build . -t ${DOCKER_TAG_NAME}
 	docker save ${DOCKER_TAG_NAME} -o ${STAGING}/${DOCKER_TAG_NAME}.tar
 	gzip ${STAGING}/${DOCKER_TAG_NAME}.tar
-	ls -lH ${STAGING}/${DOCKER_TAG_NAME}.tar.gz
+	ls -lhH ${STAGING}/${DOCKER_TAG_NAME}.tar.gz
 	scp ${STAGING}/${DOCKER_TAG_NAME}.tar.gz ${REMOTE}:${REMOTE_DESTINATION}/${DOCKER_TAG_NAME}.tar.gz
 	ssh -t ${REMOTE} 'gzip -df ${REMOTE_DESTINATION}/${DOCKER_TAG_NAME}.tar.gz'
 
