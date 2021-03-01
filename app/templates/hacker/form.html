@@ -268,15 +268,6 @@
         </div>
     </div>
 
-    <div class="field">
-        <div class="control">
-            <label class="checkbox">
-                <input type="checkbox" name="adult" {% if appl['adult'] == 1 %}checked{% endif %} required>
-                I am 18 years of age or older (or will be at the time of the event).
-                <span class="has-text-danger">*</span>
-            </label>
-        </div>
-    </div>
 
 
     <div class="field">
@@ -285,6 +276,15 @@
                 <input type="checkbox" name="hackuk_admin" {% if appl['hackuk_admin'] == 1 %}checked{% endif %} required>
                 I authorise you to share my application/registration information with <a href="https://hackathons.org.uk/" target="_blank">Hackathons UK Limited</a> for event administration, Hackathons UK Limited administration, and with my authorisation email in-line with the Hackathons UK Limited <a href="https://hackuk.org/privacy" target="_blank">Privacy Policy</a>.
                 <span class="has-text-danger">*</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="control">
+            <label class="checkbox">
+                <input type="checkbox" name="adult" {% if appl['adult'] == 1 %}checked{% endif %}>
+                I am 18 years of age or older (or will be at the time of the event).
             </label>
         </div>
     </div>
