@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, session
 from .common import get_config
 from .db import get_db
 import arrow
@@ -17,3 +17,13 @@ def index():
         status = 'Registrations are closed!'
 
     return render_template('index.html', status=status)
+
+@bp.route('/discord')
+def discord_landing():
+    session['post_login_redirect'] = 'hacker.discord'
+    return render_template('discord.html')
+
+@bp.route('/phone')
+def phone_landing():
+    session['post_login_redirect'] = 'hacker.phone'
+    return render_template('phone.html')

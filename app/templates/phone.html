@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block bulma_css %}
+<link href="{{ url_for('static', filename='bulma_cyborg.css') }}" rel="stylesheet" type="text/css"/>
+{% endblock %}
+
+{% block content %}
+
+<div class="fullpage">
+            <div class="fullpage__centered">
+                <article>
+                    <div class="image is-32x32" style="margin-bottom: 1rem;">
+                        <img src="/static/favicon.svg" alt="htb7 logo">
+                    </div>
+                    <h1 class="title">Hack the Burgh 7 Merch</h1>
+                    <h2 class="subtitle">One last thing...</h2>
+                    <p class="block">
+                        Hi there! We hope you had a wonderful event. One last
+                        thing before we wrap up: we'll need your phone number
+                        to ensure that the HtB merch makes it's way over to you.
+                        You'll be able to log in here and set your phone number.
+                    </p>
+
+                    <p class="block ">
+                        <div class="level">
+                            <div class="level-left"></div>
+                            <div class="level-right">
+                                <p class="has-text-right">
+                                    <a href="{{ url_for('github.login') }}">
+                                        <span>Log in with Github</span>
+                                        <span class="icon">
+                                            <i class="fas fa-arrow-right"></i>
+                                        </span>
+                                    </a><br/>
+                                    <a href="{{ url_for('mymlh.login') }}">
+                                        <span>Log in with MyMLH</span>
+                                        <span class="icon">
+                                            <i class="fas fa-arrow-right"></i>
+                                        </span>
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    </p>
+                </article>
+            </div>
+        </div>
+
+{% endblock %}

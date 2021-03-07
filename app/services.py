@@ -150,16 +150,22 @@ def api_get_by_email():
     '''
     Get a user by their email.
 
-    Requires a query parameter `email`, for example for email `test@example.com` the query is `email=test%40example.com`.
+    Requires a query parameter `email`, for example for email `test@example.com` the query is `email=test%40example.com`. By default, this looks at both
+    `email` and `contact_email`, to filter only by email use the parameter `strict=true`
     '''
     email = request.args.get('email')
     if email is None:
         return create_response({}, ok=False, message=f'No parameter "email"!')
 
     c = get_db().cursor()
-    c.execute('''
-        SELECT * FROM Applicants WHERE email=?
-    ''', (email,))
+    if request.args.get('strict') is not None:
+        c.execute('''
+            SELECT * FROM Applicants WHERE email=?
+        ''', (email,))
+    else:
+        c.execute('''
+            SELECT * FROM Applicants WHERE email=? OR contact_email=?
+        ''', (email,email))
 
     usr = c.fetchone()
     if usr is None:

@@ -1,0 +1,32 @@
+{% extends "hacker/base.html" %}
+
+{% block hacker_content %}
+<h1 class="title">Delivery Phone</h1>
+
+<p style="max-width: 60ch" class="block">
+    To be able to ship your merch, we'll need your phone number
+    to pass on to our delivery partners. This will be used to
+    get in touch with you in the event that more information is
+    needed by our delivery partners to ensure your merch arrives
+    safely. <b>Please include the country code!</b>
+</p>
+
+<form action="{{ url_for('hacker.phone_submit') }}" method="POST" class="block">
+    <div class="field">
+        <label class="label">Phone Number<span class="has-text-danger">*</span></label>
+        <div class="control">
+            <input class="input" type="tel" placeholder="+44 (0) 1234 567890" name="phone" value="{{ appl['address_phone'] }}" required autocomplete="off">
+        </div>
+    </div>
+
+    <div class="field">
+        <button type="submit" class="button is-success">Save</button>
+    </div>
+
+</form>
+
+
+
+
+{% endblock %}
+

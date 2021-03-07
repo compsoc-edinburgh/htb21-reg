@@ -190,7 +190,7 @@ def get_hacker_gh_profile():
     resp = github.get('/user').json()
     resp_emails = github.get('/user/emails')
     email = [addr['email'] for addr in resp_emails.json() if addr['primary']][0]
-    
+
     resp['email'] = email
 
     return resp

@@ -1,0 +1,29 @@
+{% extends "hacker/base.html" %}
+
+{% block hacker_content %}
+<h1 class="title">Discord</h1>
+
+<p style="max-width: 60ch" class="block">
+    To get access to Discord, you'll need to join the server and register with
+    your invitation code and email. {% if invite %}Your registration email is <code>{{
+    appl['email'] }}</code> and your unique invite code is 
+<code>{{ invite.code }}</code>.{% endif %}
+</p>
+
+{% if invite %}
+<p class="block">
+    <a href="{{ invite.link }}" rel="nofollow" target="_blank" class="button is-large">
+        <span>Join Discord</span>
+        <span class="icon">
+            <i class="fab fa-discord"></i>
+        </span>
+    </a>
+</p>
+
+{% endif %}
+
+
+
+
+{% endblock %}
+

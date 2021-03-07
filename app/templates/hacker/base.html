@@ -52,6 +52,24 @@
                                 </span>
                             </a>
                         </li>
+                        {% if appl['admitted'] == 1 %}
+                        <li>
+                            <a href="{{ url_for('hacker.discord') }}">
+                                <span>Discord</span>
+                                <span class="icon">
+                                    <i class="fas fa-arrow-right"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('hacker.phone') }}">
+                                <span>Phone</span>
+                                <span class="icon">
+                                    <i class="fas fa-arrow-right"></i>
+                                </span>
+                            </a>
+                        </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>

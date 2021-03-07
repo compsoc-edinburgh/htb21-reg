@@ -56,6 +56,10 @@ def init_mlh():
 
     session['email'] = email
 
+    if 'post_login_redirect' in session:
+        redir = session.pop('post_login_redirect', None)
+        return redirect(url_for(redir))
+
     return redirect(url_for('hacker.application'))
 
 @bp.route('/import/gh')
@@ -88,6 +92,11 @@ def init_gh():
     # we should load the profile maybe
 
     session['email'] = email
+
+    if 'post_login_redirect' in session:
+        redir = session.pop('post_login_redirect', None)
+        return redirect(url_for(redir))
+
     return redirect(url_for('hacker.application'))
 
 
@@ -121,6 +130,59 @@ def application():
     )
 
 
+@bp.route('/discord')
+@hacker_login_required
+def discord():
+    appl, appl_text = resolve_application(session['email'])
+
+    c = get_db().cursor()
+    c.execute('''
+        SELECT * FROM Invites WHERE app_id=?
+    ''', [appl['user_id']])
+
+    invite = c.fetchone()
+
+    return render_template(
+        'hacker/discord.html',
+        appl=appl_text,
+        invite=invite,
+        login_type=capitalize_login_provider()
+    )
+
+@bp.route('/phone')
+@hacker_login_required
+def phone():
+    appl, appl_text = resolve_application(session['email'])
+
+    return render_template(
+        'hacker/phone.html',
+        appl=appl_text,
+        login_type=capitalize_login_provider()
+    )
+
+@bp.route('/phone/submit', methods=['POST'])
+@hacker_login_required
+def phone_submit():
+    appl, appl_text = resolve_application(session['email'])
+
+    db = get_db()
+    c = db.cursor()
+
+    phone = request.form['phone']
+    if phone is None:
+        flasher('No phone number provided!', color='danger')
+        return redirect(url_for('hacker.phone'))
+
+    c.execute('''
+        UPDATE Applicants
+            SET address_phone=?
+            WHERE user_id=?
+    ''', [phone, appl['user_id']])
+    c.connection.commit()
+
+    flasher('Saved phone number successfully!', color='success')
+    return redirect(url_for('hacker.phone'))
+
 def s3_upload(filename,local_fn,tmpdir):
 
     s3 = boto3.client(
@@ -130,11 +192,11 @@ def s3_upload(filename,local_fn,tmpdir):
         aws_access_key_id=os.environ['S3_ACCESS_KEY'],
         aws_secret_access_key=os.environ['S3_ACCESS_SECRET'],
     )
-    
+
     response = s3.upload_file(local_fn, os.environ['S3_BUCKET'], filename, ExtraArgs={'ContentType': "application/pdf", 'ACL': "public-read"})
 
     shutil.rmtree(tmpdir)
-    
+
 
 def write_application(submit=False):
     db = get_db()
@@ -175,7 +237,6 @@ def write_application(submit=False):
     #print(equest.files['resume'])
 
     try:
-        
 
         # checkboxes
         cb_gdpr         = 'gdpr' in request.form and request.form['gdpr'] == 'on'
@@ -342,7 +403,7 @@ def delete_resume():
 
     if appl['resume'] is not None and appl['resume'] != '':
         filename = f"htb21-cvs/{'_'.join(appl['user_id'].split(':'))}.pdf"
-        
+
         s3 = boto3.client(
             's3',
             region_name=os.environ['S3_REGION'],
