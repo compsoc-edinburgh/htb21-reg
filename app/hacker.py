@@ -18,7 +18,7 @@ def capitalize_login_provider():
     if session['login_type'] == 'mlh':
         return 'MLH'
     elif session['login_type'] == 'github':
-        return 'Github'
+        return 'GitHub'
 
 @bp.route('/import/mlh')
 @hacker_login_required
