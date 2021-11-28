@@ -187,13 +187,13 @@ def s3_upload(filename,local_fn,tmpdir):
 
     s3 = boto3.client(
         's3',
-        region_name=os.environ['S3_REGION'],
-        endpoint_url=os.environ['S3_ENDPOINT'],
-        aws_access_key_id=os.environ['S3_ACCESS_KEY'],
-        aws_secret_access_key=os.environ['S3_ACCESS_SECRET'],
+        region_name=app.config['S3_REGION'],
+        endpoint_url=app.config['S3_ENDPOINT'],
+        aws_access_key_id=app.config['S3_ACCESS_KEY'],
+        aws_secret_access_key=app.config['S3_ACCESS_SECRET'],
     )
 
-    response = s3.upload_file(local_fn, os.environ['S3_BUCKET'], filename, ExtraArgs={'ContentType': "application/pdf", 'ACL': "public-read"})
+    response = s3.upload_file(local_fn, app.config['S3_BUCKET'], filename, ExtraArgs={'ContentType': "application/pdf", 'ACL': "public-read"})
 
     shutil.rmtree(tmpdir)
 
@@ -226,7 +226,7 @@ def write_application(submit=False):
         upload.start()
 
         # oh jesus
-        resume = f"{os.environ['S3_SUBDOMAIN']}/{filename}"
+        resume = f"{app.config['S3_SUBDOMAIN']}/{filename}"
         # we're going to set this separately to avoid overriding existing values
         c.execute('''
             UPDATE Applicants
@@ -406,14 +406,14 @@ def delete_resume():
 
         s3 = boto3.client(
             's3',
-            region_name=os.environ['S3_REGION'],
-            endpoint_url=os.environ['S3_ENDPOINT'],
-            aws_access_key_id=os.environ['S3_ACCESS_KEY'],
-            aws_secret_access_key=os.environ['S3_ACCESS_SECRET'],
+            region_name=app.config['S3_REGION'],
+            endpoint_url=app.config['S3_ENDPOINT'],
+            aws_access_key_id=app.config['S3_ACCESS_KEY'],
+            aws_secret_access_key=app.config['S3_ACCESS_SECRET'],
         )
 
         s3.delete_object(
-            Bucket=os.environ['S3_BUCKET'],
+            Bucket=app.config['S3_BUCKET'],
             Key=filename,
         )
 
