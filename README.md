@@ -31,7 +31,7 @@ https://registration.2021.hacktheburgh.com/oauth/admin/google/authorized
 
 3) You'll also need to enable access to the People API, which is used to retrieve a profile photo and other information. This can be done through the sidebar > APIs & Services > Library portal.
 
-Once you've done that, you'll need to create your json configuration file in `instance/secret.json`:
+Once you've done that, you'll need to create your json configuration file in `instance/development.json`:
 
 ```json
 {
@@ -45,6 +45,13 @@ Then you should be good to go! Start the server with:
 
 ```
 $ make run
+```
+
+or with
+
+
+```
+$ FLASK_ENV=development OAUTHLIB_INSECURE_TRANSPORT=1 OAUTHLIB_RELAX_TOKEN_SCOPE=1 FLASK_DEBUG=1 python -m flask run
 ```
 
 # who?

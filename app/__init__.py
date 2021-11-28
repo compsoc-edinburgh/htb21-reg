@@ -13,12 +13,16 @@ def create_app(test_config=None):
 
     app = Flask(__name__, instance_relative_config=True)
     app.wsgi_app = ProxyFix(app.wsgi_app)
-    app.config.from_mapping(
-        # a default secret that should be overridden by instance config
-        SECRET_KEY=os.environ['APP_SECRET_KEY'],
-        # store the database in the instance folder
-        DATABASE=os.path.join(app.instance_path, 'registrations.sqlite'),
-    )
+    
+    # load from test_config, instance/{env}.json
+    if test_config is None:
+        app.config.from_file("%s.json" % os.environ.get('FLASK_ENV', default='production'), load=json.load)
+    else:
+        app.config.from_mapping(test_config)
+
+    # populate database path if it's not already
+    if 'DATABASE' not in app.config:
+        app.config['DATABASE'] = os.path.join(app.instance_path, 'registrations.sqlite')
 
     # ensure the instance folder exists
     try:

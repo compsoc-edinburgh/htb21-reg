@@ -26,8 +26,8 @@ mymlh = None
 def register_google_bp(app):
     global google_bp # NOT GOOD
     google_bp = make_google_blueprint(
-        client_id=os.environ['GOOGLE_CLIENT_ID'],
-        client_secret=os.environ['GOOGLE_CLIENT_SECRET'],
+        client_id=app.config['GOOGLE_CLIENT_ID'],
+        client_secret=app.config['GOOGLE_CLIENT_SECRET'],
         scope=['profile', 'email'],
         redirect_to='auth.profile'
     )
@@ -40,8 +40,8 @@ def register_mlh_bp(app):
 
     mlh_bp = OAuth2ConsumerBlueprint(
         'mymlh', __name__,
-        client_id=os.environ['MLH_CLIENT_ID'],
-        client_secret=os.environ['MLH_CLIENT_SECRET'],
+        client_id=app.config['MLH_CLIENT_ID'],
+        client_secret=app.config['MLH_CLIENT_SECRET'],
         base_url='https://my.mlh.io',
         token_url='https://my.mlh.io/oauth/token',
         scope=['email','education', 'demographics'],
@@ -60,8 +60,8 @@ def register_mlh_bp(app):
 def register_github_bp(app):
     global github_bp
     github_bp = make_github_blueprint(
-        client_id=os.environ['GITHUB_CLIENT_ID'],
-        client_secret=os.environ['GITHUB_CLIENT_SECRET'],
+        client_id=app.config['GITHUB_CLIENT_ID'],
+        client_secret=app.config['GITHUB_CLIENT_SECRET'],
         scope='user:email',
         redirect_to='auth.hacker_profile_gh'
     )

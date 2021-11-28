@@ -17,7 +17,7 @@ run:
 init-db:
 	source ${VIRTUALENV}/bin/activate && \
 		FLASK_DEBUG=0                    \
-		FLASK_ENVIRONMENT=development    \
+		FLASK_ENV=development    \
 		python -m flask init-db
 
 clean:
