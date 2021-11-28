@@ -31,7 +31,7 @@
             </div>
             <div class="level-right">
                 <div class="tags are-medium">
-                    <a href="{{ url_for('actions.service_toggle', api_key=svc.api_key) }}">
+                    <a href="{{ url_for('services.service_toggle', api_key=svc.api_key) }}">
                         {% if svc.active == 1 %}
                         {{ make_tag('Active', svc.active) }}
                         {% else %}
@@ -64,7 +64,7 @@
 
                     <br />
 
-                    <form action="{{url_for('actions.service_recreate_key')}}" method="POST">
+                    <form action="{{url_for('services.service_recreate_key')}}" method="POST">
                         <input type="hidden" name="api_key" value="{{ svc.api_key }}">
                         <div class="field">
                             <label class="label">Verification</label>
@@ -95,7 +95,7 @@
 
                     <br />
 
-                    <form action="{{url_for('actions.service_delete')}}" method="POST">
+                    <form action="{{url_for('services.service_delete')}}" method="POST">
                         <input type="hidden" name="api_key" value="{{ svc.api_key }}">
                         <div class="field">
                             <label class="label">Verification</label>
@@ -130,7 +130,7 @@
     <div class="block">
         <h1 class="title">Create new service</h1>
 
-        <form action="{{ url_for('actions.service_create') }}" method="POST">
+        <form action="{{ url_for('services.service_create') }}" method="POST">
             <div class="field">
                 <label class="label">Display name</label>
                 <div class="control">

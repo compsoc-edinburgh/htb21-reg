@@ -21,7 +21,9 @@ bp = Blueprint("dashboard", __name__, url_prefix="/dashboard")
 @bp.route("/")
 @admin_login_required
 def index():
-    # return 'hello, ' + session['email']
+    """Index dashboard"""
+    # TODO: Some sort of caching?
+
     metrics = {"applicants": {}, "votes": {}}
     conn = get_db()
     c = conn.cursor()
@@ -87,9 +89,9 @@ def table():
     # parse query params
     sort = request.args.get("sort")
     reverse = request.args.get("reverse") is not None
-    sorts_available = ["user_id", "verified",
+    SORTS_AVAILABLE = ["user_id", "verified",
                        "completed", "name", "email", "school"]
-    if sort is None or (not sort in sorts_available):
+    if sort is None or (sort not in SORTS_AVAILABLE):
         sort = "user_id"
 
     # retreive from db

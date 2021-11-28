@@ -2,6 +2,7 @@ from flask import flash
 
 
 def flasher(text, color=None):
+    """Show a message on the next page"""
     if color is None:
         color = ""
     else:
@@ -10,6 +11,7 @@ def flasher(text, color=None):
 
 
 def get_config(db):
+    """Get the configuration singleton object from the database"""
     c = db.cursor()
 
     c.execute(
@@ -22,6 +24,7 @@ def get_config(db):
 
 
 def row_to_obj(row):
+    """Convert a database row to an object/dict."""
     obj = {}
     for key in row.keys():
         obj[key] = row[key]
@@ -29,6 +32,7 @@ def row_to_obj(row):
 
 
 def rows_to_objs(rows):
+    """Convert an iterator over rows to a list of objects/dicts"""
     objs = []
     for row in rows:
         objs.append(row_to_obj(row))

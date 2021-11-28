@@ -39,17 +39,16 @@ def create_app(test_config=None):
     db.init_app(app)
 
     # apply the blueprints to the app
-    from . import auth, dashboard, actions, landing, hacker, services
+    from . import auth, dashboard, actions, landing, hacker, services, service_api
 
-    app.register_blueprint(auth.bp, url_prefix="/auth")
-    auth.register_google_bp(app)
-    auth.register_mlh_bp(app)
-    auth.register_github_bp(app)
+    app.register_blueprint(auth.bp)
+    auth.register_auth_bps(app)
 
     app.register_blueprint(dashboard.bp)
     app.register_blueprint(actions.bp)
     app.register_blueprint(landing.bp)
     app.register_blueprint(services.bp)
+    app.register_blueprint(service_api.bp)
     app.register_blueprint(hacker.bp)
 
     @app.errorhandler(404)
