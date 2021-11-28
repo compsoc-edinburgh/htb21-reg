@@ -9,6 +9,7 @@ import time
 
 bp = Blueprint('service_api', __name__, url_prefix='/api/v1')
 
+
 def create_response(obj, ok=True, message=None, code=None):
     out = {}
     out['ok'] = ok
@@ -36,12 +37,10 @@ def validate_auth(auth_slug):
     if not '/' in auth_slug:
         return False
 
-
     # extract key and secret
     auth_slug = auth_slug.split('/')
-    api_key    = auth_slug[0]
+    api_key = auth_slug[0]
     api_secret = auth_slug[1].encode('ascii')
-
 
     # get database cursor
     c = get_db().cursor()
@@ -50,7 +49,6 @@ def validate_auth(auth_slug):
             FROM Services
             WHERE api_key=?
     ''', (api_key,))
-
 
     # check if there is a service with the specified key
     svc = c.fetchone()
@@ -113,7 +111,6 @@ def api_404(e):
     )
 
 
-
 @bp.route('/config')
 @service_auth_required
 def api_config():
@@ -165,7 +162,7 @@ def api_get_by_email():
     else:
         c.execute('''
             SELECT * FROM Applicants WHERE email=? OR contact_email=?
-        ''', (email,email))
+        ''', (email, email))
 
     usr = c.fetchone()
     if usr is None:
@@ -240,6 +237,7 @@ def api_get_all_applicants_csv():
         mimetype='text/csv'
     )
 
+
 @bp.route('/applicants/admit', methods=['POST'])
 @service_auth_required
 def api_admit():
@@ -255,11 +253,10 @@ def api_admit():
     '''
 
     app_id = request.json['app_id'] if 'app_id' in request.json else None
-    admit  = request.json['admit']  if 'admit'  in request.json else None
+    admit = request.json['admit'] if 'admit' in request.json else None
 
     if app_id is None or admit is None:
         return create_response({}, ok=False, message='Must have both app_id and admit!')
-
 
     c = get_db().cursor()
     c.execute('''
@@ -312,6 +309,7 @@ def api_invite_create():
 
     return create_response({})
 
+
 @bp.route('/invites/list')
 @service_auth_required
 def api_invite_list():
@@ -337,6 +335,7 @@ def api_invite_list():
         rows = []
 
     return create_response(rows_to_objs(rows))
+
 
 api_routes = [
     api_config,

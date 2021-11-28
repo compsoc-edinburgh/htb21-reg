@@ -24,7 +24,8 @@
                     <td><code>{{invite.code}}</code></td>
                     <td><a href="{{invite.link}}">{{ invite.link }}</a></td>
                     <td>
-                        <a class="has-text-danger" href="{{ url_for('actions.invite_delete', inv_id=invite.id) }}">&times;</a>
+                        <a class="has-text-danger"
+                            href="{{ url_for('actions.invite_delete', inv_id=invite.id) }}">&times;</a>
                     </td>
 
                 </tr>
@@ -47,7 +48,8 @@
                     <div class="field">
                         <label class="label">Applicant ID</label>
                         <div class="control">
-                            <input class="input" type="text" placeholder="gh:12345" name="app_id" required autocomplete="off">
+                            <input class="input" type="text" placeholder="gh:12345" name="app_id" required
+                                autocomplete="off">
                         </div>
                     </div>
                 </div>
@@ -55,7 +57,8 @@
                     <div class="field">
                         <label class="label">Service</label>
                         <div class="control">
-                            <input class="input" type="text" placeholder="Discord" name="service" required autocomplete="off">
+                            <input class="input" type="text" placeholder="Discord" name="service" required
+                                autocomplete="off">
                         </div>
                     </div>
                 </div>
@@ -73,7 +76,8 @@
                     <div class="field">
                         <label class="label">Link</label>
                         <div class="control">
-                            <input class="input" type="text" placeholder="https://discord.gg/" name="link" autocomplete="off">
+                            <input class="input" type="text" placeholder="https://discord.gg/" name="link"
+                                autocomplete="off">
                         </div>
                     </div>
                 </div>
@@ -85,6 +89,6 @@
             </div>
         </form>
     </div>
-    <br/>
+    <br />
 </div>
 {% endblock %}

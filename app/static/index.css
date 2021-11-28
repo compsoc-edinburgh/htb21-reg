@@ -34,10 +34,10 @@ main {
 
 .is-blurred {
     color: transparent;
-    text-shadow: 0 0 0.5em rgba(0,0,0,0.8);
+    text-shadow: 0 0 0.5em rgba(0, 0, 0, 0.8);
 }
 
-nav + .notification {
+nav+.notification {
     border-radius: 0;
 }
 
@@ -76,6 +76,7 @@ nav + .notification {
     flex-direction: row;
     align-items: center;
 }
+
 .flex-row.is-space-between {
     justify-content: space-between;
 }
@@ -89,8 +90,8 @@ nav + .notification {
     margin-bottom: 80px;
 }
 
-#rating > *:first-child {
-    margin-bottom: 0!important;
+#rating>*:first-child {
+    margin-bottom: 0 !important;
 }
 
 .flow_header {
@@ -114,12 +115,12 @@ nav + .notification {
     min-height: 100vh;
 }
 
-.fullpage__centered > article {
+.fullpage__centered>article {
     padding: 1em;
 }
 
 @media (min-width: 768px) {
-    .fullpage__centered > article {
+    .fullpage__centered>article {
         max-width: 50ch;
     }
 }
@@ -130,4 +131,3 @@ nav + .notification {
     right: 1em;
     opacity: 0.2;
 }
-

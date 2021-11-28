@@ -8,11 +8,11 @@
         <div class="profile__name">{{ profile.name }}</div>
         <div class="profile__status {{ 'profile__status--valid' if valid else 'profile__status--invalid' }}">
             {% if valid %}
-                <i class="fas fa-check"></i>
-                <span> verified compsoc committee member!</span>
+            <i class="fas fa-check"></i>
+            <span> verified compsoc committee member!</span>
             {% else %}
-                <i class="fas fa-times"></i>
-                <span> not a compsoc committee member.</span>
+            <i class="fas fa-times"></i>
+            <span> not a compsoc committee member.</span>
             {% endif %}
         </div>
 

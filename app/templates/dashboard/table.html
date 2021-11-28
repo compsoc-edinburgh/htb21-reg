@@ -2,25 +2,19 @@
 
 {% macro sortlink(name, field) -%}
 {% if field == sort -%}
-    {% if sort_reverse is sameas true -%}
-        <a
-            href="{{url_for('dashboard.table')}}?sort={{field}}"
-            class="has-text-primary">
-            {{name}}
-            <i class="fas fa-sort-up"></i>
-        </a>
-    {% else -%}
-        <a
-            href="{{url_for('dashboard.table')}}?sort={{field}}&reverse=true"
-            class="has-text-primary">
-            {{name}}
-            <i class="fas fa-sort-down"></i>
-        </a>
-    {% endif -%}
+{% if sort_reverse is sameas true -%}
+<a href="{{url_for('dashboard.table')}}?sort={{field}}" class="has-text-primary">
+    {{name}}
+    <i class="fas fa-sort-up"></i>
+</a>
 {% else -%}
-<a
-    href="{{url_for('dashboard.table')}}?sort={{field}}"
-    class="has-text-black">
+<a href="{{url_for('dashboard.table')}}?sort={{field}}&reverse=true" class="has-text-primary">
+    {{name}}
+    <i class="fas fa-sort-down"></i>
+</a>
+{% endif -%}
+{% else -%}
+<a href="{{url_for('dashboard.table')}}?sort={{field}}" class="has-text-black">
     {{name}}
 </a>
 {% endif -%}
@@ -29,11 +23,11 @@
 {% macro boolean_val(value) %}
 {% if value == 1 %}
 <span class="icon has-text-success">
-  <i class="fas fa-check"></i>
+    <i class="fas fa-check"></i>
 </span>
 {% else %}
 <span class="icon has-text-danger">
-  <i class="fas fa-times"></i>
+    <i class="fas fa-times"></i>
 </span>
 {% endif %}
 {% endmacro %}

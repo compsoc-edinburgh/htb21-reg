@@ -9,10 +9,11 @@
     <div class="box">
         <h1 class="is-size-3"> Download CSV</h1>
         <p>
-            This control exposes a download of the applicants database, converted to a spreadsheet. Doing this exposes personal information, so do so with caution.
+            This control exposes a download of the applicants database, converted to a spreadsheet. Doing this exposes
+            personal information, so do so with caution.
         </p>
 
-        <br/>
+        <br />
 
         <a class="button is-warning" href="{{url_for('actions.download_csv')}}" download>
             <span>Download</span>
@@ -25,10 +26,11 @@
     <div class="box">
         <h1 class="is-size-3"> Download backing SQLite database</h1>
         <p>
-            This control exposes a download of the entire SQLite database. Doing this exposes personal information, so do so with caution.
+            This control exposes a download of the entire SQLite database. Doing this exposes personal information, so
+            do so with caution.
         </p>
 
-        <br/>
+        <br />
 
         <a class="button is-warning" href="{{url_for('actions.download_db')}}">
             <span>Download</span>
@@ -42,4 +44,3 @@
 </div>
 
 {% endblock %}
-

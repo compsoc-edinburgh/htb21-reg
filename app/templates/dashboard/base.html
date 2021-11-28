@@ -98,7 +98,7 @@
         if ($navbarBurgers.length > 0) {
 
             // Add a click event on each of them
-            $navbarBurgers.forEach( el => {
+            $navbarBurgers.forEach(el => {
                 el.addEventListener('click', () => {
 
                     // Get the target from the "data-target" attribute
@@ -119,8 +119,7 @@
 </script>
 
 <section class="dashboard__content">
-{% block dashboard_content %}{% endblock %}
+    {% block dashboard_content %}{% endblock %}
 </section>
 
 {% endblock %}
-

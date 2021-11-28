@@ -68,26 +68,21 @@
     <div class="box">
         <h1 class="is-size-3"> Purge all votes </h1>
         <p>
-            This control allows you to drop all votes in the database. This is useful for clearing out votes after a new dump import. Note this this too can cause damage.
+            This control allows you to drop all votes in the database. This is useful for clearing out votes after a new
+            dump import. Note this this too can cause damage.
         </p>
 
-        <br/>
+        <br />
 
         <form action="{{url_for('actions.purge_votes')}}" method="POST">
             <div class="field">
                 <label class="label">Verification</label>
                 <div class="control">
-                    <input
-                        class="input"
-                        type="text"
-                        placeholder="i know what i am doing"
-                        name="verification"
-                        autocomplete="off"
-                        autocorrect="off"
-                        spellcheck="false"
-                        required>
+                    <input class="input" type="text" placeholder="i know what i am doing" name="verification"
+                        autocomplete="off" autocorrect="off" spellcheck="false" required>
                 </div>
-                <p class="help"> If you understand the risks, please write <code class="is-unselectable">i know what i am doing</code> in the box above.</p>
+                <p class="help"> If you understand the risks, please write <code class="is-unselectable">i know what i
+                        am doing</code> in the box above.</p>
             </div>
             <div class="control">
                 <button class="button is-danger">
@@ -102,10 +97,11 @@
     <div class="box">
         <h1 class="is-size-3"> Download backing SQLite database</h1>
         <p>
-            This control exposes a download of the entire SQLite database. Doing this exposes personal information, so do so with caution.
+            This control exposes a download of the entire SQLite database. Doing this exposes personal information, so
+            do so with caution.
         </p>
 
-        <br/>
+        <br />
 
         <a class="button is-warning" href="{{url_for('actions.download_db')}}">
             <span>Download</span>
@@ -128,4 +124,3 @@
 </script>
 
 {% endblock %}
-

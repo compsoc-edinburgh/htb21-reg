@@ -16,9 +16,10 @@
 
 {% macro make_ratebtn(value) %}
 <p class="control">
-<button class="button is-medium {% if previousVote and previousVote.value == value %}is-success{% endif %}" data-rating-val="{{value}}">
-    <span>{{ value }}</span>
-</button>
+    <button class="button is-medium {% if previousVote and previousVote.value == value %}is-success{% endif %}"
+        data-rating-val="{{value}}">
+        <span>{{ value }}</span>
+    </button>
 </p>
 {% endmacro %}
 
@@ -31,15 +32,15 @@
         {% for i in range(rating) %}
         <span class="icon has-text-warning">
             <i class="fas fa-star"></i>
-        </span> 
+        </span>
         {% endfor %}
         {% for i in range(5 - rating) %}
         <span class="icon">
             <i class="far fa-star"></i>
-        </span> 
+        </span>
         {% endfor %}
     </div>
-    
+
 </div>
 {% endmacro %}
 
@@ -54,10 +55,12 @@
     <div class="container">
         <div class="columns">
             <div class="column is-two-thirds">
-                <h1 class="subtitle">Flow voting: <strong>{{ flow_votes_total - flow_votes_completed }}</strong> remaining (<strong>{{flow_votes_percentage}}% done</strong>).</h1>
+                <h1 class="subtitle">Flow voting: <strong>{{ flow_votes_total - flow_votes_completed }}</strong>
+                    remaining (<strong>{{flow_votes_percentage}}% done</strong>).</h1>
             </div>
             <div class="column">
-                <progress value="{{ flow_votes_completed }}" max="{{ flow_votes_total }}" class="progress is-link flow-header__progress"></progress>
+                <progress value="{{ flow_votes_completed }}" max="{{ flow_votes_total }}"
+                    class="progress is-link flow-header__progress"></progress>
             </div>
         </div>
     </div>
@@ -67,24 +70,26 @@
 <div class="container">
 
     <div class="applicant__rating_row">
-    {% if applicant['completed'] or (applicant['first_name'] and applicant['last_name']) %}
-    {% if session.redacted %}
+        {% if applicant['completed'] or (applicant['first_name'] and applicant['last_name']) %}
+        {% if session.redacted %}
         <h1 class="is-size-1 is-blurred">{{ applicant['first_name'] }} {{ applicant['last_name'] }}</h1>
-    {% else %}
+        {% else %}
         <h1 class="is-size-1">{{ applicant['first_name'] }} {{ applicant['last_name'] }}</h1>
-    {% endif %}
-    {% else %}
-    <h1 class="is-blurred is-size-1">No Name Provided</h1>
-    {% endif %}
+        {% endif %}
+        {% else %}
+        <h1 class="is-blurred is-size-1">No Name Provided</h1>
+        {% endif %}
 
-    <span class="has-text-weight-bold applicant__rating">
-        <span class="is-size-3">{{ voteaverage }}/5</span>
-        <span class="is-size-6">({{ votes|length }} votes)</span>
-    </span>
+        <span class="has-text-weight-bold applicant__rating">
+            <span class="is-size-3">{{ voteaverage }}/5</span>
+            <span class="is-size-6">({{ votes|length }} votes)</span>
+        </span>
 
     </div>
     <h2 class="subtitle">
-        <span class="{% if session.redacted %}is-blurred{% endif %}">{{ applicant['email'] }}</span>{% if applicant.completed %} &bull; {{ applicant.school }}{% endif %}
+        <span
+            class="{% if session.redacted %}is-blurred{% endif %}">{{ applicant['email'] }}</span>{% if applicant.completed %}
+        &bull; {{ applicant.school }}{% endif %}
     </h2>
 
     <div class="tags are-medium">
@@ -106,15 +111,16 @@
             {% if applicant.completed %}
             <h4 class="title is-4">Basic Information</h4>
             <p>
-                <strong>University: </strong> {{ applicant.school }} <br/>
-                <strong>Grad Year: </strong> {{ applicant.gradYear }} <br/>
+                <strong>University: </strong> {{ applicant.school }} <br />
+                <strong>Grad Year: </strong> {{ applicant.gradYear }} <br />
                 {# <strong>Gender: </strong> <span class="{% if session.redacted %}is-blurred{% endif %}">{{ applicant.gender }}</span> <br/> #}
-                <strong>Login email:</strong> {{applicant.email }} <br/>
-                <strong>Contact email:</strong> {{applicant.contact_email }} <br/>
+                <strong>Login email:</strong> {{applicant.email }} <br />
+                <strong>Contact email:</strong> {{applicant.contact_email }} <br />
                 {% if applicant.resume %}
-                    <strong>Resume:</strong> <a href="{{ applicant.resume }}" target="_blank">{{applicant.resume}}</a> <br/>
+                <strong>Resume:</strong> <a href="{{ applicant.resume }}" target="_blank">{{applicant.resume}}</a>
+                <br />
                 {% else %}
-                    <strong>Resume:</strong> <i>Not provided.</i> <br/>
+                <strong>Resume:</strong> <i>Not provided.</i> <br />
                 {% endif %}
                 <strong>Submitted: </strong> {{ timestamp }}
 
@@ -147,14 +153,14 @@
                     <summary><strong>All Information</strong></summary>
                     <pre>{{ applicant_txt }}</pre>
                 </details>
-                
+
             </p>
             <h4 class="title is-4 has-margin-top--1em">Short Answers</h4>
             <strong>Why are you excited about Hack the Burgh?</strong>
             <p>
                 {{ description|safe }}
             </p>
-            <br/>
+            <br />
             <strong> Describe an interesting project you've been involved in. </strong>
             <p>
                 {{ essay|safe }}
@@ -178,58 +184,56 @@
     </div>
 
     <div class="applicant__bottompin_margin"></div>
-    
+
 
     <div class="applicant__bottompin has-background-light">
-        <form
-            class="applicant__rating_row"
-            id="rating"
-            {% if flow %}action="{{ url_for('actions.submit_vote') }}?flow=1"{% else %}action="{{ url_for('actions.submit_vote') }}"{% endif %}
-            method="POST">
-                <div class="flex-row">
-                
-                    <div class="field has-addons">
-                        {{ make_ratebtn(1) }}
-                        {{ make_ratebtn(2) }}
-                        {{ make_ratebtn(3) }}
-                        {{ make_ratebtn(4) }}
-                        {{ make_ratebtn(5) }}
+        <form class="applicant__rating_row" id="rating"
+            {% if flow %}action="{{ url_for('actions.submit_vote') }}?flow=1"
+            {% else %}action="{{ url_for('actions.submit_vote') }}" {% endif %} method="POST">
+            <div class="flex-row">
 
-                        <div class="is-hidden">
-                            {{ make_rateinput(1) }}
-                            {{ make_rateinput(2) }}
-                            {{ make_rateinput(3) }}
-                            {{ make_rateinput(4) }}
-                            {{ make_rateinput(5) }}
+                <div class="field has-addons">
+                    {{ make_ratebtn(1) }}
+                    {{ make_ratebtn(2) }}
+                    {{ make_ratebtn(3) }}
+                    {{ make_ratebtn(4) }}
+                    {{ make_ratebtn(5) }}
 
-                            <input name="user_id" type="text" value="{{ applicant.user_id }}"/>
-                            <input name="id" type="text" value="{{ applicant.id }}"/>
-                        </div>
+                    <div class="is-hidden">
+                        {{ make_rateinput(1) }}
+                        {{ make_rateinput(2) }}
+                        {{ make_rateinput(3) }}
+                        {{ make_rateinput(4) }}
+                        {{ make_rateinput(5) }}
+
+                        <input name="user_id" type="text" value="{{ applicant.user_id }}" />
+                        <input name="id" type="text" value="{{ applicant.id }}" />
                     </div>
                 </div>
-                <div class="flex-row applicant__votebtnrow">
-                    <span class="applicant__votename"> Voting as <strong>{{ session['name'] }}</strong></span>
-                    {% if previousVote %}
-                    <button type="submit" class="button is-medium is-warning">
-                        <span>
-                            Change Vote
-                        </span>
-                        <span class="icon">
-                            <i class="fas fa-chevron-right"></i>
-                        </span>
-                    </button>
-                    {% else %}
-                    <button type="submit" class="button is-medium is-primary">
-                        <span>
-                            Submit Vote
-                        </span>
-                        <span class="icon">
-                            <i class="fas fa-chevron-right"></i>
-                        </span>
-                    </button>
+            </div>
+            <div class="flex-row applicant__votebtnrow">
+                <span class="applicant__votename"> Voting as <strong>{{ session['name'] }}</strong></span>
+                {% if previousVote %}
+                <button type="submit" class="button is-medium is-warning">
+                    <span>
+                        Change Vote
+                    </span>
+                    <span class="icon">
+                        <i class="fas fa-chevron-right"></i>
+                    </span>
+                </button>
+                {% else %}
+                <button type="submit" class="button is-medium is-primary">
+                    <span>
+                        Submit Vote
+                    </span>
+                    <span class="icon">
+                        <i class="fas fa-chevron-right"></i>
+                    </span>
+                </button>
                 {% endif %}
-                </div>
-            </form>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -253,28 +257,31 @@
     let btns = document.querySelectorAll('[data-rating-val]')
     btns.forEach(e => radioClickHandler(e))
 
-    {% if previousVote %}
-    document.querySelector(`[name="rating"][value="{{ previousVote.value }}"`).checked = true
-    {% endif %}
+    {
+        %
+        if previousVote %
+    }
+    document.querySelector(`[name="rating"][value="{{ previousVote.value }}"`).checked = true {
+        % endif %
+    }
 </script>
 
 <script type="text/javascript">
-document.body.addEventListener('keyup', e => {
-    if (e.keyCode === 49) {
-        document.querySelector('[data-rating-val="1"]').click()
-    } else if (e.keyCode === 50) {
-        document.querySelector('[data-rating-val="2"]').click()
-    } else if (e.keyCode === 51) {
-        document.querySelector('[data-rating-val="3"]').click()
-    } else if (e.keyCode === 52) {
-        document.querySelector('[data-rating-val="4"]').click()
-    } else if (e.keyCode === 53) {
-        document.querySelector('[data-rating-val="5"]').click()
-    } else if (e.keyCode === 13) {
-        document.querySelector('button[type="submit"]').click()
-    }
-})
+    document.body.addEventListener('keyup', e => {
+        if (e.keyCode === 49) {
+            document.querySelector('[data-rating-val="1"]').click()
+        } else if (e.keyCode === 50) {
+            document.querySelector('[data-rating-val="2"]').click()
+        } else if (e.keyCode === 51) {
+            document.querySelector('[data-rating-val="3"]').click()
+        } else if (e.keyCode === 52) {
+            document.querySelector('[data-rating-val="4"]').click()
+        } else if (e.keyCode === 53) {
+            document.querySelector('[data-rating-val="5"]').click()
+        } else if (e.keyCode === 13) {
+            document.querySelector('button[type="submit"]').click()
+        }
+    })
 </script>
 
 {% endblock %}
-

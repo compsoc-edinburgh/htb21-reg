@@ -3,7 +3,9 @@
 {% block hacker_content %}
 
 <h1 class="title">Application</h1>
-<h2 class="subtitle">{% if appl['completed'] == 1 %}<span class="has-text-success">Submitted {{ completed_time }}</span>{% else %}Not submitted{% endif %} &bull; <span class="is-size-6 is-italic">Required fields marked with an <span class="has-text-danger">*</span>.</span></h2>
+<h2 class="subtitle">{% if appl['completed'] == 1 %}<span class="has-text-success">Submitted
+        {{ completed_time }}</span>{% else %}Not submitted{% endif %} &bull; <span class="is-size-6 is-italic">Required
+        fields marked with an <span class="has-text-danger">*</span>.</span></h2>
 
 <form action="{{ url_for('hacker.submit_application') }}" method="POST" id="application" enctype="multipart/form-data">
     <h2 class="subtitle">Basic Info</h2>
@@ -12,7 +14,8 @@
             <div class="field">
                 <label class="label">First Name<span class="has-text-danger">*</span></label>
                 <div class="control">
-                    <input class="input" type="text" placeholder="Hacker" name="first_name" value="{{ appl['first_name'] }}" required autocomplete="off">
+                    <input class="input" type="text" placeholder="Hacker" name="first_name"
+                        value="{{ appl['first_name'] }}" required autocomplete="off">
                 </div>
             </div>
         </div>
@@ -20,16 +23,18 @@
             <div class="field">
                 <label class="label">Last Name<span class="has-text-danger">*</span></label>
                 <div class="control">
-                    <input class="input" type="text" placeholder="McHackerton" name="last_name" value="{{ appl['last_name'] }}" required autocomplete="off">
+                    <input class="input" type="text" placeholder="McHackerton" name="last_name"
+                        value="{{ appl['last_name'] }}" required autocomplete="off">
                 </div>
             </div>
         </div>
     </div>
-    
+
     <div class="field">
         <label class="label">Email<span class="has-text-danger">*</span></label>
         <div class="control has-icons-left">
-            <input class="input" type="email" placeholder="hacker@hacktheburgh.com" name="contact_email" value="{{ appl['contact_email'] }}" required autocomplete="off">
+            <input class="input" type="email" placeholder="hacker@hacktheburgh.com" name="contact_email"
+                value="{{ appl['contact_email'] }}" required autocomplete="off">
             <span class="icon is-small is-left">
                 <i class="fas fa-envelope"></i>
             </span>
@@ -70,7 +75,8 @@
             <div class="field">
                 <label class="label">University Name<span class="has-text-danger">*</span></label>
                 <div class="control has-icons-left">
-                    <input class="input" type="text" placeholder="Hacker University" name="school" value="{{ appl['school'] or '' }}" required autocomplete="off">
+                    <input class="input" type="text" placeholder="Hacker University" name="school"
+                        value="{{ appl['school'] or '' }}" required autocomplete="off">
                     <span class="icon is-small is-left">
                         <i class="fas fa-university"></i>
                     </span>
@@ -83,7 +89,8 @@
                 <div class="control">
                     <div class="select">
                         <select name="gradYear" required>
-                    <option {% if appl['gradYear'] == '' %}selected{% endif %} disabled hidden value="">Select</option>
+                            <option {% if appl['gradYear'] == '' %}selected{% endif %} disabled hidden value="">Select
+                            </option>
                             <option {% if appl['gradYear'] == '2026' %}selected{% endif %} value="2026">2026</option>
                             <option {% if appl['gradYear'] == '2025' %}selected{% endif %} value="2025">2025</option>
                             <option {% if appl['gradYear'] == '2024' %}selected{% endif %} value="2024">2024</option>
@@ -105,7 +112,8 @@
         <div class="control">
             <div class="select">
                 <select name="shirt_size" required>
-                    <option {% if appl['shirt_size'] == '' %}selected{% endif %} disabled hidden value="">Select</option>
+                    <option {% if appl['shirt_size'] == '' %}selected{% endif %} disabled hidden value="">Select
+                    </option>
                     <option {% if appl['shirt_size'] == 'xs'  %}selected{% endif %} value="xs">XS</option>
                     <option {% if appl['shirt_size'] == 's'   %}selected{% endif %} value="s">S</option>
                     <option {% if appl['shirt_size'] == 'm'   %}selected{% endif %} value="m">M</option>
@@ -121,19 +129,22 @@
     <div class="field">
         <label class="label">Address Line 1<span class="has-text-danger">*</span></label>
         <div class="control">
-            <input class="input" type="text" placeholder="1337 Hacker Way" name="address_line_1" value="{{ appl['address_line_1'] }}" required autocomplete="off">
+            <input class="input" type="text" placeholder="1337 Hacker Way" name="address_line_1"
+                value="{{ appl['address_line_1'] }}" required autocomplete="off">
         </div>
     </div>
     <div class="field">
         <label class="label">Address Line 2</label>
         <div class="control">
-            <input class="input" type="text" placeholder="Apt 1a" name="address_line_2" value="{{ appl['address_line_2'] }}" autocomplete="off">
+            <input class="input" type="text" placeholder="Apt 1a" name="address_line_2"
+                value="{{ appl['address_line_2'] }}" autocomplete="off">
         </div>
     </div>
     <div class="field">
         <label class="label">Address Line 3</label>
         <div class="control">
-            <input class="input" type="text" placeholder="" name="address_line_3" value="{{ appl['address_line_3'] }}"  autocomplete="off">
+            <input class="input" type="text" placeholder="" name="address_line_3" value="{{ appl['address_line_3'] }}"
+                autocomplete="off">
         </div>
     </div>
     <div class="columns">
@@ -141,7 +152,8 @@
             <div class="field">
                 <label class="label">City<span class="has-text-danger">*</span></label>
                 <div class="control">
-                    <input class="input" type="text" placeholder="Hackville" name="address_city" value="{{ appl['address_city'] }}" required autocomplete="off">
+                    <input class="input" type="text" placeholder="Hackville" name="address_city"
+                        value="{{ appl['address_city'] }}" required autocomplete="off">
                 </div>
             </div>
         </div>
@@ -149,7 +161,8 @@
             <div class="field">
                 <label class="label">Region<span class="has-text-danger">*</span></label>
                 <div class="control">
-                    <input class="input" type="text" placeholder="McHackerton" name="address_region" value="{{ appl['address_region'] }}" required autocomplete="off">
+                    <input class="input" type="text" placeholder="McHackerton" name="address_region"
+                        value="{{ appl['address_region'] }}" required autocomplete="off">
                 </div>
             </div>
         </div>
@@ -159,7 +172,8 @@
             <div class="field">
                 <label class="label">Country<span class="has-text-danger">*</span></label>
                 <div class="control">
-                    <input class="input" type="text" placeholder="Scotland" name="address_country" value="{{ appl['address_country'] }}" required autocomplete="off">
+                    <input class="input" type="text" placeholder="Scotland" name="address_country"
+                        value="{{ appl['address_country'] }}" required autocomplete="off">
                 </div>
             </div>
         </div>
@@ -167,7 +181,8 @@
             <div class="field">
                 <label class="label">Postcode<span class="has-text-danger">*</span></label>
                 <div class="control">
-                    <input class="input" type="text" placeholder="EH8 9LE" name="address_pcode" value="{{ appl['address_pcode'] }}" required autocomplete="off">
+                    <input class="input" type="text" placeholder="EH8 9LE" name="address_pcode"
+                        value="{{ appl['address_pcode'] }}" required autocomplete="off">
                 </div>
             </div>
         </div>
@@ -175,7 +190,8 @@
     <div class="field">
         <label class="label">Phone Number<span class="has-text-danger">*</span></label>
         <div class="control">
-            <input class="input" type="tel" placeholder="+44 (0) 1234 567890" name="phone" value="{{ appl['address_phone'] }}" required autocomplete="off">
+            <input class="input" type="tel" placeholder="+44 (0) 1234 567890" name="phone"
+                value="{{ appl['address_phone'] }}" required autocomplete="off">
         </div>
     </div>
 
@@ -218,7 +234,8 @@
                         </label>
                     </div>
                     {% if appl['resume'] %}
-                    <a href="{{ url_for('hacker.show_resume') }}" class="button is-link" style="margin-left: 1em" target="_blank">
+                    <a href="{{ url_for('hacker.show_resume') }}" class="button is-link" style="margin-left: 1em"
+                        target="_blank">
                         <span>View uploaded</span>
                         <div class="icon">
                             <i class="fas fa-external-link-alt"></i>
@@ -258,7 +275,9 @@
         <div class="control">
             <label class="checkbox">
                 <input type="checkbox" name="gdpr" {% if appl['gdpr'] == 1 %}checked{% endif %} required>
-                I agree to the Hack the Burgh <a href="https://www.eusa.ed.ac.uk/about/privacynotice/">privacy policy</a>, as well as authorise Hack the Burgh to process my registration information for the purposes of event organisation and shipping merch to our hackers. 
+                I agree to the Hack the Burgh <a href="https://www.eusa.ed.ac.uk/about/privacynotice/">privacy
+                    policy</a>, as well as authorise Hack the Burgh to process my registration information for the
+                purposes of event organisation and shipping merch to our hackers.
                 <span class="has-text-danger">*</span>
             </label>
         </div>
@@ -268,7 +287,9 @@
         <div class="control">
             <label class="checkbox">
                 <input type="checkbox" name="mlh_admin" {% if appl['mlh_admin'] == 1 %}checked{% endif %} required>
-                I authorise you to share my application/registration information with Major League Hacking for event administration, ranking, and MLH administration in-line with the MLH Privacy Policy. I further agree to the terms of both the MLH Contest Terms and Conditions and the MLH Privacy Policy.
+                I authorise you to share my application/registration information with Major League Hacking for event
+                administration, ranking, and MLH administration in-line with the MLH Privacy Policy. I further agree to
+                the terms of both the MLH Contest Terms and Conditions and the MLH Privacy Policy.
                 <span class="has-text-danger">*</span>
             </label>
         </div>
@@ -279,8 +300,12 @@
     <div class="field">
         <div class="control">
             <label class="checkbox">
-                <input type="checkbox" name="hackuk_admin" {% if appl['hackuk_admin'] == 1 %}checked{% endif %} required>
-                I authorise you to share my application/registration information with <a href="https://hackathons.org.uk/" target="_blank">Hackathons UK Limited</a> for event administration, Hackathons UK Limited administration, and with my authorisation email in-line with the Hackathons UK Limited <a href="https://hackuk.org/privacy" target="_blank">Privacy Policy</a>.
+                <input type="checkbox" name="hackuk_admin" {% if appl['hackuk_admin'] == 1 %}checked{% endif %}
+                    required>
+                I authorise you to share my application/registration information with <a
+                    href="https://hackathons.org.uk/" target="_blank">Hackathons UK Limited</a> for event
+                administration, Hackathons UK Limited administration, and with my authorisation email in-line with the
+                Hackathons UK Limited <a href="https://hackuk.org/privacy" target="_blank">Privacy Policy</a>.
                 <span class="has-text-danger">*</span>
             </label>
         </div>
@@ -309,12 +334,13 @@
         <div class="control">
             <label class="checkbox">
                 <input type="checkbox" name="mlh_email" {% if appl['mlh_email'] == 1 %}checked{% endif %}>
-                I authorise MLH to send me pre- and post-event informational emails, which contain free credit and opportunities from their partners.
+                I authorise MLH to send me pre- and post-event informational emails, which contain free credit and
+                opportunities from their partners.
             </label>
         </div>
     </div>
 
-    
+
     <div class="field">
         <div class="control">
             <label class="checkbox">
@@ -323,7 +349,7 @@
             </label>
         </div>
     </div>
-    <br/>
+    <br />
 
     <div class="field is-grouped">
         {% if appl['completed'] == 1 %}
@@ -344,21 +370,21 @@
 
 {% if appl['completed'] != 1 %}
 <script type="text/javascript">
-document.querySelector('#save-button')
-    .addEventListener('click', e => {
-        e.preventDefault()
-        const form = document.querySelector('form#application')
+    document.querySelector('#save-button')
+        .addEventListener('click', e => {
+            e.preventDefault()
+            const form = document.querySelector('form#application')
 
-        form
-            .querySelectorAll('input')
-            .forEach(el => {
-                el.removeAttribute('required')
-            })
+            form
+                .querySelectorAll('input')
+                .forEach(el => {
+                    el.removeAttribute('required')
+                })
 
-        form.setAttribute('action', "{{ url_for('hacker.save_application') }}")
+            form.setAttribute('action', "{{ url_for('hacker.save_application') }}")
 
-        form.submit()
-    })
+            form.submit()
+        })
 </script>
 {% endif %}
 
@@ -371,7 +397,7 @@ document.querySelector('#save-button')
             f_el.classList.remove('is-danger')
             const fileName = document.querySelector('#file-resume .file-name');
             fileName.textContent = fileInput.files[0].name;
-            
+
             if (fileInput.files[0].size > 15 * 1024 * 1024) {
                 f_el.classList.add('is-danger')
                 fileName.textContent = 'File too large!';
