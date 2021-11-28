@@ -24,9 +24,9 @@ def update_cfg():
             WHERE
                 id=0
     ''', [
-        arrow.get(request.form['applications_open']).timestamp,
-        arrow.get(request.form['applications_dline']).timestamp,
-        arrow.get(request.form['event_start']).timestamp,
+        arrow.get(request.form['applications_open']).timestamp(),
+        arrow.get(request.form['applications_dline']).timestamp(),
+        arrow.get(request.form['event_start']).timestamp(),
     ])
 
     c.connection.commit()
