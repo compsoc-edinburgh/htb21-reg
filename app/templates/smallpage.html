@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="smallpage">
+    <img src="/static/logo.svg" alt="HTB8 Logo" class="logo image is-128x128 is-centered">
+    <div class="columns is-centered is-mobile">
+        <main class="column is-three-quarters-mobile is-half-tablet is-one-third-desktop">
+            {% block pagecontent %}
+            {% endblock %}
+        </main>
+    </div>
+</div>
+
+<footer>
+    {% block footer %}
+    {% endblock %}
+</footer>
+{% endblock %}

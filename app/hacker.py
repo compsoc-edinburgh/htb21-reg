@@ -241,6 +241,7 @@ def write_application(submit=False):
         return redirect(url_for("hacker.application"))
 
     if request.files["resume"].filename != "":
+        # TODO: More file validation
 
         filename = f"htb21-cvs/{'_'.join(appl_old['user_id'].split(':'))}.pdf"
 

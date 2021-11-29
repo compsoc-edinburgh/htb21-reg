@@ -147,7 +147,7 @@ def profile():
 # -- MLH profile info --
 
 def get_hacker_mlh_profile():
-    resp = mymlh.session.get("/api/v3/user.json")
+    resp = mymlh.get("/api/v3/user.json")
     return resp.json()["data"]
 
 

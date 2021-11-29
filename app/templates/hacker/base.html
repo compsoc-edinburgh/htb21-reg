@@ -18,13 +18,12 @@
 </script>
 
 <section class="section">
-
     <div class="container">
         <div class="columns">
             <div class="column">
                 <div class="block">
                     <h1 class="title">HTB7 Registration</h1>
-                    <h2 class="subtitle">Logged in with {{ login_type }} &bull; <a
+                    <h2 class="subtitle">Logged in with {{ login_type }} &bull;&nbsp;<a
                             href="{{ url_for('auth.hacker_logout') }}">Log out</a></h2>
                 </div>
                 <div class="block">
@@ -45,6 +44,7 @@
                                 </span>
                             </a>
                         </li>
+                        {#
                         <li>
                             <a href="{{ url_for('hacker.invites') }}">
                                 <span>Invites</span>
@@ -53,6 +53,7 @@
                                 </span>
                             </a>
                         </li>
+                        #}
                         {% if appl['admitted'] == 1 %}
                         <li>
                             <a href="{{ url_for('hacker.discord') }}">

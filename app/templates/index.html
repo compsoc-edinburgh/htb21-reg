@@ -1,49 +1,39 @@
-{% extends "base.html" %}
+{% extends "smallpage.html" %}
 
-{% block bulma_css %}
-<link href="{{ url_for('static', filename='bulma_cyborg.css') }}" rel="stylesheet" type="text/css"/>
+{% block pagecontent %}
+
+<h1 class="title">Hack the Burgh 8 Registration</h1>
+<h2 class="subtitle">{{ status }}</h2>
+<p class="block">
+    This is the main registration page for Hack the Burgh 8.
+    Here you can submit your application, check on your
+    application status, and view any invite codes you receive.
+</p>
+
+<p class="block">
+    <div class="level">
+        <div class="level-left"></div>
+        <div class="level-right">
+            <p class="has-text-right">
+                <a href="{{ url_for('github.login') }}">
+                    <span>Log in with Github</span>
+                    <span class="icon">
+                        <i class="fas fa-arrow-right"></i>
+                    </span>
+                </a><br/>
+                <a href="{{ url_for('mymlh.login') }}">
+                    <span>Log in with MyMLH</span>
+                    <span class="icon">
+                        <i class="fas fa-arrow-right"></i>
+                    </span>
+                </a>
+            </p>
+        </div>
+    </div>
+</p>
+
 {% endblock %}
 
-{% block content %}
-
-<div class="fullpage">
-            <div class="fullpage__centered">
-                <article>
-                    <div class="image is-32x32" style="margin-bottom: 1rem;">
-                        <img src="/static/favicon.svg" alt="htb7 logo">
-                    </div>
-                    <h1 class="title">Hack the Burgh 7 Registration</h1>
-                    <h2 class="subtitle">{{ status }}</h2>
-                    <p class="block">
-                        This is the main registration page for Hack the Burgh 7.
-                        Here you can submit your application, check on your
-                        application status, and view any invite codes you receive.
-                        <a class="admin_login_button" href="{{ url_for('google.login') }}" class="button">Log in as admin</a>
-                    </p>
-
-                    <p class="block ">
-                        <div class="level">
-                            <div class="level-left"></div>
-                            <div class="level-right">
-                                <p class="has-text-right">
-                                    <a href="{{ url_for('github.login') }}">
-                                        <span>Log in with Github</span>
-                                        <span class="icon">
-                                            <i class="fas fa-arrow-right"></i>
-                                        </span>
-                                    </a><br/>
-                                    <a href="{{ url_for('mymlh.login') }}">
-                                        <span>Log in with MyMLH</span>
-                                        <span class="icon">
-                                            <i class="fas fa-arrow-right"></i>
-                                        </span>
-                                    </a>
-                                </p>
-                            </div>
-                        </div>
-                    </p>
-                </article>
-            </div>
-        </div>
-
+{% block footer %}
+<a class="has-text-grey" href="{{ url_for('google.login') }}" class="button">Log in as admin</a>
 {% endblock %}

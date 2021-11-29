@@ -1,34 +1,7 @@
-{% extends "base.html" %}
+{% extends "smallpage.html" %}
 
-{% block bulma_css %}
-<link href="{{ url_for('static', filename='bulma_cyborg.css') }}" rel="stylesheet" type="text/css"/>
-{% endblock %}
+{% block pagecontent %}
+<h1 class="is-size-1">404</h1>
 
-{% block content %}
-<div class="fullpage">
-    <div class="fullpage__centered">
-        <article>
-            <div class="image is-32x32" style="margin-bottom: 1rem;">
-                <img src="/static/favicon.svg" alt="htb7 logo">
-            </div>
-            <h1 class="title">404</h1>
-            <h2 class="subtitle">Page not found.</h2>
-            <p class="block">
-                You seem to have reached a page that doesn't exist. If you believe
-                this is in error, please <a href="mailto:tech@hacktheburgh.com?subject=404%20Error">contact us</a>.
-                <div class="level">
-                    <div class="level-left"></div>
-                    <div class="level-right">
-                        <a href="{{ url_for('landing.index') }}">
-                            <span>Back to safety</span>
-                            <span class="icon">
-                                <i class="fas fa-arrow-right"></i>
-                            </span>
-                        </a>
-                    </div>
-                </div>
-            </p>
-
-    </div>
-</div>
+<p>Double-check the URL, or <a href="{{ url_for('landing.index') }}">Go home</a></p>
 {% endblock %}
