@@ -24,11 +24,11 @@
 {% endmacro %}
 
 {% macro make_rating(email, name, rating) %}
-<div>
-    <strong>
-        <abbr title="{{ email }}">{{ name }}</abbr>
-    </strong>
-    <div class="flex-row">
+<tr>
+    <td>
+        {{ name }}
+    </td>
+    <td class="flex-row">
         {% for i in range(rating) %}
         <span class="icon has-text-warning">
             <i class="fas fa-star"></i>
@@ -39,9 +39,9 @@
             <i class="far fa-star"></i>
         </span>
         {% endfor %}
-    </div>
+    </td>
 
-</div>
+</tr>
 {% endmacro %}
 
 {% macro make_rateinput(value) %}
@@ -114,23 +114,42 @@
     <div class="columns applicant__main">
         <div class="column is-two-thirds">
             {% if applicant.completed %}
-            <h4 class="title is-4">Basic Information</h4>
-            <p>
-                <strong>University: </strong> {{ applicant.school }} <br />
-                <strong>Grad Year: </strong> {{ applicant.gradYear }} <br />
-                {# <strong>Gender: </strong> <span class="{% if session.redacted %}is-blurred{% endif %}">{{ applicant.gender }}</span> <br/> #}
-                <strong>Login email:</strong> {{applicant.email }} <br />
-                <strong>Contact email:</strong> {{applicant.contact_email }} <br />
-                {% if applicant.resume %}
-                <strong>Resume:</strong> <a href="{{ applicant.resume }}" target="_blank">{{applicant.resume}}</a>
-                <br />
-                {% else %}
-                <strong>Resume:</strong> <i>Not provided.</i> <br />
-                {% endif %}
-                <strong>Submitted: </strong> {{ timestamp }}
-
+            <h2 class="title is-2">Basic Information</h2>
+            <table class="table is-fullwidth is-hoverable">
+                <tbody>
+                    <tr>
+                        <td>University</td>
+                        <td>{{ applicant.school }}</td>
+                    </tr>
+                    <tr>
+                        <td>Graduation Year</td>
+                        <td>{{ applicant.grad_year }}</td>
+                    </tr>
+                    <tr>
+                        <td>Login Email</td>
+                        <td>{{ applicant.email }}</td>
+                    </tr>
+                    <tr>
+                        <td>Contact Email</td>
+                        <td>{{ applicant.contact_email }}</td>
+                    </tr>
+                    <tr>
+                        <td>Resume</td>
+                        <td>{% if applicant.resume %}
+                            <a href="{{ applicant.resume }}" target="_blank">{{applicant.resume}}</a>
+                            {% else %}
+                            Not provided.
+                            {% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Submitted</td>
+                        <td>{{ timestamp }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="block">
                 <details>
-                    <summary><strong>Address info</strong></summary>
+                    <summary><span class="subtitle">Address info</span></summary>
                     <pre>{{ applicant.first_name }} {{ applicant.last_name }}
 {{ applicant.address_line_1 }}{% if applicant.address_line_2 %}
 {{ applicant.address_line_2 }}{% endif %}{% if applicant.address_line_3 %}
@@ -138,52 +157,67 @@
 {{ applicant.address_city }}, {{ applicant.address_region }}
 {{ applicant.address_country }} {{ applicant.address_pcode }}</pre>
                 </details>
+            </div>
+
+            <div class="block">
                 <details>
-                    <summary><strong>Authorizations</strong></summary>
-                    <strong>Required:</strong>
-                    <div class="tags" style="margin-bottom: 0px;">
+                    <summary><span class="subtitle">Authorizations</span></summary>
+                    <span>Required:</span>
+                    <div class="tags">
                         {{ make_tag('HTB Admin', applicant['gdpr']) }}
                         {{ make_tag('MLH Admin', applicant['mlh_admin']) }}
                         {{ make_tag('HackUK Admin', applicant['hackuk_admin']) }}
                         {{ make_tag('MLH COC', applicant['mlh_coc']) }}
                     </div>
-                    <strong>Optional:</strong>
+                    <span>Optional:</span>
                     <div class="tags">
                         {{ make_tag('Share with sponsors?', applicant['gdpr_sponsor']) }}
                         {{ make_tag('MLH Email', applicant['mlh_email']) }}
                         {{ make_tag('HackUK Email', applicant['hackuk_email']) }}
                     </div>
                 </details>
+            </div>
+
+            <div class="block">
                 <details>
-                    <summary><strong>All Information</strong></summary>
+                    <summary><span class="subtitle">All Information</span></summary>
                     <pre>{{ applicant_txt }}</pre>
                 </details>
+            </div>
 
-            </p>
-            <h4 class="title is-4 has-margin-top--1em">Short Answers</h4>
-            <strong>Why are you excited about Hack the Burgh?</strong>
-            <p>
-                {{ description|safe }}
-            </p>
-            <br />
-            <strong> Describe an interesting project you've been involved in. </strong>
-            <p>
-                {{ essay|safe }}
-            </p>
+            <h2 class="title is-2 has-margin-top--1em">Short Answers</h2>
+            <div class="block">
+                <h3 class="subtitle">Why are you excited about Hack the Burgh?</h3>
+                <p>
+                    {{ description|safe }}
+                </p>
+            </div>
+
+            <div class="block">
+                <h3 class="subtitle"> Describe an interesting project you've been involved in. </h3>
+                <p>
+                    {{ essay|safe }}
+                </p>
+            </div>
             {% else %}
             <div class="applicant__incompletebody">
-                <span class="is-size-4 is-italic">application incomplete</span>
+                <span class="is-size-4 is-italic">Application Incomplete</span>
             </div>
             {% endif %}
         </div>
         <div class="column">
             <h4 class="title is-4">Vote History</h4>
             {% if votes %}
-            {% for vote in votes %}
-            {{ make_rating(vote.author_email, vote.author, vote.rating) }}
-            {% endfor %}
+            <table class="table table-fullwidth">
+                <tbody>
+                    {% for vote in votes %}
+                    {{ make_rating(vote.author_email, vote.author, vote.rating) }}
+                    {% endfor %}
+                </tbody>
+
+            </table>
             {% else %}
-            <i> no votes yet. </i>
+            <p>No votes yet.</p>
             {% endif %}
         </div>
     </div>
@@ -237,7 +271,6 @@
                         </button>
                         {% endif %}
                     </div>
-
                 </div>
             </div>
 
