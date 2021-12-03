@@ -7,12 +7,14 @@
 
 {% block content %}
 
+{% block messages %}
 {% for message in get_flashed_messages() %}
 <div class="notification {{ message.type }}">
     <button class="delete" onclick="closeNotification(this)"></button>
     {{ message.text }}
 </div>
 {% endfor %}
+{% endblock %}
 <script type="text/javascript">
     const closeNotification = e => e.parentElement.remove()
 </script>

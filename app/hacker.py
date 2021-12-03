@@ -11,8 +11,71 @@ import tempfile
 import boto3
 import shutil
 import os
+from wtforms import Form, StringField, EmailField, IntegerField, SelectField, BooleanField, validators
 
 bp = Blueprint("hacker", __name__, url_prefix="/hacker")
+
+
+class ApplicationForm(Form):
+    first_name = StringField('First Name', [validators.Length(min=1, max=50)])
+    last_name = StringField('Last Name', [validators.Length(min=1, max=50)])
+    contact_email = EmailField('Email')
+    school = StringField('University Name', [
+                         validators.Length(min=1, max=75)])
+    gradYear = IntegerField("Graduation Year")
+    shirt_size = SelectField(
+        "Shirt Size", choices=[("xs", "XS"), ("s", "S"), ("m", "M"), ("l", "L"), ("xl", "XL")])
+    address_line_1 = StringField(
+        'Address Line 1', [validators.Length(min=1, max=75)])
+    address_line_2 = StringField(
+        'Address Line 2', [validators.Length(min=0, max=75)])
+    address_line_3 = StringField(
+        'Address Line 3', [validators.Length(min=0, max=75)])
+    address_city = StringField('City', [validators.Length(min=0, max=75)])
+    address_region = StringField('Region', [validators.Length(min=0, max=75)])
+    address_country = StringField(
+        'Country', [validators.Length(min=0, max=40)])
+    address_pcode = StringField('Postcode', [validators.Length(min=0, max=10)])
+    phone = StringField('Phone Number', [validators.Length(min=11, max=15)])
+    description = StringField('"Why are you excited about Hack the Burgh?"', [
+                              validators.Length(min=1, max=1000)])
+    essay = StringField('"Describe an interesting project you\'ve been involved in"', [
+                        validators.Length(min=1, max=1000)])
+    mlh_coc = BooleanField("MLH Code of Conduct", [validators.DataRequired()])
+    gdpr = BooleanField("Privacy Policy", [validators.DataRequired()])
+    mlh_admin = BooleanField("MLH Privacy Policy", [validators.DataRequired()])
+    hackuk_admin = BooleanField("HackUK Privacy Policy", [
+                                validators.DataRequired()])
+    adult = BooleanField("Over 18", [validators.DataRequired()])
+
+
+# Similar to above, but allows empty fields. This is used to make sure we still don't let people
+# put as much data as they want
+class IncompleteApplicationForm(Form):
+    first_name = StringField('First Name', [validators.Length(min=0, max=50)])
+    last_name = StringField('Last Name', [validators.Length(min=0, max=50)])
+    contact_email = StringField('Email', [validators.Length(min=0, max=50)])
+    school = StringField('University Name', [
+                         validators.Length(min=0, max=75)])
+    gradYear = IntegerField("Graduation Year")
+    shirt_size = SelectField(
+        "Shirt Size", choices=[("", "Select"), ("xs", "XS"), ("s", "S"), ("m", "M"), ("l", "L"), ("xl", "XL")])
+    address_line_1 = StringField(
+        'Address Line 1', [validators.Length(min=0, max=75)])
+    address_line_2 = StringField(
+        'Address Line 2', [validators.Length(min=0, max=75)])
+    address_line_3 = StringField(
+        'Address Line 3', [validators.Length(min=0, max=75)])
+    address_city = StringField('City', [validators.Length(min=0, max=75)])
+    address_region = StringField('Region', [validators.Length(min=0, max=75)])
+    address_country = StringField(
+        'Country', [validators.Length(min=0, max=40)])
+    address_pcode = StringField('Postcode', [validators.Length(min=0, max=10)])
+    phone = StringField('Phone Number', [validators.Length(min=0, max=15)])
+    description = StringField('"Why are you excited about Hack the Burgh?"', [
+                              validators.Length(min=0, max=1000)])
+    essay = StringField('"Describe an interesting project you\'ve been involved in"', [
+                        validators.Length(min=0, max=1000)])
 
 
 def capitalize_login_provider():
@@ -43,7 +106,7 @@ def init_mlh():
             """
             INSERT INTO Applicants
                 (verified, admin, adult, completed, admitted, user_id, email, contact_email, mlh_json, first_name, last_name, timestamp, school)
-                VALUES (1,0,0,0,0,?,?,?,?,?,?,?,?,?)
+                VALUES (1,0,0,0,0,?,?,?,?,?,?,?,?)
         """,
             (
                 "mlh:" + str(mlh_id),
@@ -238,6 +301,26 @@ def write_application(submit=False):
     if cfg["applications_dline"] <= time.time():
         flasher("Application deadline has passed!", color="danger")
         return redirect(url_for("hacker.application"))
+
+    # Validation
+    form = IncompleteApplicationForm(request.form)
+    if not form.validate():
+        for field in form:
+            for error in field.errors:
+                flasher("%s: %s" % (field.label.text, error), "danger")
+        for error in form.form_errors:
+            flasher(error)
+
+        return False
+    elif submit:
+        form = ApplicationForm(request.form)
+        if not form.validate():
+            for field in form:
+                for error in field.errors:
+                    flasher("%s: %s" % (field.label.text, error), "danger")
+            for error in form.form_errors:
+                flasher(error)
+            submit = False
 
     if request.files["resume"].filename != "":
         # TODO: More file validation

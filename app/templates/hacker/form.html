@@ -1,11 +1,22 @@
 {% extends "hacker/base.html" %}
 
+{% block messages %}
+{# dont show messages right on top #}
+{% endblock %}
+
 {% block hacker_content %}
 
 <h1 class="title">Application</h1>
 <h2 class="subtitle">{% if appl['completed'] == 1 %}<span class="has-text-success">Submitted
         {{ completed_time }}</span>{% else %}Not submitted{% endif %} &bull; <span class="is-size-6 is-italic">Required
         fields marked with an <span class="has-text-danger">*</span>.</span></h2>
+{% for message in get_flashed_messages() %}
+<div class="notification {{ message.type }}">
+    <button class="delete" onclick="closeNotification(this)"></button>
+    {{ message.text }}
+</div>
+
+{% endfor %}
 
 <form action="{{ url_for('hacker.submit_application') }}" method="POST" id="application" enctype="multipart/form-data">
     <section class="section">
@@ -194,17 +205,17 @@
 
         <h2 class="title">Short Answers</h2>
         <div class="field">
-            <label class="label">Why are you excited about Hack the Burgh?</label>
+            <label class="label">Why are you excited about Hack the Burgh?&nbsp;<span class="has-text-danger">*</span></label>
             <div class="control">
-                <textarea class="textarea" placeholder="Type here!"
+                <textarea required class="textarea" placeholder="Type here!"
                     name="description">{{ appl['description'] }}</textarea>
             </div>
         </div>
 
         <div class="field">
-            <label class="label">Describe an interesting project you've been involved in.</label>
+            <label class="label">Describe an interesting project you've been involved in.&nbsp;<span class="has-text-danger">*</span></label>
             <div class="control">
-                <textarea class="textarea" name="essay" placeholder="One time I was...">{{appl['essay']}}</textarea>
+                <textarea required class="textarea" name="essay" placeholder="One time I was...">{{appl['essay']}}</textarea>
             </div>
         </div>
 
