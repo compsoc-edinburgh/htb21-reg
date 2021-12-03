@@ -6,65 +6,6 @@
     <h1 class="title">Administration</h1>
     <h2 class="subtitle">the dangerous stuff</h2>
 
-    {#
-    <div class="box">
-        <h1 class="is-size-3"> Process new dumpfile </h1>
-        <p>
-            This control allows for new Mongo dump files to be uploaded onto the server. If you are not 100% sure you know what you're doing, this could potentially corrupt votes.
-        </p>
-
-        <br/>
-
-        <form enctype="multipart/form-data" action="{{url_for('actions.submit_dump')}}" method="POST">
-            <div class="field">
-                <label class="label">Dump file</label>
-                <div class="control">
-                    <div id="file-upload" class="file has-name">
-                        <label class="file-label">
-                            <input class="file-input" type="file" name="csv" accept=".csv,*" required>
-                            <span class="file-cta">
-                                <span class="file-icon">
-                                    <i class="fas fa-upload"></i>
-                                </span>
-                                <span class="file-label">
-                                    Choose a file…
-                                </span>
-                            </span>
-                            <span class="file-name">
-                                No file uploaded
-                            </span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="field">
-                <label class="label">Verification</label>
-                <div class="control">
-                    <input
-                        class="input"
-                        type="text"
-                        placeholder="i know what i am doing"
-                        name="verification"
-                        autocomplete="off"
-                        autocorrect="off"
-                        spellcheck="false"
-                        required>
-                </div>
-                <p class="help"> If you understand the risks, please write <code class="is-unselectable">i know what i am doing</code> in the box above.</p>
-            </div>
-            <div class="control">
-                <button class="button is-danger">
-                    <span>Submit</span>
-                    <span class="icon">
-                        <i class="fas fa-upload"></i>
-                    </span>
-                </button>
-            </div>
-        </form>
-    </div>
-    #}
-
     <div class="box">
         <h1 class="is-size-3"> Purge all votes </h1>
         <p>
@@ -93,23 +34,6 @@
                 </button>
             </div>
         </form>
-    </div>
-    <div class="box">
-        <h1 class="is-size-3"> Download backing SQLite database</h1>
-        <p>
-            This control exposes a download of the entire SQLite database. Doing this exposes personal information, so
-            do so with caution.
-        </p>
-
-        <br />
-
-        <a class="button is-warning" href="{{url_for('actions.download_db')}}">
-            <span>Download</span>
-            <span class="icon">
-                <i class="fas fa-download"></i>
-            </span>
-        </a>
-
     </div>
 </div>
 

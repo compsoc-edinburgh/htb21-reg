@@ -74,23 +74,6 @@ def download_csv():
     return Response(csv_str, mimetype="text/csv")
 
 
-@bp.route("/submit_dump", methods=["POST"])
-@admin_login_required
-@verification_required
-def submit_dump():
-    """Import applicants from a bulk CSV"""
-    conn = get_db()
-    cursor = conn.cursor()
-    count = 0
-    for applicant in get_applicants_from_csv(request.files["csv"]):
-        insert_applicant(cursor, applicant)
-        count += 1
-    conn.commit()
-    flasher("Imported {} records.".format(count), color="success")
-
-    return redirect(url_for("dashboard.admin"))
-
-
 @bp.route("/votes/purge", methods=["POST"])
 @admin_login_required
 @verification_required
