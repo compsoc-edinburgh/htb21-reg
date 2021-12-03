@@ -32,6 +32,7 @@ def verification_required(view):
         if request.form["verification"] != "i know what i am doing":
             flasher("Verification failed, please try again.", color="warning")
             return redirect(url_for("dashboard.admin"))
+        return view()
 
     return wrapped_view
 
