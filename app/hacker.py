@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, url_for, redirect, request
+from flask import Blueprint, render_template, session, url_for, redirect, request, current_app
 from .auth import hacker_login_required
 from .common import flasher, get_config
 from .db import get_db
@@ -212,15 +212,15 @@ def s3_upload(filename, local_fn, tmpdir):
 
     s3 = boto3.client(
         "s3",
-        region_name=app.config["S3_REGION"],
-        endpoint_url=app.config["S3_ENDPOINT"],
-        aws_access_key_id=app.config["S3_ACCESS_KEY"],
-        aws_secret_access_key=app.config["S3_ACCESS_SECRET"],
+        region_name=current_app.config["S3_REGION"],
+        endpoint_url=current_app.config["S3_ENDPOINT"],
+        aws_access_key_id=current_app.config["S3_ACCESS_KEY"],
+        aws_secret_access_key=current_app.config["S3_ACCESS_SECRET"],
     )
 
     response = s3.upload_file(
         local_fn,
-        app.config["S3_BUCKET"],
+        current_app.config["S3_BUCKET"],
         filename,
         ExtraArgs={"ContentType": "application/pdf", "ACL": "public-read"},
     )
@@ -246,8 +246,6 @@ def write_application(submit=False):
 
         # HAX - S3 upload is slow as fuck, so i'm doing it in the background
         # and just hoping it works
-        print(filename)
-
         tmpdir = tempfile.mkdtemp()
         local_fn = os.path.join(tmpdir, filename.split("/")[1])
         request.files["resume"].save(local_fn)
@@ -257,7 +255,7 @@ def write_application(submit=False):
         upload.start()
 
         # oh jesus
-        resume = f"{app.config['S3_SUBDOMAIN']}/{filename}"
+        resume = f"{current_app.config['S3_SUBDOMAIN']}/{filename}"
         # we're going to set this separately to avoid overriding existing values
         c.execute(
             """
@@ -267,8 +265,6 @@ def write_application(submit=False):
         """,
             (resume, session["email"]),
         )
-
-    # print(equest.files['resume'])
 
     try:
 
@@ -434,7 +430,7 @@ def show_resume():
     # this exists solely for people who click the link too fast
     # (before it has a chance to upload)
     appl, _ = resolve_application(session["email"])
-
+    print(appl["resume"])
     if appl["resume"] is not None and appl["resume"] != "":
         resp = requests.head(appl["resume"])
         if resp.status_code != 403:
@@ -457,7 +453,7 @@ def delete_resume():
         return redirect(url_for("hacker.application"))
 
     if appl["resume"] is not None and appl["resume"] != "":
-        filename = f"htb21-cvs/{'_'.join(appl['user_id'].split(':'))}.pdf"
+        filename = f"htb22-cvs/{'_'.join(appl['user_id'].split(':'))}.pdf"
 
         s3 = boto3.client(
             "s3",
