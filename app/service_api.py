@@ -1,13 +1,13 @@
 from flask import Blueprint, url_for, redirect, request, jsonify, Response, make_response, send_file, current_app
 from .common import get_config, row_to_obj, rows_to_objs
-from .data import create_csv
+from .data import create_csv, LESS_SENSITIVE_APPLICANT_FIELDS
 from .db import get_db
 from json import dumps
 import functools
 import bcrypt
 import time
 
-bp = Blueprint('service_api', __name__, url_prefix='/api/v1')
+bp = Blueprint('service_api', __name__, url_prefix='/api/v2')
 
 
 def create_response(obj, ok=True, message=None, code=None):
@@ -53,17 +53,20 @@ def validate_auth(auth_slug):
     # check if there is a service with the specified key
     svc = c.fetchone()
     if svc is None:
-        print('no such service')
+        current_app.logger.warn(
+            'Service request w/ unrecognised service. Key = %s, Given Secret = %s' % (api_key, api_secret))
         return False
 
     # validate bcrypt
     if not bcrypt.checkpw(api_secret, svc['api_secret']):
-        print('bcrypt failure')
+        current_app.logger.warn(
+            'Service request w/ bad secret. Key = %s, Given Secret = %s' % (api_key, api_secret))
         return False
 
     # check it's not disabled
     if svc['active'] == 0:
-        print('inactive service')
+        current_app.logger.warn(
+            'Service request from inactive service. Key = %s, Given Secret = %s' % (api_key, api_secret))
         return False
 
     # successful auth, update lastused
@@ -85,8 +88,8 @@ def service_auth_required(view):
         try:
             authed = validate_auth(request.headers.get('Authorization'))
         except Exception as e:
-            raise
-            print(e)
+            current_app.logger.error(
+                "Error validating service auth: %s" % str(e))
             authed = False
 
         if not authed:
@@ -132,15 +135,6 @@ def api_config():
     return create_response(obj)
 
 
-@bp.route('/backup')
-@service_auth_required
-def api_download_backup():
-    '''
-    Download the database as a SQLite file.
-    '''
-    return send_file(current_app.config['DATABASE'])
-
-
 @bp.route('/applicants/by_email')
 @service_auth_required
 def api_get_by_email():
@@ -157,13 +151,12 @@ def api_get_by_email():
     c = get_db().cursor()
     if request.args.get('strict') is not None:
         c.execute('''
-            SELECT * FROM Applicants WHERE email=?
-        ''', (email,))
+            SELECT %s FROM Applicants WHERE email=?
+        ''' % LESS_SENSITIVE_APPLICANT_FIELDS, (email,))
     else:
         c.execute('''
-            SELECT * FROM Applicants WHERE email=? OR contact_email=?
-        ''', (email, email))
-
+            SELECT %s FROM Applicants WHERE email=? OR contact_email=?
+        ''' % LESS_SENSITIVE_APPLICANT_FIELDS, (email, email))
     usr = c.fetchone()
     if usr is None:
         return create_response({}, ok=False, message=f'No such user {email}', code=404)
@@ -185,8 +178,8 @@ def api_get_by_id():
 
     c = get_db().cursor()
     c.execute('''
-        SELECT * FROM Applicants WHERE user_id=?
-    ''', (uid,))
+        SELECT %s FROM Applicants WHERE user_id=?
+    ''' % LESS_SENSITIVE_APPLICANT_FIELDS, (uid,))
 
     usr = c.fetchone()
     if usr is None:
@@ -207,12 +200,12 @@ def api_get_all_applicants():
 
     if (request.args.get('completed') == 'true'):
         c.execute('''
-            SELECT * FROM Applicants WHERE completed=1
-        ''')
+            SELECT %s FROM Applicants WHERE completed=1
+        ''' % LESS_SENSITIVE_APPLICANT_FIELDS)
     else:
         c.execute('''
-            SELECT * FROM Applicants
-        ''')
+            SELECT %s FROM Applicants
+        ''' % LESS_SENSITIVE_APPLICANT_FIELDS)
 
     rows = c.fetchall()
     if rows is None:
@@ -339,7 +332,6 @@ def api_invite_list():
 
 api_routes = [
     api_config,
-    api_download_backup,
     api_get_by_id,
     api_get_by_email,
     api_get_all_applicants,

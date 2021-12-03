@@ -5,6 +5,12 @@ import functools
 import tempfile
 import os
 
+# subset of fields that are slightly less sensitive
+# these should still be treated with care, but at least they aren't full address and phone #s
+LESS_SENSITIVE_APPLICANT_FIELDS = '''user_id, id, admin, email, contact_email, verified, completed, adult, admitted,
+                              first_name, last_name, school,
+                              gdpr, gdpr_sponsor, mlh_coc, mlh_admin, mlh_email, hackuk_admin, hackuk_email'''
+
 # helper to map from column names in the CSV dump to the schema
 dumpNameMapping = {
     "_id": "mongo_id",
@@ -88,13 +94,20 @@ def insert_applicant(cursor, applicant):
     )
 
 
-def create_csv(conn):
+def create_csv(conn, sensitive=False):
     c = conn.cursor()
-    c.execute(
+    if sensitive:
+        c.execute(
+            """
+            SELECT * FROM Applicants WHERE completed=1
         """
-        SELECT * FROM Applicants WHERE completed=1
-    """
-    )
+        )
+    else:
+        c.execute(
+            """
+            SELECT %s FROM Applicants WHERE completed=1
+        """ % LESS_SENSITIVE_APPLICANT_FIELDS
+        )
     rows = c.fetchall()
     if rows is None:
         rows = []
