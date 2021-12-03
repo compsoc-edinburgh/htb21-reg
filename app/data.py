@@ -24,7 +24,6 @@ dumpNameMapping = {
     "profile.name": "name",
     "profile.school": "school",
     "profile.graduationYear": "gradYear",
-    "profile.gender": "gender",
     "profile.description": "description",
     "profile.essay": "essay",
 }
@@ -64,7 +63,6 @@ def insert_applicant(cursor, applicant):
         "name",
         "school",
         "gradYear",
-        "gender",
         "description",
         "essay",
     ]
@@ -85,7 +83,6 @@ def insert_applicant(cursor, applicant):
             name,
             school,
             gradYear,
-            gender,
             description,
             essay
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)

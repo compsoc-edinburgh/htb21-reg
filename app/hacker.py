@@ -42,7 +42,7 @@ def init_mlh():
         c.execute(
             """
             INSERT INTO Applicants
-                (verified, admin, adult, completed, admitted, user_id, email, contact_email, mlh_json, first_name, last_name, timestamp, gender, school)
+                (verified, admin, adult, completed, admitted, user_id, email, contact_email, mlh_json, first_name, last_name, timestamp, school)
                 VALUES (1,0,0,0,0,?,?,?,?,?,?,?,?,?)
         """,
             (
@@ -53,7 +53,6 @@ def init_mlh():
                 session["mlh_info"]["first_name"],
                 session["mlh_info"]["last_name"],
                 int(time.time() * 1000),
-                session["mlh_info"]["gender"].lower(),
                 school_name,
             ),
         )
