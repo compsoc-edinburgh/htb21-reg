@@ -70,7 +70,7 @@ def update_cfg():
 def download_csv():
     """Download all applicants as a CSV"""
     conn = get_db()
-    csv_str = create_csv(conn)
+    csv_str = create_csv(conn, request.args.get('sensitive') is not None)
     return Response(csv_str, mimetype="text/csv")
 
 
@@ -89,14 +89,6 @@ def submit_dump():
     flasher("Imported {} records.".format(count), color="success")
 
     return redirect(url_for("dashboard.admin"))
-
-
-@bp.route("/download_db/registrations.sqlite")
-@admin_login_required
-def download_db():
-    """Download the entire SQLite database"""
-    # TODO: Is there enough of a justification for this big of a target?
-    return send_file(current_app.config["DATABASE"])
 
 
 @bp.route("/votes/purge", methods=["POST"])
