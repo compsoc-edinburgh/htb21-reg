@@ -51,17 +51,22 @@
 {% block dashboard_content %}
 
 {% if flow %}
-<div class="flow_header has-background-light">
+<div class="flow_header has-background-dark">
     <div class="container">
-        <div class="columns">
-            <div class="column is-two-thirds">
-                <h1 class="subtitle">Flow voting: <strong>{{ flow_votes_total - flow_votes_completed }}</strong>
-                    remaining (<strong>{{flow_votes_percentage}}% done</strong>).</h1>
+        <div class="level">
+            <div class="level-left">
+                <div class="level-item has-text-left">
+                    <h1 class="subtitle">Flow voting: <strong>{{ flow_votes_total - flow_votes_completed }}</strong>
+                        remaining (<strong>{{flow_votes_percentage}}% done</strong>).</h1>
+                </div>
             </div>
-            <div class="column">
-                <progress value="{{ flow_votes_completed }}" max="{{ flow_votes_total }}"
-                    class="progress is-link flow-header__progress"></progress>
+            <div class="level-right">
+                <div class="level-item">
+                    <progress value="{{ flow_votes_completed }}" max="{{ flow_votes_total }}"
+                        class="progress is-success"></progress>
+                </div>
             </div>
+
         </div>
     </div>
 </div>
@@ -81,7 +86,7 @@
         {% endif %}
 
         <span class="has-text-weight-bold applicant__rating">
-            <span class="is-size-3">{{ voteaverage }}/5</span>
+            <span class="is-size-3">{{ voteaverage }}/5.0</span>
             <span class="is-size-6">({{ votes|length }} votes)</span>
         </span>
 
@@ -183,56 +188,59 @@
         </div>
     </div>
 
-    <div class="applicant__bottompin_margin"></div>
-
-
-    <div class="applicant__bottompin has-background-light">
-        <form class="applicant__rating_row" id="rating"
-            {% if flow %}action="{{ url_for('actions.submit_vote') }}?flow=1"
+    <div class="applicant__bottompin">
+        <form id="rating" {% if flow %}action="{{ url_for('actions.submit_vote') }}?flow=1"
             {% else %}action="{{ url_for('actions.submit_vote') }}" {% endif %} method="POST">
-            <div class="flex-row">
+            <div class="columns">
 
-                <div class="field has-addons">
-                    {{ make_ratebtn(1) }}
-                    {{ make_ratebtn(2) }}
-                    {{ make_ratebtn(3) }}
-                    {{ make_ratebtn(4) }}
-                    {{ make_ratebtn(5) }}
+                <div class="column is-half flex-row">
+                    <div class="field has-addons">
+                        {{ make_ratebtn(1) }}
+                        {{ make_ratebtn(2) }}
+                        {{ make_ratebtn(3) }}
+                        {{ make_ratebtn(4) }}
+                        {{ make_ratebtn(5) }}
 
-                    <div class="is-hidden">
-                        {{ make_rateinput(1) }}
-                        {{ make_rateinput(2) }}
-                        {{ make_rateinput(3) }}
-                        {{ make_rateinput(4) }}
-                        {{ make_rateinput(5) }}
+                        <div class="is-hidden">
+                            {{ make_rateinput(1) }}
+                            {{ make_rateinput(2) }}
+                            {{ make_rateinput(3) }}
+                            {{ make_rateinput(4) }}
+                            {{ make_rateinput(5) }}
 
-                        <input name="user_id" type="text" value="{{ applicant.user_id }}" />
-                        <input name="id" type="text" value="{{ applicant.id }}" />
+                            <input name="user_id" type="text" value="{{ applicant.user_id }}" />
+                            <input name="id" type="text" value="{{ applicant.id }}" />
+                        </div>
                     </div>
                 </div>
+                <div class="column">
+                    <div class="votingButtons">
+                        <span class="applicant__votename">Voting as <strong>{{ session['name'] }}</strong></span>
+
+                        {% if previousVote %}
+                        <button type="submit" class="button is-medium is-warning">
+                            <span>
+                                Change Vote
+                            </span>
+                            <span class="icon">
+                                <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </button>
+                        {% else %}
+                        <button type="submit" class="button is-medium is-primary">
+                            <span>
+                                Submit Vote
+                            </span>
+                            <span class="icon">
+                                <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </button>
+                        {% endif %}
+                    </div>
+
+                </div>
             </div>
-            <div class="flex-row applicant__votebtnrow">
-                <span class="applicant__votename"> Voting as <strong>{{ session['name'] }}</strong></span>
-                {% if previousVote %}
-                <button type="submit" class="button is-medium is-warning">
-                    <span>
-                        Change Vote
-                    </span>
-                    <span class="icon">
-                        <i class="fas fa-chevron-right"></i>
-                    </span>
-                </button>
-                {% else %}
-                <button type="submit" class="button is-medium is-primary">
-                    <span>
-                        Submit Vote
-                    </span>
-                    <span class="icon">
-                        <i class="fas fa-chevron-right"></i>
-                    </span>
-                </button>
-                {% endif %}
-            </div>
+
         </form>
     </div>
 </div>
@@ -257,13 +265,9 @@
     let btns = document.querySelectorAll('[data-rating-val]')
     btns.forEach(e => radioClickHandler(e))
 
-    {
-        %
-        if previousVote %
-    }
-    document.querySelector(`[name="rating"][value="{{ previousVote.value }}"`).checked = true {
-        % endif %
-    }
+    {% if previousVote %}
+    document.querySelector(`[name="rating"][value="{{ previousVote.value }}"`).checked = true;
+    {% endif %}
 </script>
 
 <script type="text/javascript">

@@ -32,3 +32,27 @@ footer {
 .mb-3 {
     margin-bottom: 1rem !important;
 }
+
+.logo.hackerPages {
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.logo.hackerPages img {
+    margin: 0 auto;
+}
+
+.flow_header {
+    padding: 1rem 0;
+}
+
+.votingButtons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.votingButtons span {
+    margin-right: 1rem;
+}
