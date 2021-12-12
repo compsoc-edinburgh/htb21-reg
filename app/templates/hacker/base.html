@@ -1,30 +1,33 @@
 {% extends "base.html" %}
 
 {% block bulma_css %}
-<link href="{{ url_for('static', filename='bulma_cyborg.css') }}" rel="stylesheet" type="text/css"/>
-<link href="{{ url_for('static', filename='hacker.css') }}" rel="stylesheet" type="text/css"/>
+<link href="{{ url_for('static', filename='bulma_cyborg.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ url_for('static', filename='hacker.css') }}" rel="stylesheet" type="text/css" />
 {% endblock %}
 
 {% block content %}
 
+{% block messages %}
 {% for message in get_flashed_messages() %}
 <div class="notification {{ message.type }}">
     <button class="delete" onclick="closeNotification(this)"></button>
     {{ message.text }}
 </div>
 {% endfor %}
+{% endblock %}
 <script type="text/javascript">
     const closeNotification = e => e.parentElement.remove()
 </script>
 
 <section class="section">
-    
     <div class="container">
         <div class="columns">
             <div class="column">
-                <div class="block">
+                <div class="block has-text-centered">
+                    <a class="logo hackerPages" href="https://2022.hacktheburgh.com"><img src="/static/logo.svg" alt="HTB8 Logo" class="image is-128x128"></a>
                     <h1 class="title">HTB7 Registration</h1>
-                    <h2 class="subtitle">Logged in with {{ login_type }} &bull; <a href="{{ url_for('auth.hacker_logout') }}">Log out</a></h2>
+                    <h2 class="subtitle">Logged in with {{ login_type }} &bull;&nbsp;<a
+                            href="{{ url_for('auth.hacker_logout') }}">Log out</a></h2>
                 </div>
                 <div class="block">
                     <ul>
@@ -44,6 +47,7 @@
                                 </span>
                             </a>
                         </li>
+                        {#
                         <li>
                             <a href="{{ url_for('hacker.invites') }}">
                                 <span>Invites</span>
@@ -52,6 +56,7 @@
                                 </span>
                             </a>
                         </li>
+                        #}
                         {% if appl['admitted'] == 1 %}
                         <li>
                             <a href="{{ url_for('hacker.discord') }}">

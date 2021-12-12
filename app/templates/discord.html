@@ -1,48 +1,33 @@
-{% extends "base.html" %}
+{% extends "smallpage.html" %}
 
-{% block bulma_css %}
-<link href="{{ url_for('static', filename='bulma_cyborg.css') }}" rel="stylesheet" type="text/css"/>
-{% endblock %}
+{% block pagecontent %}
+<h1 class="title">Hack the Burgh 7 Discord</h1>
+<h2 class="subtitle">Join the hack!</h2>
+<p class="block">
+    Ready to join Hack the Burgh? This page will give you
+    the invite link for our Discord server, where the
+    hackathon will be taking place.
+</p>
 
-{% block content %}
-
-<div class="fullpage">
-            <div class="fullpage__centered">
-                <article>
-                    <div class="image is-32x32" style="margin-bottom: 1rem;">
-                        <img src="/static/favicon.svg" alt="htb7 logo">
-                    </div>
-                    <h1 class="title">Hack the Burgh 7 Discord</h1>
-                    <h2 class="subtitle">Join the hack!</h2>
-                    <p class="block">
-                        Ready to join Hack the Burgh? This page will give you
-                        the invite link for our Discord server, where the
-                        hackathon will be taking place.
-                    </p>
-
-                    <p class="block ">
-                        <div class="level">
-                            <div class="level-left"></div>
-                            <div class="level-right">
-                                <p class="has-text-right">
-                                    <a href="{{ url_for('github.login') }}">
-                                        <span>Log in with Github</span>
-                                        <span class="icon">
-                                            <i class="fas fa-arrow-right"></i>
-                                        </span>
-                                    </a><br/>
-                                    <a href="{{ url_for('mymlh.login') }}">
-                                        <span>Log in with MyMLH</span>
-                                        <span class="icon">
-                                            <i class="fas fa-arrow-right"></i>
-                                        </span>
-                                    </a>
-                                </p>
-                            </div>
-                        </div>
-                    </p>
-                </article>
-            </div>
+<p class="block ">
+    <div class="level">
+        <div class="level-left"></div>
+        <div class="level-right">
+            <p class="has-text-right">
+                <a href="{{ url_for('github.login') }}">
+                    <span>Log in with Github</span>
+                    <span class="icon">
+                        <i class="fas fa-arrow-right"></i>
+                    </span>
+                </a><br />
+                <a href="{{ url_for('mymlh.login') }}">
+                    <span>Log in with MyMLH</span>
+                    <span class="icon">
+                        <i class="fas fa-arrow-right"></i>
+                    </span>
+                </a>
+            </p>
         </div>
-
+    </div>
+</p>
 {% endblock %}

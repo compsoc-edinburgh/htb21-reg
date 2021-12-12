@@ -1,19 +1,24 @@
 <!DOCTYPE html>
 
 <html>
-    <head>
-        <title>{% block title %}HTB 2021 Registration{% endblock %}</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="{{ url_for('static', filename='index.css') }}" rel="stylesheet" type="text/css">
-        <link href="{{ url_for('static', filename='favicon.svg') }}" type="image/png" rel="icon">
 
-        {# link href="{{ url_for('static', filename='bulma_cyborg.css') }}" rel="stylesheet" type="text/css"#}
-        {% block bulma_css %}<link href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.css" rel="stylesheet">{% endblock %}
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" crossorigin="anonymous">
+<head>
+    <title>{% block title %}HTB 8 Registration{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <link href="{{ url_for('static', filename='favicon.png') }}" type="image/png" rel="icon">
 
-    </head>
-    <body>
-        {% block content %}{% endblock %}
-    </body>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" crossorigin="anonymous">
+    {# link href="{{ url_for('static', filename='bulma_cyborg.css') }}" rel="stylesheet" type="text/css"#}
+    {% block bulma_css %}
+    <link href="{{ url_for('static', filename='bulma_cyborg.css') }}" rel="stylesheet" type="text/css" />
+    {% endblock %}
+    
+</head>
+
+<body>
+    {% block content %}{% endblock %}
+</body>
+
 </html>

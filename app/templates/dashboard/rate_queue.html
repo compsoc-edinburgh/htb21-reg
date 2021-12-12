@@ -2,13 +2,13 @@
 
 {% macro make_applicant(row) %}
 <tr>
-        <td>{{ row['first_name'] }} {{ row['last_name'] }}</td>
-        <td>{{ row['email'] }}</td>
-        <td>
-            <a href="{{url_for('dashboard.applicant', user_id=row['user_id'])}}?flow=1">
-                vote
-            </a>
-        </td>
+    <td>{{ row['first_name'] }} {{ row['last_name'] }}</td>
+    <td>{{ row['email'] }}</td>
+    <td>
+        <a href="{{url_for('dashboard.applicant', user_id=row['user_id'])}}?flow=1">
+            vote
+        </a>
+    </td>
 </tr>
 {% endmacro %}
 
@@ -27,10 +27,11 @@
         </a>
     </div>
     <h2 class="subtitle">Your personal voting queue.</h2>
-    
+
     <p>
-        <i>Remember, you can use your keyboard to vote! Number keys selects a value, and Enter submits.</i><br/>
-        <a href="{{url_for('actions.toggle_hiding')}}">Click to toggle hiding names (currently {% if session['redacted'] %}enabled{% else %}disabled{% endif %}).</a></p>
+        <i>Remember, you can use your keyboard to vote! Number keys selects a value, and Enter submits.</i><br />
+        <a href="{{url_for('actions.toggle_hiding')}}">Click to toggle hiding names (currently
+            {% if session['redacted'] %}enabled{% else %}disabled{% endif %}).</a></p>
 
     <div class="columns has-margin-top--1em">
         <div class="column">
@@ -45,13 +46,13 @@
                 </thead>
                 <tbody>
                     {% for app in targets %}
-                        {{ make_applicant(app) }}
+                    {{ make_applicant(app) }}
                     {% else %}
-                        <tr>
-                            <td colspan=2>
-                                <i>None remaining. Good job!</i>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td colspan=2>
+                            <i>None remaining. Good job!</i>
+                        </td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -68,20 +69,19 @@
                 </thead>
                 <tbody>
                     {% for app in done %}
-                        {{ make_applicant(app) }}
+                    {{ make_applicant(app) }}
                     {% else %}
-                        <tr>
-                            <td colspan=2>
-                                <i>No votes yet.</i>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td colspan=2>
+                            <i>No votes yet.</i>
+                        </td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
-    
+
 </div>
 
 {% endblock %}
-

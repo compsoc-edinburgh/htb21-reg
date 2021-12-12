@@ -1,21 +1,30 @@
-{% extends "base.html" %}
+{% extends "smallpage.html" %}
 
-{% block content %}
-
-<main class="login__bg">
-    <a href="{{ url_for('auth.profile') }}" class="login row">
-        <span>login with admin</span>
-        <i class="fas fa-arrow-right"></i>
-    </a>
-    <a href="{{ url_for('auth.hacker_profile') }}" class="login row">
-        <span>login with MyMLH</span>
-        <i class="fas fa-arrow-right"></i>
-    </a>
-    <a href="{{ url_for('github.login') }}" class="login row">
-        <span>login with Github</span>
-        <i class="fas fa-arrow-right"></i>
-    </a>
-</main>
-
+{% block pagecontent %}
+<ul class="linkList">
+    <li>
+        <a href="{{ url_for('github.login') }}">
+            <span>Log in with Github</span>
+            <span class="icon">
+                <i class="fas fa-arrow-right"></i>
+            </span>
+        </a>
+    </li>
+    <li>
+        <a href="{{ url_for('mymlh.login') }}">
+            <span>Log in with MyMLH</span>
+            <span class="icon">
+                <i class="fas fa-arrow-right"></i>
+            </span>
+        </a>
+    </li>
+    <li>
+        <a href="{{ url_for('auth.profile') }}">
+            <span>Log in as an admin</span>
+            <span class="icon">
+                <i class="fas fa-arrow-right"></i>
+            </span>
+        </a>
+    </li>
+</ul>
 {% endblock %}
-

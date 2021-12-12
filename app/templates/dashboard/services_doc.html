@@ -10,10 +10,13 @@
 
         <h2 class="subtitle">Bearer tokens</h2>
         <p>
-            Each request must have a <a href="https://tools.ietf.org/html/rfc6750">bearer token</a> with the API key and API secret separated by a slash:<br/><br/>
-            <pre>curl -H "Authorization: Bearer api_key/api_secret" https://register.2021.hacktheburgh.com{{ url_for('service_api.api_config') }}</pre><br/>
-            For example, with API key <code>abcdef</code> and secret <code>1234567890</code>:<br/><br/>
-            <pre>curl -H "Authorization: Bearer abcdef/1234567890" https://register.2021.hacktheburgh.com{{ url_for('service_api.api_config') }}</pre><br/>
+            Each request must have a <a href="https://tools.ietf.org/html/rfc6750">bearer token</a> with the API key and
+            API secret separated by a slash:<br /><br />
+            <pre>curl -H "Authorization: Bearer api_key/api_secret" https://register.2021.hacktheburgh.com{{ url_for('service_api.api_config') }}</pre>
+            <br />
+            For example, with API key <code>abcdef</code> and secret <code>1234567890</code>:<br /><br />
+            <pre>curl -H "Authorization: Bearer abcdef/1234567890" https://register.2021.hacktheburgh.com{{ url_for('service_api.api_config') }}</pre>
+            <br />
         </p>
 
         <h1 class="title">Responses</h1>
@@ -21,9 +24,10 @@
 
 
         <p>
-            The API will respond to requests with JSON for every request (except where noted otherwise. The <code>code</code> field mirrors the HTTP status code.
+            The API will respond to requests with JSON for every request (except where noted otherwise. The
+            <code>code</code> field mirrors the HTTP status code.
         </p>
-        <br/>
+        <br />
 
         <div class="columns">
             <div class="column">
@@ -36,7 +40,7 @@
     "data": { ... }
 }</pre>
                 </p>
-                
+
             </div>
             <div class="column">
                 <p>
@@ -62,7 +66,7 @@
             </div>
         </div>
 
-        
+
 
     </div>
 
@@ -78,7 +82,7 @@
     </div>
     {% endfor %}
 
-    <br/>
+    <br />
 
 </div>
 

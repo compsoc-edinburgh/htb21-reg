@@ -31,11 +31,11 @@
             </div>
             <div class="level-right">
                 <div class="tags are-medium">
-                    <a href="{{ url_for('actions.service_toggle', api_key=svc.api_key) }}">
+                    <a href="{{ url_for('services.service_toggle', api_key=svc.api_key) }}">
                         {% if svc.active == 1 %}
-                            {{ make_tag('Active', svc.active) }}
+                        {{ make_tag('Active', svc.active) }}
                         {% else %}
-                            {{ make_tag('Inactive', svc.active) }}
+                        {{ make_tag('Inactive', svc.active) }}
                         {% endif %}
                     </a>
                 </div>
@@ -43,11 +43,12 @@
         </div>
 
         <p>
-            <strong>API key:</strong> <code>{{ svc.api_key }}</code><br/>
-            <strong>API secret:</strong> <code>[hidden]</code><br/>
-            <strong>Created:</strong> {{ svc.created }}<br/>
-            <strong>Created by:</strong> {{ svc.author_email }}<br/>
-            <strong>Last used:</strong> {% if svc.last_used %}{{ svc.last_used }}{% else %}<i>unused</i>{% endif %}<br/>
+            <strong>API key:</strong> <code>{{ svc.api_key }}</code><br />
+            <strong>API secret:</strong> <code>[hidden]</code><br />
+            <strong>Created:</strong> {{ svc.created }}<br />
+            <strong>Created by:</strong> {{ svc.author_email }}<br />
+            <strong>Last used:</strong>
+            {% if svc.last_used %}{{ svc.last_used }}{% else %}<i>unused</i>{% endif %}<br />
         </p>
 
         <details>
@@ -57,27 +58,23 @@
                 <div class="column">
                     <h1 class="is-size-3"> Recreate API Secret </h1>
                     <p>
-                        This will re-create the API secret for this service. Requests with the old credentials will immediately fail.
+                        This will re-create the API secret for this service. Requests with the old credentials will
+                        immediately fail.
                     </p>
 
-                    <br/>
+                    <br />
 
-                    <form action="{{url_for('actions.service_recreate_key')}}" method="POST">
+                    <form action="{{url_for('services.service_recreate_key')}}" method="POST">
                         <input type="hidden" name="api_key" value="{{ svc.api_key }}">
                         <div class="field">
                             <label class="label">Verification</label>
                             <div class="control">
-                                <input
-                                    class="input"
-                                    type="text"
-                                    placeholder="i know what i am doing"
-                                    name="verification"
-                                    autocomplete="off"
-                                    autocorrect="off"
-                                    spellcheck="false"
+                                <input class="input" type="text" placeholder="i know what i am doing"
+                                    name="verification" autocomplete="off" autocorrect="off" spellcheck="false"
                                     required>
                             </div>
-                            <p class="help"> If you understand the risks, please write <code class="is-unselectable">i know what i am doing</code> in the box above.</p>
+                            <p class="help"> If you understand the risks, please write <code class="is-unselectable">i
+                                    know what i am doing</code> in the box above.</p>
                         </div>
                         <div class="control">
                             <button class="button is-warning">
@@ -92,27 +89,23 @@
                 <div class="column">
                     <h1 class="is-size-3"> Delete the service </h1>
                     <p>
-                        This will immediately and irrevocably delete the service. Requests with these credentials will fail.
+                        This will immediately and irrevocably delete the service. Requests with these credentials will
+                        fail.
                     </p>
 
-                    <br/>
+                    <br />
 
-                    <form action="{{url_for('actions.service_delete')}}" method="POST">
+                    <form action="{{url_for('services.service_delete')}}" method="POST">
                         <input type="hidden" name="api_key" value="{{ svc.api_key }}">
                         <div class="field">
                             <label class="label">Verification</label>
                             <div class="control">
-                                <input
-                                    class="input"
-                                    type="text"
-                                    placeholder="i know what i am doing"
-                                    name="verification"
-                                    autocomplete="off"
-                                    autocorrect="off"
-                                    spellcheck="false"
+                                <input class="input" type="text" placeholder="i know what i am doing"
+                                    name="verification" autocomplete="off" autocorrect="off" spellcheck="false"
                                     required>
                             </div>
-                            <p class="help"> If you understand the risks, please write <code class="is-unselectable">i know what i am doing</code> in the box above.</p>
+                            <p class="help"> If you understand the risks, please write <code class="is-unselectable">i
+                                    know what i am doing</code> in the box above.</p>
                         </div>
                         <div class="control">
                             <button class="button is-danger">
@@ -137,11 +130,12 @@
     <div class="block">
         <h1 class="title">Create new service</h1>
 
-        <form action="{{ url_for('actions.service_create') }}" method="POST">
+        <form action="{{ url_for('services.service_create') }}" method="POST">
             <div class="field">
                 <label class="label">Display name</label>
                 <div class="control">
-                    <input class="input" type="text" placeholder="My Cool Service" name="display_name" autocomplete="off" required>
+                    <input class="input" type="text" placeholder="My Cool Service" name="display_name"
+                        autocomplete="off" required>
                 </div>
             </div>
 
@@ -156,7 +150,7 @@
         </form>
     </div>
 
-    <br/>
+    <br />
 
 
 </div>

@@ -4,7 +4,7 @@
 <h1 class="title">Application Status</h1>
 
 {% if appl['completed'] %}
-<div class="is-size-4 has-text-success">
+<div class="section is-size-4 has-text-success">
     <span class="icon">
         <i class="fas fa-check"></i>
     </span>
@@ -12,14 +12,14 @@
 </div>
 
 {% if appl['admitted'] %}
-<div class="is-size-4 has-text-success">
+<div class="section is-size-4 has-text-success">
     <span class="icon">
         <i class="fas fa-check"></i>
     </span>
     &nbsp;Application accepted!
 </div>
 {% else %}
-<div class="is-size-4 has-text-warning">
+<div class="section is-size-4 has-text-warning">
     <span class="icon">
         <i class="fas fa-clock"></i>
     </span>
@@ -29,7 +29,7 @@
 
 
 {% else %}
-<div class="is-size-4 has-text-warning">
+<div class="section is-size-4 has-text-warning">
     <span class="icon">
         <i class="fas fa-times"></i>
     </span>
@@ -38,4 +38,3 @@
 {% endif %}
 
 {% endblock %}
-

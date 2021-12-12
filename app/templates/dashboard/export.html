@@ -7,12 +7,16 @@
     <h2 class="subtitle">Gets the data off this application.</h2>
 
     <div class="box">
-        <h1 class="is-size-3"> Download CSV</h1>
+        <h1 class="is-size-3">Download CSV</h1>
         <p>
-            This control exposes a download of the applicants database, converted to a spreadsheet. Doing this exposes personal information, so do so with caution.
+            This control exposes a download of the applicants database, converted to a spreadsheet. Doing this exposes
+            personal information, so do so with caution.
+        </p>
+        <p>
+            <strong>Don't download this unless you're sure you need it, and delete it as soon as you're done.</strong>
         </p>
 
-        <br/>
+        <br />
 
         <a class="button is-warning" href="{{url_for('actions.download_csv')}}" download>
             <span>Download</span>
@@ -22,15 +26,21 @@
         </a>
 
     </div>
+
     <div class="box">
-        <h1 class="is-size-3"> Download backing SQLite database</h1>
+        <h1 class="is-size-3">Download Full CSV</h1>
         <p>
-            This control exposes a download of the entire SQLite database. Doing this exposes personal information, so do so with caution.
+            This control exposes a download of the applicants database, converted to a spreadsheet. Doing this exposes
+            personal information, so do so with caution.
+        </p>
+        <p>
+            Unlike above, this includes <strong>ALL</strong> information, including addresses and phone numbers.
+        </p>
+        <p>
+            <strong>Don't download this unless you're sure you need it, and delete it as soon as you're done.</strong>
         </p>
 
-        <br/>
-
-        <a class="button is-warning" href="{{url_for('actions.download_db')}}">
+        <a class="button is-warning" href="{{url_for('actions.download_csv')}}?sensitive=true" download>
             <span>Download</span>
             <span class="icon">
                 <i class="fas fa-download"></i>
@@ -38,8 +48,6 @@
         </a>
 
     </div>
-
 </div>
 
 {% endblock %}
-

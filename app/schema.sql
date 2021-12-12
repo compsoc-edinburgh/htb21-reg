@@ -39,7 +39,6 @@ CREATE TABLE Applicants (
     last_name   TEXT,
     school      TEXT,
     gradYear    TEXT,
-    gender      TEXT,
     description TEXT,
     essay       TEXT,
     resume      TEXT,
