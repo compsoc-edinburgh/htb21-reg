@@ -1,7 +1,8 @@
 version: '3'
 services:
-    htb21-reg:
-        image: htb21-reg
+    htb-reg:
+        build: .
+        image: htb-reg
         environment:
         - "FLASK_PREFERRED_URL_SCHEME=https"
         - "OAUTHLIB_RELAX_TOKEN_SCOPE=1"
