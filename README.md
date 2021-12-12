@@ -41,18 +41,15 @@ Once you've done that, you'll need to create your json configuration file in `in
 }
 ```
 
-Then you should be good to go! Start the server with:
+Then you should be good to go! Initialise the database with and start a development server with:
 
 ```
-$ make run
+$ export FLASK_ENV=development
+$ python -m flask init-db
+$ OAUTHLIB_INSECURE_TRANSPORT=1 OAUTHLIB_RELAX_TOKEN_SCOPE=1 python -m flask run
 ```
 
-or with
-
-
-```
-$ FLASK_ENV=development OAUTHLIB_INSECURE_TRANSPORT=1 OAUTHLIB_RELAX_TOKEN_SCOPE=1 FLASK_DEBUG=1 python -m flask run
-```
+When deploying, you just need to use `docker-compose up -d`. We deploy it behind an nginx proxy.
 
 # who?
 
