@@ -47,6 +47,7 @@ class ApplicationForm(Form):
     hackuk_admin = BooleanField("HackUK Privacy Policy", [
                                 validators.DataRequired()])
     adult = BooleanField("Over 18", [validators.DataRequired()])
+    vaccinated = BooleanField("Fully Vaccinated", [validators.DataRequired()])
 
 
 # Similar to above, but allows empty fields. This is used to make sure we still don't let people
@@ -366,6 +367,9 @@ def write_application(submit=False):
         cb_hackuk_email = (
             "hackuk_email" in request.form and request.form["hackuk_email"] == "on"
         )
+        cb_vaccinated = (
+            "vaccinated" in request.form and request.form["vaccinated"] == "on"
+        )
 
         dd_gradYear = request.form["gradYear"] if "gradYear" in request.form else None
         dd_shirt_size = (
@@ -399,6 +403,7 @@ def write_application(submit=False):
                     adult=?,
                     hackuk_admin=?,
                     hackuk_email=?,
+                    vaccinated=?,
                     completed=?,
                     completed_time=?
                 WHERE
@@ -429,6 +434,7 @@ def write_application(submit=False):
                 cb_adult,
                 cb_hackuk_admin,
                 cb_hackuk_email,
+                cb_vaccinated,
                 1 if submit else 0,
                 (time.time()) if submit else None,
                 session["email"],

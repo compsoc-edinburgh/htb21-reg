@@ -327,6 +327,19 @@
             </div>
         </div>
 
+        <div class="field">
+            <div class="control">
+                <label class="checkbox">
+                    <input type="checkbox" name="vaccinated" {% if appl['vaccinated'] == 1 %}checked{% endif %} required>
+                    I am fully vaccinated against COVID-19, plan to be by February, or have a valid medical exemption.
+                    <span class="has-text-danger">*</span>
+
+                    <br>
+                    Fully vaccinated means at least 14 days have passed since your second dose. You may be asked to prove this.
+                </label>
+            </div>
+        </div>
+
         <h2 class="subtitle">Marketing (Optional)</h2>
 
         <div class="field">

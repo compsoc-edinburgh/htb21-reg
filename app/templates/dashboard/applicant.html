@@ -107,6 +107,7 @@
         </span>
         {% else %}
         {{ make_tag('adult', applicant['adult']) }}
+        {{ make_tag('vaccinated', applicant['vaccinated']) }}
         {% endif %}
         {{ make_tag('admitted', applicant['admitted']) }}
     </div>

@@ -52,6 +52,7 @@ CREATE TABLE Applicants (
     mlh_email       INTEGER,
     hackuk_admin    INTEGER,
     hackuk_email    INTEGER,
+    vaccinated      INTEGER,
 
     UNIQUE (user_id),
     UNIQUE (email)
