@@ -38,9 +38,9 @@ class ApplicationForm(Form):
     address_pcode = StringField('Postcode', [validators.Length(min=0, max=10)])
     phone = StringField('Phone Number', [validators.Length(min=11, max=15)])
     description = StringField('"Why are you excited about Hack the Burgh?"', [
-                              validators.Length(min=1, max=1000)])
+                              validators.Length(min=1, max=500)])
     essay = StringField('"Describe an interesting project you\'ve been involved in"', [
-                        validators.Length(min=1, max=1000)])
+                        validators.Length(min=1, max=500)])
     mlh_coc = BooleanField("MLH Code of Conduct", [validators.DataRequired()])
     gdpr = BooleanField("Privacy Policy", [validators.DataRequired()])
     mlh_admin = BooleanField("MLH Privacy Policy", [validators.DataRequired()])
@@ -74,9 +74,9 @@ class IncompleteApplicationForm(Form):
     address_pcode = StringField('Postcode', [validators.Length(min=0, max=10)])
     phone = StringField('Phone Number', [validators.Length(min=0, max=15)])
     description = StringField('"Why are you excited about Hack the Burgh?"', [
-                              validators.Length(min=0, max=1000)])
+                              validators.Length(min=0, max=500)])
     essay = StringField('"Describe an interesting project you\'ve been involved in"', [
-                        validators.Length(min=0, max=1000)])
+                        validators.Length(min=0, max=500)])
 
 
 def capitalize_login_provider():

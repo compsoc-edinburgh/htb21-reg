@@ -205,17 +205,17 @@
 
         <h2 class="title">Short Answers</h2>
         <div class="field">
-            <label class="label">Why are you excited about Hack the Burgh?&nbsp;<span class="has-text-danger">*</span></label>
+            <label class="label">Why are you excited about Hack the Burgh?&nbsp;<span class="has-text-danger">*</span> (max 500 characters)</label>
             <div class="control">
-                <textarea required class="textarea" placeholder="Type here!"
+                <textarea required maxlength="500" class="textarea" placeholder="Type here!"
                     name="description">{{ appl['description'] }}</textarea>
             </div>
         </div>
 
         <div class="field">
-            <label class="label">Describe an interesting project you've been involved in.&nbsp;<span class="has-text-danger">*</span></label>
+            <label class="label">Describe an interesting project you've been involved in.&nbsp;<span class="has-text-danger">*</span> (max 500 characters)</label>
             <div class="control">
-                <textarea required class="textarea" name="essay" placeholder="One time I was...">{{appl['essay']}}</textarea>
+                <textarea required maxlength="500" class="textarea" name="essay" placeholder="One time I was...">{{appl['essay']}}</textarea>
             </div>
         </div>
 
