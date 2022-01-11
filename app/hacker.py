@@ -22,6 +22,8 @@ class ApplicationForm(Form):
     contact_email = EmailField('Email')
     school = StringField('University Name', [
                          validators.Length(min=1, max=75)])
+    allergens = StringField('Dietary Requirements', [
+        validators.Length(min=0, max=100)])
     gradYear = IntegerField("Graduation Year")
     shirt_size = SelectField(
         "Shirt Size", choices=[("xs", "XS"), ("s", "S"), ("m", "M"), ("l", "L"), ("xl", "XL")])
@@ -58,6 +60,8 @@ class IncompleteApplicationForm(Form):
     contact_email = StringField('Email', [validators.Length(min=0, max=50)])
     school = StringField('University Name', [
                          validators.Length(min=0, max=75)])
+    allergens = StringField('Dietary Requirements', [
+        validators.Length(min=0, max=100)])
     gradYear = IntegerField("Graduation Year")
     shirt_size = SelectField(
         "Shirt Size", choices=[("", "Select"), ("xs", "XS"), ("s", "S"), ("m", "M"), ("l", "L"), ("xl", "XL")])
@@ -385,6 +389,7 @@ def write_application(submit=False):
                     school=?,
                     gradYear=?,
                     shirt_size=?,
+                    allergens=?,
                     address_line_1=?,
                     address_line_2=?,
                     address_line_3=?,
@@ -416,6 +421,7 @@ def write_application(submit=False):
                 request.form["school"],
                 dd_gradYear,
                 dd_shirt_size,
+                request.form["allergens"],
                 request.form["address_line_1"],
                 request.form["address_line_2"],
                 request.form["address_line_3"],

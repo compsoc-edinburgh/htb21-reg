@@ -43,6 +43,7 @@ CREATE TABLE Applicants (
     essay       TEXT,
     resume      TEXT,
     shirt_size  TEXT,
+    allergens   TEXT,
 
     -- authorizations
     gdpr            INTEGER,

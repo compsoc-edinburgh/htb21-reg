@@ -125,6 +125,14 @@
                 </div>
             </div>
         </div>
+
+        <div class="field">
+            <label class="label">Do you have any dietary requirements / allergens?</label>
+            <div class="control">
+                <input class="input" type="text" placeholder="Dairy, Vegetarian, ..." name="allergens"
+                    value="{{ appl['allergens'] or '' }}" required autocomplete="off">
+            </div>
+        </div>
     </section>
 
     <section class="section">
