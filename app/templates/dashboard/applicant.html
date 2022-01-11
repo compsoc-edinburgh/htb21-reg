@@ -146,6 +146,14 @@
                         <td>Submitted</td>
                         <td>{{ timestamp }}</td>
                     </tr>
+                    <tr>
+                        <td>Shirt Size</td>
+                        <td>{{ applicant.shirt_size }}</td>
+                    </tr>
+                    <tr>
+                        <td>Dietary Requirements</td>
+                        <td>{{ applicant.allergens }}</td>
+                    </tr>
                 </tbody>
             </table>
             <div class="block">
@@ -189,14 +197,14 @@
             <h2 class="title is-2 has-margin-top--1em">Short Answers</h2>
             <div class="block">
                 <h3 class="subtitle">Why are you excited about Hack the Burgh?</h3>
-                <p>
+                <p style="word-wrap: anywhere;">
                     {{ description|safe }}
                 </p>
             </div>
 
             <div class="block">
                 <h3 class="subtitle"> Describe an interesting project you've been involved in. </h3>
-                <p>
+                <p style="word-wrap: anywhere;">
                     {{ essay|safe }}
                 </p>
             </div>
