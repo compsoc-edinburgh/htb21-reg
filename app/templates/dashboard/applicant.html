@@ -82,7 +82,7 @@
         <h1 class="is-size-1">{{ applicant['first_name'] }} {{ applicant['last_name'] }}</h1>
         {% endif %}
         {% else %}
-        <h1 class="is-blurred is-size-1">No Name Provided</h1>
+        <h1 class="is-size-1">No Name Provided</h1>
         {% endif %}
 
         <span class="has-text-weight-bold applicant__rating">
@@ -128,11 +128,27 @@
                     </tr>
                     <tr>
                         <td>Login Email</td>
-                        <td>{{ applicant.email }}</td>
+                        <td>
+                            {% if session.redacted %}
+                            <span class="is-blurred">
+                                {{ applicant.email }}
+                            </span>
+                            {% else %}
+                            {{ applicant.email }}
+                            {% endif %}
+                        </td>
                     </tr>
                     <tr>
                         <td>Contact Email</td>
-                        <td>{{ applicant.contact_email }}</td>
+                        <td>
+                            {% if session.redacted %}
+                            <span class="is-blurred">
+                                {{ applicant.contact_email }}
+                            </span>
+                            {% else %}
+                            {{ applicant.contact_email }}
+                            {% endif %}
+                        </td>
                     </tr>
                     <tr>
                         <td>Resume</td>
