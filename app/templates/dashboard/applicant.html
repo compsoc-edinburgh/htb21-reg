@@ -75,12 +75,8 @@
 <div class="container">
 
     <div class="applicant__rating_row">
-        {% if applicant['completed'] or (applicant['first_name'] and applicant['last_name']) %}
-        {% if session.redacted %}
-        <h1 class="is-size-1 is-blurred">{{ applicant['first_name'] }} {{ applicant['last_name'] }}</h1>
-        {% else %}
-        <h1 class="is-size-1">{{ applicant['first_name'] }} {{ applicant['last_name'] }}</h1>
-        {% endif %}
+        {% if applicant['completed'] or (applicant['first_name'] and applicant['last_name']) %}        
+        <h1 class="is-size-1 {% if session.redacted %}is-blurred{% endif %}">{{ applicant['first_name'] }} {{ applicant['last_name'] }}</h1>
         {% else %}
         <h1 class="is-size-1">No Name Provided</h1>
         {% endif %}
@@ -129,25 +125,17 @@
                     <tr>
                         <td>Login Email</td>
                         <td>
-                            {% if session.redacted %}
-                            <span class="is-blurred">
+                            <span class="{% if session.redacted %}is-blurred{% endif %}">
                                 {{ applicant.email }}
                             </span>
-                            {% else %}
-                            {{ applicant.email }}
-                            {% endif %}
                         </td>
                     </tr>
                     <tr>
                         <td>Contact Email</td>
                         <td>
-                            {% if session.redacted %}
-                            <span class="is-blurred">
+                            <span class="{% if session.redacted %}is-blurred{% endif %}">
                                 {{ applicant.contact_email }}
                             </span>
-                            {% else %}
-                            {{ applicant.contact_email }}
-                            {% endif %}
                         </td>
                     </tr>
                     <tr>
@@ -175,7 +163,7 @@
             <div class="block">
                 <details>
                     <summary><span class="subtitle">Address info</span></summary>
-                    <pre>{{ applicant.first_name }} {{ applicant.last_name }}
+                    <pre><span class="{% if session.redacted %}is-blurred{% endif %}">{{ applicant.first_name }} {{ applicant.last_name }}</span>
 {{ applicant.address_line_1 }}{% if applicant.address_line_2 %}
 {{ applicant.address_line_2 }}{% endif %}{% if applicant.address_line_3 %}
 {{ applicant.address_line_3 }}{% endif %}
