@@ -35,4 +35,6 @@ for user in get_all_users():
         continue
 
     cv_url = f"{CV_BASE_URL}{user['user_id'].replace(':', '_')}.pdf"
+    if requests.get(cv_url).status_code != 200:
+        continue
     w.writerow([user['first_name'], user['last_name'], user['contact_email'], cv_url, user['admitted'] == 1])
