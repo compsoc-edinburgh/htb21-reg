@@ -8,7 +8,7 @@ from sys import stdout, argv
 from os import getenv
 import requests
 
-SERVER_BASE = "https://register.2022.hacktheburgh.com/"
+SERVER_BASE = "https://register.2023.hacktheburgh.com/"
 CV_BASE_URL = "https://htb8-test.s3.eu-west-2.amazonaws.com/htb21-cvs/"
 API_KEY = getenv("HTB_API_KEY")
 API_SECRET = getenv("HTB_API_SECRET")

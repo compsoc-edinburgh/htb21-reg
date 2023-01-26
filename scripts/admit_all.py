@@ -6,7 +6,7 @@ from csv import reader
 from sys import argv
 import requests
 
-SERVER_BASE = "https://register.2022.hacktheburgh.com/"
+SERVER_BASE = "https://register.2023.hacktheburgh.com/"
 API_KEY = getenv("HTB_API_KEY")
 API_SECRET = getenv("HTB_API_SECRET")
 

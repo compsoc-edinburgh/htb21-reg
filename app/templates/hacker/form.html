@@ -84,6 +84,10 @@
                                 <option {% if appl['gradYear'] == '' %}selected{% endif %} disabled hidden value="">
                                     Select
                                 </option>
+                                <option {% if appl['gradYear'] == '2028' %}selected{% endif %} value="2028">2028
+                                </option>
+                                <option {% if appl['gradYear'] == '2027' %}selected{% endif %} value="2027">2027
+                                </option>
                                 <option {% if appl['gradYear'] == '2026' %}selected{% endif %} value="2026">2026
                                 </option>
                                 <option {% if appl['gradYear'] == '2025' %}selected{% endif %} value="2025">2025
@@ -91,16 +95,6 @@
                                 <option {% if appl['gradYear'] == '2024' %}selected{% endif %} value="2024">2024
                                 </option>
                                 <option {% if appl['gradYear'] == '2023' %}selected{% endif %} value="2023">2023
-                                </option>
-                                <option {% if appl['gradYear'] == '2022' %}selected{% endif %} value="2022">2022
-                                </option>
-                                <option {% if appl['gradYear'] == '2021' %}selected{% endif %} value="2021">2021
-                                </option>
-                                <option {% if appl['gradYear'] == '2020' %}selected{% endif %} value="2020">2020
-                                </option>
-                                <option {% if appl['gradYear'] == '2019' %}selected{% endif %} value="2019">2019
-                                </option>
-                                <option {% if appl['gradYear'] == '2018' %}selected{% endif %} value="2018">2018
                                 </option>
                             </select>
                         </div>
