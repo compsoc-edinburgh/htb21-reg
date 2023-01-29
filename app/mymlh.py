@@ -1,5 +1,5 @@
 from flask import _app_ctx_stack as stack
-from flask.globals import LocalProxy, _lookup_app_object
+from flask.globals import *
 from functools import partial
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 
